@@ -4,7 +4,7 @@
    - 其他
       - [虚拟机的使用](https://github.com/Thirup2/Blog/issues/2)
    - CentOS
-      - [CentOS 安装过程](https://github.com/Thirup2/Blog/issues/1)
+      - [CentOS 安装](https://github.com/Thirup2/Blog/issues/1)
    - Ubuntu
    - Gentoo
 - [Github](https://github.com/Thirup2/Blog/projects/2)
