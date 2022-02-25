@@ -6,6 +6,7 @@
    - CentOS
       - [CentOS 安装](https://github.com/Thirup2/Blog/issues/1)
       - [CentOS 基本配置](https://github.com/Thirup2/Blog/issues/3)
+      - [gcc版本更新](https://github.com/Thirup2/Blog/issues/4)
    - Ubuntu
    - Gentoo
 - [Github](https://github.com/Thirup2/Blog/projects/2)
