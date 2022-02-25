@@ -11,3 +11,6 @@
    - 代码管理
    - 个人博客
    - 技术学习
+- [编程软件](https://github.com/Thirup2/Blog/projects/3)
+   - VSCode(代码编辑)
+   - Vim(代码编辑)
