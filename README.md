@@ -14,3 +14,12 @@
 - [编程软件](https://github.com/Thirup2/Blog/projects/3)
    - VSCode(代码编辑)
    - Vim(代码编辑)
+- [编程技能](https://github.com/Thirup2/Blog/projects/4)
+   - C语言
+   - 数据结构
+   - 算法
+   - 计算机组成原理
+   - 操作系统
+   - 计算机网络
+   - 数据库
+   - 设计模式
