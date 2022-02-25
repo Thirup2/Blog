@@ -7,3 +7,7 @@
       - [CentOS 7 安装过程](https://github.com/Thirup2/Blog/issues/1)
    - Ubuntu
    - Gentoo
+- [Github](https://github.com/Thirup2/Blog/projects/2)
+   - 代码管理
+   - 个人博客
+   - 技术学习
