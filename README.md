@@ -1,13 +1,13 @@
 ### 简介
 主要记录一些学习过程中遇到的问题, 以下是博客的基本目录:
 - [Linux](https://github.com/Thirup2/Blog/projects/1)
-   - 其他
+   - **其他**
       - [虚拟机的使用](https://github.com/Thirup2/Blog/issues/2)
-   - CentOS
+   - **CentOS**
       - [CentOS 安装](https://github.com/Thirup2/Blog/issues/1)
       - [CentOS 基本配置](https://github.com/Thirup2/Blog/issues/3)
       - [gcc版本更新](https://github.com/Thirup2/Blog/issues/4)
-   - Ubuntu
+   - **Ubuntu
    - Gentoo
 - [Github](https://github.com/Thirup2/Blog/projects/2)
    - 代码管理
