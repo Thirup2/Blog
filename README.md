@@ -11,6 +11,7 @@
    - **Gentoo**
 - [Github](https://github.com/Thirup2/Blog/projects/2)
    - **代码管理**
+      - [Github基本使用方法](https://github.com/Thirup2/Blog/issues/7)
    - **个人博客**
       - [Github Issues的使用](https://github.com/Thirup2/Blog/issues/5)
       - [Github wiki的使用](https://github.com/Thirup2/Blog/issues/6)
