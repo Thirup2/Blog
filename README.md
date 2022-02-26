@@ -13,7 +13,7 @@
    - **代码管理**
    - **个人博客**
       - [Github Issues的使用](https://github.com/Thirup2/Blog/issues/5)
-      - [Github wiki的使用]()
+      - [Github wiki的使用](https://github.com/Thirup2/Blog/issues/6)
    - **技术学习**
 - [编程软件](https://github.com/Thirup2/Blog/projects/3)
    - **VSCode**(代码编辑)
