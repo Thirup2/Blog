@@ -17,6 +17,7 @@
       - [Github Issues的使用](https://github.com/Thirup2/Blog/issues/5)
       - [Github wiki的使用](https://github.com/Thirup2/Blog/issues/6)
    - **技术学习**
+      - [Markdown语法要点](https://github.com/Thirup2/Blog/issues/10)
 - [编程软件](https://github.com/Thirup2/Blog/projects/3)
    - **VSCode**(代码编辑)
       - [关于VScode在行尾加分号同时换行](https://github.com/Thirup2/Blog/issues/8)
