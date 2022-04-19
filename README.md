@@ -22,11 +22,10 @@
    - **Vim**(代码编辑)
 - [编程技能](https://github.com/Thirup2/Blog/projects/4)
    - **C语言**
-   - **数据结构**
-   - **算法**
-   - **计算机组成原理**
-      - [关于补码运算](https://github.com/Thirup2/Blog/issues/9)
+   - **C++**
+   - **数据结构与算法**
    - **操作系统**
+      - [关于补码运算](https://github.com/Thirup2/Blog/issues/9)
    - **计算机网络**
    - **数据库**
    - **设计模式**
