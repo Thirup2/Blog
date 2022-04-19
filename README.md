@@ -7,9 +7,9 @@
    - **lfs**
 - [Github]
    - **项目管理**
-      - [Aanswer]()
-      - [C_Projects]()
-      - [Library]()
+      - [Aanswer](https://github.com/Thirup2/Answer)
+      - [C_Projects](https://github.com/Thirup2/C_Projects)
+      - [Library](https://github.com/Thirup2/Library)
    - **技术学习**
 - [编程软件]
    - **VSCode**(代码编辑)
