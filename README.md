@@ -1,31 +1,21 @@
 ### 目录
-- [Linux](https://github.com/Thirup2/Blog/projects/1)
+- [Linux]
    - **其他**
-      - [虚拟机的使用](https://github.com/Thirup2/Blog/issues/2)
    - **CentOS**
-      - [CentOS 安装](https://github.com/Thirup2/Blog/issues/1)
-      - [CentOS 基本配置](https://github.com/Thirup2/Blog/issues/3)
-      - [gcc版本更新](https://github.com/Thirup2/Blog/issues/4)
-   - **Ubuntu**
+   - **Arch**
    - **Gentoo**
-- [Github](https://github.com/Thirup2/Blog/projects/2)
-   - **代码管理**
-      - [Github基本使用方法](https://github.com/Thirup2/Blog/issues/7)
-   - **个人博客**
-      - [Github Issues的使用](https://github.com/Thirup2/Blog/issues/5)
-      - [Github wiki的使用](https://github.com/Thirup2/Blog/issues/6)
+   - **lfs**
+- [Github]
+   - **项目管理**
    - **技术学习**
-      - [Markdown语法要点](https://github.com/Thirup2/Blog/issues/10)
-- [编程软件](https://github.com/Thirup2/Blog/projects/3)
+- [编程软件]
    - **VSCode**(代码编辑)
-      - [关于VScode在行尾加分号同时换行](https://github.com/Thirup2/Blog/issues/8)
    - **Vim**(代码编辑)
-- [编程技能](https://github.com/Thirup2/Blog/projects/4)
+- [编程技能]
    - **C语言**
    - **C++**
    - **数据结构与算法**
    - **操作系统**
-      - [关于补码运算](https://github.com/Thirup2/Blog/issues/9)
    - **计算机网络**
    - **数据库**
    - **设计模式**
