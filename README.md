@@ -3,6 +3,7 @@
    - **C语言**
    - **C++**
    - **数据结构与算法**
+      - [关于链表中头节点与头指针的问题](https://github.com/Thirup2/Blog/issues/14)
    - **操作系统**
       - [关于补码运算](https://github.com/Thirup2/Blog/issues/9)
    - **计算机网络**
