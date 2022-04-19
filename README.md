@@ -17,7 +17,7 @@
    - **lfs**
 - [Github](https://github.com/Thirup2/Blog/projects/2)
    - **项目管理**
-      - [Aanswer](https://github.com/Thirup2/Blog/issues/11)
+      - [Answer](https://github.com/Thirup2/Blog/issues/11)
       - [C_Projects](https://github.com/Thirup2/Blog/issues/12)
       - [Library](https://github.com/Thirup2/Blog/issues/13)
    - **技术学习**
