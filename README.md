@@ -1,6 +1,4 @@
-### 简介
-主要记录一些学习过程中遇到的问题的解决  
-以及对wiki提出的问题的解决及整理
+### 目录
 - [Linux](https://github.com/Thirup2/Blog/projects/1)
    - **其他**
       - [虚拟机的使用](https://github.com/Thirup2/Blog/issues/2)
