@@ -1,6 +1,7 @@
 ### 目录
 - [编程技能](https://github.com/Thirup2/Blog/projects/4)
    - **C语言**
+      - [C语言总结](https://github.com/Thirup2/Blog/issues/17)
    - **C++**
    - **数据结构与算法**
       - [数据结构总结](https://github.com/Thirup2/Blog/issues/15)
