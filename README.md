@@ -11,6 +11,7 @@
    - **计算机网络**
       - [计算机网络连接过程](https://github.com/Thirup2/Blog/issues/18)
    - **数据库**
+      - [SQL命令总结](https://github.com/Thirup2/Blog/issues/19)
    - **设计模式**
 ## - **[Linux](https://github.com/Thirup2/Blog/projects/1)**
    - **CentOS**
