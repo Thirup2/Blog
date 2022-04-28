@@ -1,17 +1,18 @@
 # 目录
+## - **待完成**
+- [C语言总结](https://github.com/Thirup2/Blog/issues/17)
+- [数据结构总结](https://github.com/Thirup2/Blog/issues/15)
+- [关于补码运算](https://github.com/Thirup2/Blog/issues/9)
+- [计算机网络连接过程](https://github.com/Thirup2/Blog/issues/18)
+- [SQL命令总结](https://github.com/Thirup2/Blog/issues/19)
 ## - **[编程技能](https://github.com/Thirup2/Blog/projects/4)**
    - **C语言**
-      - [C语言总结](https://github.com/Thirup2/Blog/issues/17)
    - **C++**
    - **数据结构与算法**
-      - [数据结构总结](https://github.com/Thirup2/Blog/issues/15)
       - [关于链表中头节点与头指针的问题](https://github.com/Thirup2/Blog/issues/14)
    - **操作系统**
-      - [关于补码运算](https://github.com/Thirup2/Blog/issues/9)
    - **计算机网络**
-      - [计算机网络连接过程](https://github.com/Thirup2/Blog/issues/18)
    - **数据库**
-      - [SQL命令总结](https://github.com/Thirup2/Blog/issues/19)
    - **设计模式**
 ## - **[Linux](https://github.com/Thirup2/Blog/projects/1)**
    - **CentOS**
