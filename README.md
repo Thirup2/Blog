@@ -17,6 +17,7 @@
    - **计算机网络**
    - **数据库**
    - **设计模式**
+   - **其他**
 ## - **[Linux](https://github.com/Thirup2/Blog/projects/1)**
    - **CentOS**
       - [CentOS基本配置](https://github.com/Thirup2/Blog/issues/3)
