@@ -1,11 +1,11 @@
 # 目录
 ## - **待完成**
-- [C语言总结(暑假)](https://github.com/Thirup2/Blog/issues/17)
-- [C++总结(暑假)](https://github.com/Thirup2/Blog/issues/20)
-- [C/C++区别总结(暑假)](https://github.com/Thirup2/Blog/issues/21)
 - [数据结构总结](https://github.com/Thirup2/Blog/issues/15)
 - [计算机网络连接过程](https://github.com/Thirup2/Blog/issues/18)
 - [SQL命令总结](https://github.com/Thirup2/Blog/issues/19)
+- [C语言总结(暑假)](https://github.com/Thirup2/Blog/issues/17)
+- [C++总结(暑假)](https://github.com/Thirup2/Blog/issues/20)
+- [C/C++区别总结(暑假)](https://github.com/Thirup2/Blog/issues/21)
 ## - **[编程技能](https://github.com/Thirup2/Blog/projects/4)**
    - **C语言**
    - **C++**
