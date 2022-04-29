@@ -1,7 +1,6 @@
 # 目录
 ## - **待完成**
 - [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
-- [关于"auto"与"decltype"](https://github.com/Thirup2/Blog/issues/22)
 - [数据结构总结](https://github.com/Thirup2/Blog/issues/15)
 - [计算机网络连接过程](https://github.com/Thirup2/Blog/issues/18)
 - [SQL命令总结](https://github.com/Thirup2/Blog/issues/19)
@@ -11,6 +10,7 @@
 ## - **[编程技能](https://github.com/Thirup2/Blog/projects/4)**
    - **C语言**
    - **C++**
+      - [关于"auto"与"decltype"](https://github.com/Thirup2/Blog/issues/22)
    - **数据结构与算法**
       - [关于链表中头节点与头指针的问题](https://github.com/Thirup2/Blog/issues/14)
    - **操作系统**
