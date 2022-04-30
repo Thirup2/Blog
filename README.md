@@ -11,6 +11,7 @@
    - **C语言**
    - **C++**
       - [关于"auto"与"decltype"](https://github.com/Thirup2/Blog/issues/22)
+      - [引用的用法](https://github.com/Thirup2/Blog/issues/24)
    - **数据结构与算法**
       - [关于链表中头节点与头指针的问题](https://github.com/Thirup2/Blog/issues/14)
    - **操作系统**
