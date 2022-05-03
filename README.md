@@ -2,7 +2,7 @@
 ## - **待完成**
 - [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
 - [数据结构总结](https://github.com/Thirup2/Blog/issues/15)
-- [算法总结](https://github.com/Thirup2/Blog/issues/25)
+- [算法总结 : 按数据结构](https://github.com/Thirup2/Blog/issues/25)
 - [计算机网络连接过程](https://github.com/Thirup2/Blog/issues/18)
 - [SQL命令总结](https://github.com/Thirup2/Blog/issues/19)
 - [C语言总结(暑假)](https://github.com/Thirup2/Blog/issues/17)
