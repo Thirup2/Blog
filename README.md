@@ -39,5 +39,6 @@
 ## - **[编程软件](https://github.com/Thirup2/Blog/projects/3)**
    - **VSCode**(代码编辑)
       - [关于VScode在行尾加分号同时换行](https://github.com/Thirup2/Blog/issues/8)
+      - [VSCode基本配置](https://github.com/Thirup2/Blog/issues/27)
    - **Vim**(代码编辑)
 
