@@ -34,7 +34,7 @@
       - [Library](https://github.com/Thirup2/Blog/issues/13)
       - [Problems](https://github.com/Thirup2/Blog/issues/16)
    - **技术学习**
-      - [Github Doc](https://github.com/Thirup2/Blog/issues/28)
+      - [Github文档](https://github.com/Thirup2/Blog/issues/28)
       - [Markdown语法](https://github.com/Thirup2/Blog/issues/10)
 ## - **[编程软件](https://github.com/Thirup2/Blog/projects/3)**
    - **VSCode**(代码编辑)
