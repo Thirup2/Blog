@@ -1,4 +1,5 @@
-# 目录
+## 简介
+作为一个博客，这里包含了我对一些知识做的总结、一些解决某些问题的方法、以及一些疑惑与问题，其中短文就直接使用了GitHub仓库中的Issues和Projects来管理，而长文则是转移到GitBook进行的编写，以下是全部内容的目录：
 ## **待完成**
 - [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
 - [数据结构总结](https://github.com/Thirup2/Blog/issues/15)
