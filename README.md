@@ -4,7 +4,7 @@
 - [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
 - [数据结构总结](https://app.gitbook.com/s/ObONivWpIpfwMxKFRKgF/)
 - [算法总结](https://app.gitbook.com/s/SEb0fcPGUin38lHQO55a/)
-- [计算机网络连接过程](https://github.com/Thirup2/Blog/issues/18)
+- [计算机网络连接过程](https://app.gitbook.com/s/tEdLE7ByPZdhME7KNLrp/)
 - [SQL命令总结](https://github.com/Thirup2/Blog/issues/19)
 - [C语言总结(暑假)](https://github.com/Thirup2/Blog/issues/17)
 - [C++总结(暑假)](https://github.com/Thirup2/Blog/issues/20)
