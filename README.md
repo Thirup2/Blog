@@ -1,2 +1,45 @@
 ## 简介
-本文旨在总结C语言和C++的不同之处。说是不同之处，实际上可以将C语言看做C++的子集，因为一个C语言程序几乎都能在与C++语法相兼容。所以本文其实是总结C++比C语言多出来的部分，当然还包括二者之间确实存在的一些差异。
+作为一个博客，这里包含了我对一些知识做的总结、一些解决某些问题的方法、以及一些疑惑与问题，其中短文就直接使用了GitHub仓库中的Issues和Projects来管理，而长文则是转移到GitBook进行的编写，以下是全部内容的目录：
+## **待完成**
+- [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
+- [数据结构总结](https://app.gitbook.com/s/ObONivWpIpfwMxKFRKgF/)
+- [算法总结](https://app.gitbook.com/s/SEb0fcPGUin38lHQO55a/)
+- [计算机网络连接过程](https://app.gitbook.com/s/tEdLE7ByPZdhME7KNLrp/)
+- [SQL命令总结](https://app.gitbook.com/s/w67GHUTi0XawSN4Ui5rj/)
+- [C语言总结(暑假)](https://app.gitbook.com/s/DA9M2gGms5mKMU9LmFqs/)
+- [C++总结(暑假)](https://app.gitbook.com/s/irezOX6zF6QvBdUtTmwm/)
+- [C/C++区别总结(暑假)](https://github.com/Thirup2/Blog/issues/21)
+- [C/C++区别总结(暑假)](https://app.gitbook.com/s/YHwVc5QIp3NJN8Lpevz2/)
+## **[编程技能](https://github.com/Thirup2/Blog/projects/4)**
+   - **C语言**
+   - **C++**
+      - [关于"auto"与"decltype"](https://app.gitbook.com/s/R9RRrKavbFBYhUyUP39X/)
+      - [引用的用法](https://github.com/Thirup2/Blog/issues/24)
+   - **数据结构与算法**
+      - [关于链表中头节点与头指针的问题](https://github.com/Thirup2/Blog/issues/14)
+   - **操作系统**
+   - **计算机网络**
+   - **数据库**
+   - **设计模式**
+   - **其他**
+## **[Linux](https://github.com/Thirup2/Blog/projects/1)**
+   - **CentOS**
+      - [CentOS基本配置](https://github.com/Thirup2/Blog/issues/3)
+      - [gcc版本更新](https://github.com/Thirup2/Blog/issues/4)
+   - **Arch**
+   - **Gentoo**
+   - **lfs**
+## **[Github](https://github.com/Thirup2/Blog/projects/2)**
+   - **项目管理**
+      - [Answer](https://github.com/Thirup2/Blog/issues/11)
+      - [C_Projects](https://github.com/Thirup2/Blog/issues/12)
+      - [Library](https://github.com/Thirup2/Blog/issues/13)
+      - [Problems](https://github.com/Thirup2/Blog/issues/16)
+   - **技术学习**
+      - [Github文档](https://github.com/Thirup2/Blog/issues/28)
+      - [Markdown语法](https://github.com/Thirup2/Blog/issues/10)
+## **[编程软件](https://github.com/Thirup2/Blog/projects/3)**
+   - **VSCode**(代码编辑)
+      - [关于VScode在行尾加分号同时换行](https://github.com/Thirup2/Blog/issues/8)
+      - [VSCode基本配置](https://github.com/Thirup2/Blog/issues/27)
+   - **Vim**(代码编辑)
