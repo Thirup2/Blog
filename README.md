@@ -8,7 +8,7 @@
 - [计算机网络连接过程](https://app.gitbook.com/s/tEdLE7ByPZdhME7KNLrp/)
 - [SQL命令总结](https://app.gitbook.com/s/w67GHUTi0XawSN4Ui5rj/)
 - [C语言总结(暑假)](https://www.kancloud.cn/thirup/thirup/2781376)
-- [C++总结(暑假)](https://app.gitbook.com/s/irezOX6zF6QvBdUtTmwm/)
+- [C++总结(暑假)](https://www.kancloud.cn/thirup/thirup-cpp_in_all/2781416)
 - [C/C++区别总结(暑假)](https://app.gitbook.com/s/YHwVc5QIp3NJN8Lpevz2/)
 ## **[编程技能](https://github.com/Thirup2/Blog/projects/4)**
    - **C语言**
