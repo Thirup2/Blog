@@ -3,7 +3,7 @@
 ## **待完成**
 - [关于在两个循环中分别读取数据的问题](https://github.com/Thirup2/Blog/issues/29)
 - [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
-- [数据结构总结](https://app.gitbook.com/s/ObONivWpIpfwMxKFRKgF/)
+- [数据结构总结](https://www.kancloud.cn/thirup/thirup-adt_in_all/2782484)
 - [算法总结](https://app.gitbook.com/s/SEb0fcPGUin38lHQO55a/)
 - [计算机网络连接过程](https://app.gitbook.com/s/tEdLE7ByPZdhME7KNLrp/)
 - [SQL命令总结](https://app.gitbook.com/s/w67GHUTi0XawSN4Ui5rj/)
