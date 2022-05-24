@@ -5,7 +5,7 @@
 - [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
 - [数据结构总结](https://www.kancloud.cn/thirup/thirup-adt_in_all/2782484)
 - [算法总结](https://www.kancloud.cn/thirup/thirup-methods_in_all/2782529)
-- [计算机网络连接过程](https://app.gitbook.com/s/tEdLE7ByPZdhME7KNLrp/)
+- [计算机网络连接过程](https://www.kancloud.cn/thirup/thirup-how_network_works/2782573)
 - [SQL命令总结](https://app.gitbook.com/s/w67GHUTi0XawSN4Ui5rj/)
 - [C语言总结(暑假)](https://www.kancloud.cn/thirup/thirup/2781376)
 - [C++总结(暑假)](https://www.kancloud.cn/thirup/thirup-cpp_in_all/2781416)
