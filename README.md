@@ -7,9 +7,9 @@
 - [算法总结](https://www.kancloud.cn/thirup/thirup-methods_in_all/2782529)
 - [计算机网络连接过程](https://www.kancloud.cn/thirup/thirup-how_network_works/2782573)
 - [SQL命令总结](https://www.kancloud.cn/thirup/thirup-sql_orders/2782598)
-- [C语言总结(暑假)](https://www.kancloud.cn/thirup/thirup/2781376)
-- [C++总结(暑假)](https://www.kancloud.cn/thirup/thirup-cpp_in_all/2781416)
-- [C/C++区别总结(暑假)](https://www.kancloud.cn/thirup/thirup-c_cpp_difference/2781463)
+- [C语言总结](https://www.kancloud.cn/thirup/thirup/2781376)
+- [C++总结](https://www.kancloud.cn/thirup/thirup-cpp_in_all/2781416)
+- [C/C++区别总结](https://www.kancloud.cn/thirup/thirup-c_cpp_difference/2781463)
 ## **[编程技能](https://github.com/Thirup2/Blog/projects/4)**
    - **C语言**
    - **C++**
