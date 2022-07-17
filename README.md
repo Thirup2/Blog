@@ -5,7 +5,6 @@
 - [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
 - [数据结构总结](https://www.kancloud.cn/thirup/thirup-adt_in_all/2782484)
 - [算法总结](https://www.kancloud.cn/thirup/thirup-methods_in_all/2782529)
-- [计算机网络连接过程](https://www.kancloud.cn/thirup/thirup-how_network_works/2782573)
 - [SQL命令总结](https://www.kancloud.cn/thirup/thirup-sql_orders/2782598)
 - [C语言总结](https://www.kancloud.cn/thirup/thirup/2781376)
 - [C++总结](https://www.kancloud.cn/thirup/thirup-cpp_in_all/2781416)
@@ -19,6 +18,7 @@
       - [关于链表中头节点与头指针的问题](https://github.com/Thirup2/Blog/issues/14)
    - **操作系统**
    - **计算机网络**
+      - [计算机网络连接过程](https://www.kancloud.cn/thirup/thirup-how_network_works/2782573)
    - **数据库**
    - **设计模式**
    - **其他**
