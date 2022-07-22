@@ -10,6 +10,7 @@
 - [C/C++区别总结](https://www.kancloud.cn/thirup/thirup-c_cpp_difference/2781463)
 ## **[编程技能](https://github.com/Thirup2/Blog/projects/4)**
    - **C语言**
+      - [C语言标准](https://github.com/Thirup2/Blog/issues/30)
    - **C++**
       - [关于"auto"与"decltype"](https://www.kancloud.cn/thirup/thirup-about_auto_and_decltype/2781713)
       - [引用的用法](https://github.com/Thirup2/Blog/issues/24)
