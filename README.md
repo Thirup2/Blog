@@ -3,8 +3,7 @@
 ## **待完成**
 - [关于在两个循环中分别读取数据的问题](https://github.com/Thirup2/Blog/issues/29)
 - [整数类型编码方式](https://github.com/Thirup2/Blog/issues/23)
-- [数据结构总结](https://www.kancloud.cn/thirup/thirup-adt_in_all/2782484)
-- [算法总结](https://www.kancloud.cn/thirup/thirup-methods_in_all/2782529)
+- [数据结构及算法总结](https://www.kancloud.cn/thirup/thirup-adt_in_all/2782484)
 - [C语言总结](https://www.kancloud.cn/thirup/thirup/2781376)
 - [C++总结](https://www.kancloud.cn/thirup/thirup-cpp_in_all/2781416)
 - [C/C++区别总结](https://www.kancloud.cn/thirup/thirup-c_cpp_difference/2781463)
