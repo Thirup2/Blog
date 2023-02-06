@@ -103,7 +103,9 @@ theme: material
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: git@github.com:Thirup2/Blog.git
+  branch: gh-pages
 
 # Search
 search:
