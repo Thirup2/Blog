@@ -500,3 +500,87 @@ cd /usr/share/fonts/<你刚才新建的文件夹>/
 sudo mkfontscale && sudo mkfontdir && sudo fc-cache -fv
 ```
 
+
+
+# 六. 其他配置
+
+## 1. 禁用电脑自带键盘
+
+由于为了节省空间，我常常需要把外接键盘放在笔记本上，但是很容易造成误触，所以需要将电脑自带键盘进行禁用，具体方法如下：
+
+- 首先打开终端，输入以下命令：
+
+  ```bash
+  xinput list
+  ```
+
+  如果没有 xinput 的话，按照指示安装即可
+
+- 在 Ubuntu 22 下，通常这个命令执行之后会有一条错误信息
+
+  ```
+  WARNING: running xinput against an Xwayland server. See the xinput man page for details.
+  ```
+
+  这是因为 Ubuntu 22 默认使用了 Wayland 模式，导致 /etc/X11/xorg.conf.d/40-libinput.conf 不起作用，在这种情况下我们是无法正常禁用设备的，而且它也并不会把电脑自带键盘列出来，我们需要修改一下 /etc/gdm3/custom.conf 这个文件：
+
+  ```bash
+  sudo vim /etc/gdm3/custom.conf
+  ```
+
+  可以先观察一下这个文件的内容，它的 WaylandEnable 这一项可能是 WaylandEnable=true 也可能直接注释掉了，如我的就是直接注释掉了，我们把该项前的注释符`#`删掉，然后确认一下 WaylandEnable 的值为 false 即可。
+
+  最后重启一下电脑。
+
+  **注意**：不会使用 vim 编辑器的可以尝试使用 gedit，将上述命令中的 vim 替换为 gedit 即可，没有该软件的根据终端的提示进行安装。
+
+- 在排除了问题之后，我们再次打开终端输入 `xinput list` 命令，正常情况下，输出就应该像下面这样全部输入输出设备都列出来了：
+
+  ```
+  sn@Program:~/桌面$ xinput list
+  ⎡ Virtual core pointer                    	id=2	[master pointer  (3)]
+  ⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]
+  ⎜   ↳ MSFT0004:00 06CB:CD98 Mouse             	id=16	[slave  pointer  (2)]
+  ⎜   ↳ MSFT0004:00 06CB:CD98 Touchpad          	id=17	[slave  pointer  (2)]
+  ⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]
+      ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]
+      ↳ Video Bus                               	id=6	[slave  keyboard (3)]
+      ↳ Power Button                            	id=7	[slave  keyboard (3)]
+      ↳ Integrated Camera: Integrated C         	id=12	[slave  keyboard (3)]
+      ↳ Ideapad extra buttons                   	id=15	[slave  keyboard (3)]
+      ↳ AT Translated Set 2 keyboard            	id=18	[slave  keyboard (3)]
+  ```
+
+- 我们首先找到电脑自带键盘，一般名称都是 “AT Translated Set 2 keyboard”，我们需要使用该项后面的 id 值，我这里是 18，然后输入下面的命令：
+
+  ```bash
+  xinput set-prop 18 "Device Enabled" 0
+  ```
+
+  即可禁用电脑自带键盘，命令中的 18 替换成你要禁用的设备在你自己的电脑上的 id 值，然后最后的值为 0 即为禁用，值为 1 即为启用，如，启用该设备的命令为：
+
+  ```bash
+  xinput set-prop 18 "Device Enabled" 1
+  ```
+
+另外，使用命令禁用键盘之后，只要重启电脑，又会自动启用。如果想永久禁用的话，就把命令写入到 bashrc：
+
+```bash
+sudo vim ~/.bashrc
+```
+
+添加高亮的两行即可：
+
+![截图 2023-02-07 17-44-24](https://user-images.githubusercontent.com/91216205/217210311-c2390f90-635b-4f27-8993-a164180b449b.png)
+
+具体内容是：
+
+```bash
+# 禁用电脑自带键盘
+xinput set-prop "AT Translated Set 2 keyboard" "Device Enabled" 0
+```
+
+这里使用设备的名称而不是用 id 值是因为 id 值可能发生变化。
+
+接下来重启一下试试吧。
+
