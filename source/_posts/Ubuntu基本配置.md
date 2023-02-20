@@ -445,6 +445,68 @@ tar -xvf <package-name>
 
 
 
+## 8. Chrome
+
+首先移动到安装 Chrome 的目录，然后执行下面的命令下载最新的`.deb`软件包：
+
+```bash
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+```
+
+然后执行下面的命令安装即可：
+
+```bash
+sudo apt install ./google-chrome-stable_current_amd64.deb
+```
+
+
+
+## 9. Clash For Windows
+
+安装完 Chrome 之后，同步书签是个问题，我尝试了很多办法，就这个办法最简单且好用。
+
+首先我们需要一个可订阅的代理服务器，这里我选择的是 WestWorld，连接比较稳定快速，最重要的是经常可以白嫖，同时还有各个平台的客户端应用，哪怕买了套餐也不用担心只在 Linux 上可用。
+
+WestWorld 的官网是： https://xbsj5632.website/
+
+具体的使用方法就不多介绍了。
+
+由于基本上这些软件都不会提供 Linux 的客户端，所以我们需要一个代理工具，用于将我们自己的电脑和 VPN 提供的服务器连接起来。
+
+首先是下载页面： https://github.com/Fndroid/clash_for_windows_pkg/releases
+
+![截图 2023-02-13 22-31-34](https://user-images.githubusercontent.com/91216205/218485889-98ea7548-81ee-4ecd-8eb9-7217b0281a14.png)
+
+我们选择 `*-x64-linux.tar.gz` 版本下载即可。
+
+下载完成后将该压缩包解压，直接执行解压后文件夹中的 `cfw` 程序，会打开一个窗口：
+
+![截图 2023-02-13 22-34-42](https://user-images.githubusercontent.com/91216205/218486550-6266a321-bb97-4765-af33-d8638e2fd94b.png)
+
+这个软件就安装成功了，后面我们需要用到这里的 Port 值 7890
+
+接下来我们打开 WestWorld 官网，进入到 “客户端下载” 页面，然后选择 “Linux” 选项，可以看到最顶部有两个链接，一个 “Clash订阅链接”，一个 “Trojan订阅链接”，我们选择 “Clash订阅链接” 复制后面的链接。
+
+然后我们打开 Clash for Windows 的这个页面：
+
+![截图 2023-02-13 22-43-53](https://user-images.githubusercontent.com/91216205/218488821-2d222aaf-147a-44cf-968d-2f7be3c79536.png)
+
+在上面的输入框输入我们刚保存的链接，然后 Download 即可。
+
+接下来可以看到我们的结点变多了：
+
+![截图 2023-02-13 22-45-38](https://user-images.githubusercontent.com/91216205/218489250-dce4fdba-d6f2-44f5-b068-13e4ca66c1d8.png)
+
+直接选择合适的结点连接即可。
+
+最后，需要修改系统的代理，首先打开网络设置，点击代理后面的按钮，像下面这样输入：
+
+![截图 2023-02-13 22-48-27](https://user-images.githubusercontent.com/91216205/218490048-4858c138-1486-4365-b03c-0d67ac9aad60.png)
+
+接下来就可以正常使用 google 了，需要注意的是，如果不需要代理了，那么在关闭了 cfw 之后，需要将网络代理调回 禁用，否则将无法正常联网。
+
+
+
 # 五. 外观
 
 ## 1. 缩放与字体大小
@@ -469,6 +531,8 @@ tar -xvf <package-name>
 **typora**：直接在 **偏好设置-外观** 设置中调整自己需要的字体大小即可，更换大屏显示器后将字体调回原本大小或者直接使用自动大小即可。
 
 **火狐浏览器**：将默认缩放大小设置为 120% 或 133%（或者自己需要的大小）即可，更换大屏显示器后将设置调回 100%
+
+**Chrome**：与 “火狐浏览器” 操作相同
 
 
 
