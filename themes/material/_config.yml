@@ -157,7 +157,7 @@ toc:
 
 # SNS Menu
 sns:
-    email: 246946332@qq.com
+    email: admin@syunn.cn
     facebook: "https://www.facebook.com/facebook"
     twitter: "https://twitter.com/twitter"
     googleplus: "https://www.google.com/"
@@ -185,7 +185,7 @@ sns_share:
 sidebar:
     dropdown:
         Email Me:
-            link: "mailto: 246946332@qq.com"
+            link: "mailto: admin@syunn.cn"
             icon: email
     homepage:
         use: true
