@@ -411,7 +411,7 @@ npm install docsify-cli -g
 
 在等待下载的这一段时间里，我们可以点击下载按钮下方的 **系统要求**，来查看在安装之前需要做的准备：
 
-![图片](https://user-images.githubusercontent.com/91216205/215746175-3041b6e1-7051-41e7-b88f-d0b927988074.png)
+![01](images/Ubuntu基本配置/01.png)
 
 可以看到，在 Linux 环境下，我们还需要下载一些软件包才能正常使用 ToolBox
 
@@ -439,7 +439,7 @@ tar -xvf <package-name>
 
 如果能够看到下面的界面，就说明安装成功了：
 
-![图片](https://user-images.githubusercontent.com/91216205/215747799-2ba979f0-2b76-4eca-bbe2-3a802a84c208.png)
+![02](images/Ubuntu基本配置/02.png)
 
 然后就可以在 ToolBox 里安装需要的软件了。
 
@@ -475,13 +475,13 @@ WestWorld 的官网是： https://xbsj5632.website/
 
 首先是下载页面： https://github.com/Fndroid/clash_for_windows_pkg/releases
 
-![截图 2023-02-13 22-31-34](https://user-images.githubusercontent.com/91216205/218485889-98ea7548-81ee-4ecd-8eb9-7217b0281a14.png)
+![03](images/Ubuntu基本配置/03.png)
 
 我们选择 `*-x64-linux.tar.gz` 版本下载即可。
 
 下载完成后将该压缩包解压，直接执行解压后文件夹中的 `cfw` 程序，会打开一个窗口：
 
-![截图 2023-02-13 22-34-42](https://user-images.githubusercontent.com/91216205/218486550-6266a321-bb97-4765-af33-d8638e2fd94b.png)
+![04](images/Ubuntu基本配置/04.png)
 
 这个软件就安装成功了，后面我们需要用到这里的 Port 值 7890
 
@@ -489,19 +489,19 @@ WestWorld 的官网是： https://xbsj5632.website/
 
 然后我们打开 Clash for Windows 的这个页面：
 
-![截图 2023-02-13 22-43-53](https://user-images.githubusercontent.com/91216205/218488821-2d222aaf-147a-44cf-968d-2f7be3c79536.png)
+![05](images/Ubuntu基本配置/05.png)
 
 在上面的输入框输入我们刚保存的链接，然后 Download 即可。
 
 接下来可以看到我们的结点变多了：
 
-![截图 2023-02-13 22-45-38](https://user-images.githubusercontent.com/91216205/218489250-dce4fdba-d6f2-44f5-b068-13e4ca66c1d8.png)
+![06](images/Ubuntu基本配置/06.png)
 
 直接选择合适的结点连接即可。
 
 最后，需要修改系统的代理，首先打开网络设置，点击代理后面的按钮，像下面这样输入：
 
-![截图 2023-02-13 22-48-27](https://user-images.githubusercontent.com/91216205/218490048-4858c138-1486-4365-b03c-0d67ac9aad60.png)
+![07](images/Ubuntu基本配置/07.png)
 
 接下来就可以正常使用 google 了，需要注意的是，如果不需要代理了，那么在关闭了 cfw 之后，需要将网络代理调回 禁用，否则将无法正常联网。
 
@@ -635,7 +635,7 @@ sudo vim ~/.bashrc
 
 添加高亮的两行即可：
 
-![截图 2023-02-07 17-44-24](https://user-images.githubusercontent.com/91216205/217210311-c2390f90-635b-4f27-8993-a164180b449b.png)
+![08](images/Ubuntu基本配置/08.png)
 
 具体内容是：
 

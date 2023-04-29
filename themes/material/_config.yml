@@ -4,9 +4,9 @@
 
 # Head info
 head:
-    favicon: "/img/icon.png"
-    high_res_favicon: "/img/icon.png"
-    apple_touch_icon: "/img/icon.png"
+    favicon: "/img/logo/icon.png"
+    high_res_favicon: "/img/logo/icon.png"
+    apple_touch_icon: "/img/logo/icon.png"
     keywords:
     site_verification:
         google:
@@ -19,8 +19,8 @@ head:
 # Jump Links Settings
 url:
     rss:
-    daily_pic: "https://Thirup2.github.io/Blog"
-    logo: "https://Thirup2.github.io/Blog"
+    daily_pic: "#"
+    logo: "#"
 
 
 # ---------------------------------------------------------------
@@ -70,11 +70,11 @@ background:
 
 # Images Settings
 img:
-    logo: "/img/headright.png"
-    avatar: "/img/headaside.png"
-    daily_pic: "/img/daily_pic.png"
-    sidebar_header: "/img/sidebar_header.png"
-    random_thumbnail: "/img/random/material-"
+    logo: "/img/headcut/main.png"
+    avatar: "/img/headcut/aside.png"
+    daily_pic: "/img/another/daily_pic.png"
+    sidebar_header: "/img/another/sidebar_header.png"
+    random_thumbnail: "/img/cover/material-"
     footer_image:
         #upyun_logo:
             #link: "https://www.upyun.com/"
