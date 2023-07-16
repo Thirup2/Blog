@@ -105,11 +105,11 @@ theme: material
 
 deploy:
 #GitPage
-#  type: git
-#  repo: git@github.com:Thirup2/Blog.git
-#  branch: gh-pages
+  type: git
+  repo: git@github.com:Thirup2/Blog.git
+  branch: gh-pages
 #Server
-  type: ''
+#  type: ''
 
 # Search
 search:
