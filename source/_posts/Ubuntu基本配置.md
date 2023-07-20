@@ -1,11 +1,20 @@
 ---
 title: Ubuntu基本配置
-date: 2022-12-01
+date: 2022-12-01 00:00:00
+tags:
+- 系统
+- 教程
+categories:
+- Linux
+- Ubuntu
+description: Ubuntu从安装到配置，基本Linux开发环境的搭建
+top_img: /img/cover/material-1.webp
+cover: /img/cover/material-1.webp
 ---
 
-# 一. 前言
+## 一、 准备
 
-## 1. 安装环境
+### 1. 安装环境
 
 系统：Ubuntu-22.04.1
 
@@ -21,7 +30,7 @@ date: 2022-12-01
 
 
 
-## 2. 写在前面
+### 2. 写在前面
 
 本文仅作为物理机安装Ubuntu系统的参考，虚拟机大部分操作类似，但如果想安装虚拟机，请寻找更合适的文章。
 
@@ -31,9 +40,9 @@ date: 2022-12-01
 
 
 
-# 二. 安装Ubuntu
+## 二、 安装Ubuntu
 
-## 1. 下载ISO文件
+### 1. 下载ISO文件
 
 首先我们选择一个镜像源，我选择的是北京外国语大学的镜像：https://mirrors.bfsu.edu.cn/
 
@@ -41,7 +50,7 @@ date: 2022-12-01
 
 
 
-## 2. 制作启动U盘
+### 2. 制作启动U盘
 
 首先我们需要一个制作启动U盘的软件，是软碟通，通过这个链接可以下载：https://cn.ultraiso.net/xiazai.html
 
@@ -49,7 +58,7 @@ date: 2022-12-01
 
 
 
-## 3. 启动BIOS设置U盘启动
+### 3. 启动BIOS设置U盘启动
 
 各个电脑打开BIOS的操作可能不一样，总之这一步自己查询，进到BIOS里就行了。
 
@@ -57,7 +66,7 @@ date: 2022-12-01
 
 
 
-## 4. 开始安装
+### 4. 开始安装
 
 安装的其他步骤都很简单，唯一需要介绍的一步是：分区操作
 
@@ -89,7 +98,7 @@ date: 2022-12-01
 
 
 
-# 三. 换源
+## 三、 换源
 
 由于Ubuntu官方的源下载速度很慢，所以需要换源。
 
@@ -110,11 +119,13 @@ sudo apt upgrade
 
 
 
-# 四. 其他安装项
+## 四、 其他安装项（可选）
 
-## 1. fastgithub
+### 1. fastgithub
 
-### 下载
+{% tabs fastgithub %}
+
+<!-- tab 下载 -->
 
 下载地址：https://github.com/dotnetcore/FastGithub/releases/download/2.1.4/fastgithub_linux-x64.zip
 
@@ -122,9 +133,9 @@ sudo apt upgrade
 
 > 上面提供的下载地址为2.1.4版本，由于版本可能更新，可以通过下面的网址查看最新版本：https://github.com/dotnetcore/FastGithub/releases ，根据自己的系统和架构选择应该下载的软件包即可。
 
+<!-- endtab -->
 
-
-### 安装
+<!-- tab 安装 -->
 
 - 我们将下载下来的软件包解压，然后将其移动到`/opt`目录下，然后自己移动到`fastgithub`文件夹下
 
@@ -162,70 +173,78 @@ sudo apt upgrade
   sudo ln -s /opt/<fastgithub软件包>/fastgithub /usr/local/bin
   ```
 
+<!-- endtab -->
+
+{% endtabs %}
 
 
-## 2. git
 
-### 安装
+### 2. git
+
+{% tabs fastgithub %}
+
+<!-- tab 安装 -->
+
+执行下面的命令即可：
 
 ```bash
 sudo apt install git
 ```
 
+<!-- endtab -->
 
+<!-- tab 添加SSH Key -->
 
-### 配置
+1. 首先创建SSH密钥
 
-- 添加SSH key
+   ```bash
+   ssh-keygen -t rsa -C "<你的用户名>"
+   ```
 
-  1. 首先创建SSH密钥
+   接下来会有一些输出，主要是key的存放位置和密码设置，直接默认回车即可
 
-     ```bash
-     ssh-keygen -t rsa -C "<你的用户名>"
-     ```
+   最后看到类似如下的输出，就表示成功生成SSH key了：
 
-     接下来会有一些输出，主要是key的存放位置和密码设置，直接默认回车即可
+   ```
+   Your identification has been saved in /home/Username/.ssh/id_rsa.
+   Your public key has been saved in /home/Username/.ssh/id_rsa.pub.
+   The key fingerprint is:
+   SHA256:RwvBINgH8CEt2KniltmykeyDsOseUYcwMzehFeyT86s emailnum@email.com
+   The key's randomart image is:
+   +---[RSA 2048]----+
+   | o+%OO+o.        |
+   |..=+%*+ ..       |
+   | ..+o+o.. .      |
+   |o.  o=.  o .     |
+   |o oolalala S o      |
+   | +.+.. . .       |
+   |. .o    .        |
+   |  . .  .         |
+   |   . E.          |
+   +----[SHA256]-----+
+   ```
 
-     最后看到类似如下的输出，就表示成功生成SSH key了：
+2. 复制密钥
 
-     ```
-     Your identification has been saved in /home/Username/.ssh/id_rsa.
-     Your public key has been saved in /home/Username/.ssh/id_rsa.pub.
-     The key fingerprint is:
-     SHA256:RwvBINgH8CEt2KniltmykeyDsOseUYcwMzehFeyT86s emailnum@email.com
-     The key's randomart image is:
-     +---[RSA 2048]----+
-     | o+%OO+o.        |
-     |..=+%*+ ..       |
-     | ..+o+o.. .      |
-     |o.  o=.  o .     |
-     |o oolalala S o      |
-     | +.+.. . .       |
-     |. .o    .        |
-     |  . .  .         |
-     |   . E.          |
-     +----[SHA256]-----+
-     ```
+   密钥内容放在用户文件夹下的`.ssh/id_rsa.pub`文件中，可以打开文本编辑器进行复制；
 
-  2. 复制密钥
+   然后进入自己的github主页，依次点击：Settings->SSH and GPG keys->New SSH key按钮，Title随便输，然后在下面的文本框粘贴刚复制的内容，最后点击保存即可
 
-     密钥内容放在用户文件夹下的`.ssh/id_rsa.pub`文件中，可以打开文本编辑器进行复制；
+3. 测试SSH连接
 
-     然后进入自己的github主页，依次点击：Settings->SSH and GPG keys->New SSH key按钮，Title随便输，然后在下面的文本框粘贴刚复制的内容，最后点击保存即可
+   ```bash
+   ssh -T git@github.com
+   ```
 
-  3. 测试SSH连接
+   输出会首先询问是否确认连接，输入yes回车确认即可，最后会看到如下输出：
 
-     ```bash
-     ssh -T git@github.com
-     ```
+   ```
+   Hi You! You've successfully authenticated, but GitHub does not provide shell access.
+   ```
 
-     输出会首先询问是否确认连接，输入yes回车确认即可，最后会看到如下输出：
+<!-- endtab -->
 
-     ```
-     Hi You! You've successfully authenticated, but GitHub does not provide shell access.
-     ```
-
-- 其他配置项
+<!-- tab 其他配置 -->
 
 ```bash
 git config --global user.name "<你的用户名>"
@@ -233,29 +252,23 @@ git config --global user.email "<你的邮箱>"
 git config --global core.quotepath false		/* 解决中文路径显示乱码的问题 */
 ```
 
+<!-- endtab -->
 
-
-### 克隆
-
-之所以设置SSH key，就是为了这一步，SSH协议是git专用的协议，通过该协议克隆的仓库进行操作是不需要密码的。在克隆时可以在仓库首页的绿色按钮`CODE`的下拉框里找到对应的SSH的仓库地址，使用：
-
-```bash
-git clone git@github.com:UserName/Repository.git
-```
-
-即可使用SSH协议进行克隆
+{% endtabs %}
 
 
 
-## 3. vscode
+### 3. vscode
 
-### 下载
+{% tabs fastgithub %}
+
+<!-- tab 下载 -->
 
 直接在官网下载`.deb`文件：https://code.visualstudio.com/
 
+<!-- endtab -->
 
-
-### 安装
+<!-- tab 安装 -->
 
 通过下面的命令安装即可：
 
@@ -265,17 +278,23 @@ sudo dpkg -i <packagename>
 
 然后打开软件登陆同步配置即可
 
+<!-- endtab -->
+
+{% endtabs %}
 
 
-## 4. typora
 
-### 下载
+### 4. typora
+
+{% tabs fastgithub %}
+
+<!-- tab 下载 -->
 
 直接在官网下载`.deb`文件：https://typoraio.cn/#linux
 
+<!-- endtab -->
 
-
-### 安装
+<!-- tab 安装 -->
 
 通过下面的命令安装即可：
 
@@ -285,9 +304,13 @@ sudo dpkg -i <packagename>
 
 然后打开软件设置激活即可
 
+<!-- endtab -->
+
+{% endtabs %}
 
 
-## 5. gcc
+
+### 5. gcc
 
 直接通过下面的命令即可安装 gcc：
 
@@ -298,19 +321,11 @@ sudo apt install g++
 
 
 
-## 6. node
+### 6. node
 
-****
+{% tabs fastgithub %}
 
-> **2023.05.10 更新**：
->
-> 在 Ubuntu 上安装 node 实际上可以通过更简单的方式，即`sudo apt install nodejs`，但这样安装的 node 版本较低，所以一般选择通过二进制文件或者源码编译安装，而源码编译安装方法比较麻烦，所以最常用的方法就是使用二进制文件安装。
->
-> 在今天更新的时候，node 已经更新到了 18.16.0 版本。这个版本的安装步骤和下面的方法完全相同，但是 npm 安装的默认地址不一样了，在最开始写这篇文章时，npm 安装工具的默认地址在 `/usr/local`，这会产生权限问题。但 18.16.0 版本的默认安装地址改在了解压出来的目录下，虽然这样我们每一次安装新工具都要手动去添加一个软链，但是却不用操心权限的问题。
-
-****
-
-### 安装
+<!-- tab 安装 -->
 
 我们通过二进制文件安装：
 
@@ -350,29 +365,21 @@ npm -v
 
 如果正常显示版本号就表明成功了
 
+<!-- endtab -->
 
+<!-- tab npm换源 -->
 
-### npm换源
+由于原淘宝域名即将停止解析，所以将镜像源地址更新为如下：
 
-****
+```
+https://registry.npmmirror.com/
+```
 
->  **2023.05.10 更新**：
->
-> 由于原淘宝域名即将停止解析，所以将镜像源地址更新为如下：
->
-> ```
-> https://registry.npmmirror.com/
-> ```
->
-> 即应该通过下面这条命令更新软件源：
->
-> ```bash
-> npm config set registry https://registry.npmmirror.com/
-> ```
->
-> 之前的命令就不再使用了
+通过下面这条命令更新软件源：
 
-****
+```bash
+npm config set registry https://registry.npmmirror.com/
+```
 
 然后通过下面的方法来验证是否成功：
 
@@ -380,11 +387,9 @@ npm -v
 npm config get registry
 ```
 
+<!-- endtab -->
 
-
-### npm安装位置权限问题
-
-> **注意**：我使用的是修改默认全局安装路径的权限的方法，介意的可以使用其他方法
+<!-- tab 安装测试 -->
 
 首先我们查看一下npm的默认安装位置：
 
@@ -392,38 +397,33 @@ npm config get registry
 npm config get prefix
 ```
 
-对于大多数系统显示目录为：`/usr/local`，如果显示为`/usr`请使用其他方法
+> 一般来说，18.16版本之后的 node 的默认安装位置应该都是在你解压出来的目录下，以前在一个系统目录下，会产生权限问题，现在则没有这个问题了，只不过我们在安装完后需要自行添加软链，否则无法直接使用命令。
 
-然后修改路径权限：
-
-```bash
-sudo chown -R $(whoami) $(npm config get prefix)
-```
-
-或者
-
-```bash
-sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
-```
-
-即可
-
-
-
-### 测试
-
-安装软件来测试一下权限问题是否得到解决：
+安装hexo测试：
 
 ```bash
 npm install hexo-cli -g
-npm install docsify-cli -g
 ```
 
+如果我的 node 文件夹在`/opt`目录下，则它会安装到`/opt/node/lib/node_modules/hexo-cli/bin/`下面，我们像下面这样添加软链即可：
+
+```bash
+ln -s /opt/node/lib/node_modules/hexo-cli/bin/hexo /usr/local/bin/
+```
+
+需要注意的是，添加软链时地址一定是绝对地址，不要填成了相对地址。
+
+<!-- endtab -->
+
+{% endtabs %}
 
 
-## 7. JetBrains
 
-### 下载
+### 7. JetBrains
+
+{% tabs fastgithub %}
+
+<!-- tab 下载 -->
 
 主要有两种下载安装方法，对于只需要 JB 中的某一个软件的用户来说，直接去相应软件的下载页面下载即可，这里不进行详述。
 
@@ -435,7 +435,7 @@ npm install docsify-cli -g
 
 在等待下载的这一段时间里，我们可以点击下载按钮下方的 **系统要求**，来查看在安装之前需要做的准备：
 
-![01](images/Ubuntu基本配置/01.png)
+![01](/images/Ubuntu基本配置/01.png)
 
 可以看到，在 Linux 环境下，我们还需要下载一些软件包才能正常使用 ToolBox
 
@@ -445,9 +445,9 @@ npm install docsify-cli -g
 sudo apt install libfuse2 libxi6 libxrender1 libxtst6 mesa-utils libfontconfig libgtk-3-bin
 ```
 
+<!-- endtab -->
 
-
-### 安装
+<!-- tab 安装 -->
 
 下载好 ToolBox 的安装包文件之后，输入下面的命令解压缩即可：
 
@@ -463,13 +463,17 @@ tar -xvf <package-name>
 
 如果能够看到下面的界面，就说明安装成功了：
 
-![02](images/Ubuntu基本配置/02.png)
+![02](/images/Ubuntu基本配置/02.png)
 
 然后就可以在 ToolBox 里安装需要的软件了。
 
+<!-- endtab -->
+
+{% endtabs %}
 
 
-## 8. Chrome
+
+### 8. Chrome
 
 首先移动到安装 Chrome 的目录，然后执行下面的命令下载最新的`.deb`软件包：
 
@@ -485,55 +489,9 @@ sudo apt install ./google-chrome-stable_current_amd64.deb
 
 
 
-## 9. Clash For Windows
+## 五、 外观
 
-安装完 Chrome 之后，同步书签是个问题，我尝试了很多办法，就这个办法最简单且好用。
-
-首先我们需要一个可订阅的代理服务器，这里我选择的是 WestWorld，连接比较稳定快速，最重要的是经常可以白嫖，同时还有各个平台的客户端应用，哪怕买了套餐也不用担心只在 Linux 上可用。
-
-WestWorld 的官网是： https://xbsj5632.website/
-
-具体的使用方法就不多介绍了。
-
-由于基本上这些软件都不会提供 Linux 的客户端，所以我们需要一个代理工具，用于将我们自己的电脑和 VPN 提供的服务器连接起来。
-
-首先是下载页面： https://github.com/Fndroid/clash_for_windows_pkg/releases
-
-![03](images/Ubuntu基本配置/03.png)
-
-我们选择 `*-x64-linux.tar.gz` 版本下载即可。
-
-下载完成后将该压缩包解压，直接执行解压后文件夹中的 `cfw` 程序，会打开一个窗口：
-
-![04](images/Ubuntu基本配置/04.png)
-
-这个软件就安装成功了，后面我们需要用到这里的 Port 值 7890
-
-接下来我们打开 WestWorld 官网，进入到 “客户端下载” 页面，然后选择 “Linux” 选项，可以看到最顶部有两个链接，一个 “Clash订阅链接”，一个 “Trojan订阅链接”，我们选择 “Clash订阅链接” 复制后面的链接。
-
-然后我们打开 Clash for Windows 的这个页面：
-
-![05](images/Ubuntu基本配置/05.png)
-
-在上面的输入框输入我们刚保存的链接，然后 Download 即可。
-
-接下来可以看到我们的结点变多了：
-
-![06](images/Ubuntu基本配置/06.png)
-
-直接选择合适的结点连接即可。
-
-最后，需要修改系统的代理，首先打开网络设置，点击代理后面的按钮，像下面这样输入：
-
-![07](images/Ubuntu基本配置/07.png)
-
-接下来就可以正常使用 google 了，需要注意的是，如果不需要代理了，那么在关闭了 cfw 之后，需要将网络代理调回 禁用，否则将无法正常联网。
-
-
-
-# 五. 外观
-
-## 1. 缩放与字体大小
+### 1. 缩放与字体大小
 
 和 Windows 的全局缩放相比，Ubuntu 的全局缩放基本上是用不了的，即使只是 125%，也看起来很模糊，所以对于小屏幕（如我的笔记本只有 14 英寸）来说，改变观感的方法只能从各个软件入手。以下设置完全以我的屏幕大小为参考：
 
@@ -550,8 +508,6 @@ WestWorld 的官网是： https://xbsj5632.website/
 - 第二项设置将上一项设置加入默认同步设置项中（第一项设置默认不同步，如果再次安装需要重新设置）
 - 更换大屏显示器后将上述两项注释掉即可
 
-
-
 **typora**：直接在 **偏好设置-外观** 设置中调整自己需要的字体大小即可，更换大屏显示器后将字体调回原本大小或者直接使用自动大小即可。
 
 **火狐浏览器**：将默认缩放大小设置为 120% 或 133%（或者自己需要的大小）即可，更换大屏显示器后将设置调回 100%
@@ -560,7 +516,7 @@ WestWorld 的官网是： https://xbsj5632.website/
 
 
 
-## 2. 字体
+### 2. 安装字体
 
 一般的设置按照自己的喜好自行设置即可。这里主要介绍一个操作：添加字体。主要是因为我写代码比较喜欢 Consolas 字体，但是 Ubuntu 里没有这个字体。
 
@@ -590,9 +546,9 @@ sudo mkfontscale && sudo mkfontdir && sudo fc-cache -fv
 
 
 
-# 六. 其他配置
+## 六、 其他配置
 
-## 1. 禁用电脑自带键盘
+### 1. 禁用电脑自带键盘
 
 由于为了节省空间，我常常需要把外接键盘放在笔记本上，但是很容易造成误触，所以需要将电脑自带键盘进行禁用，具体方法如下：
 
@@ -659,7 +615,7 @@ sudo vim ~/.bashrc
 
 添加高亮的两行即可：
 
-![08](images/Ubuntu基本配置/08.png)
+![08](/images/Ubuntu基本配置/08.png)
 
 具体内容是：
 
@@ -672,3 +628,4 @@ xinput set-prop "AT Translated Set 2 keyboard" "Device Enabled" 0
 
 接下来重启一下试试吧。
 
+****
