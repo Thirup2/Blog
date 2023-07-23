@@ -2,14 +2,15 @@
 title: Ubuntu基本配置
 date: 2022-12-01 00:00:00
 tags:
-- 系统
-- 教程
+  - 系统
+  - 教程
 categories:
-- Linux
-- Ubuntu
+  - Linux
+  - Ubuntu
 description: Ubuntu从安装到配置，基本Linux开发环境的搭建
 top_img: /img/cover/material-1.webp
 cover: /img/cover/material-1.webp
+abbrlink: c7af8c65
 ---
 
 ## 一、 准备

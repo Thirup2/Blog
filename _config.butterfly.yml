@@ -3,21 +3,24 @@
 # --------------------------------------
 
 nav:
-  logo: /img/logo/icon.png
+  logo: /img/avatar/circle.png
   display_title: true
   fixed: false # fixed navigation bar
 
 # Menu 目錄
 menu:
   首页: / || fas fa-home
-  时间轴: /archives/ || fas fa-archive
-  标签: /tags/ || fas fa-tags
-  分类: /categories/ || fas fa-folder-open
-  喜欢||fas fa-list:
+  文章||fa-solid fa-newspaper:
+    时间轴: /archives/ || fa-solid fa-timeline
+    标签: /tags/ || fas fa-tags
+    分类: /categories/ || fas fa-folder-open
+  喜欢||fa-solid fa-heart:
     音乐: /music/ || fas fa-music
-    电影: /movies/ || fas fa-video
+    小说: /novel/ || fa-solid fa-book
+    动漫: /anime/ || fa-solid fa-dragon
+  图库: /gallery/ || fa-solid fa-image
   友链: /link/ || fas fa-link
-  关于: /about/ || fas fa-heart
+  关于: /about/ || fa-solid fa-circle-info
 
 # Code Blocks (代碼相關)
 # --------------------------------------
@@ -33,18 +36,20 @@ code_word_wrap: false
 # formal:
 #   icon: link || the description || color
 social:
-  fab fa-github: https://github.com/Thirup2 || Github || '#24292e'
-  fas fa-envelope: mailto:admin@syunn.cn || Email || '#4a7dbe'
+  fas fa-envelope: mailto:246946332@qq.com || Email || '#ffa500'
+  fa-brands fa-qq: /img/qrcode/QQ.png || QQ || '#00bfff'
+  fa-brands fa-weixin: /img/qrcode/WeChat.png || WeChat || '#1ddb3d'
+  fa-brands fa-telegram: https://t.me/SyunnT || Telegram || '#87ceeb'
 
 # Image (圖片設置)
 # --------------------------------------
 
 # Favicon（網站圖標）
-favicon: /img/logo/icon.png
+favicon: /img/avatar/circle.png
 
 # Avatar (頭像)
 avatar:
-  img: /img/headcut/main.png
+  img: /img/avatar/circle.png
   effect: false
 
 # Disable all banner image
@@ -57,11 +62,11 @@ index_img: /img/background/bg1.jpg
 default_top_img:
 
 # The banner image of archive page
-archive_img:
+archive_img: /img/pages/timeline.jpg
 
 # If the banner of tag page not setting, it will show the top_img
 # note: tag page, not tags page (子標籤頁面的 top_img)
-tag_img:
+tag_img: /img/pages/tags.jpg
 
 # The banner image of tag page
 # format:
@@ -70,7 +75,7 @@ tag_per_img:
 
 # If the banner of category page not setting, it will show the top_img
 # note: category page, not categories page (子分類頁面的 top_img)
-category_img:
+category_img: /img/pages/categories.jpg
 
 # The banner image of category page
 # format:
@@ -150,7 +155,7 @@ toc:
   post: true
   page: false
   number: false
-  expand: true
+  expand: false
   style_simple: true # for post
   scroll_percent: true
 
@@ -234,14 +239,14 @@ aside:
       link: https://github.com/Thirup2
   card_announcement:
     enable: true
-    content: This is my Blog
+    content: 欢迎来到瞬のブログ，希望你能在这里找到对你有用的内容！<br />小站目前搭建在Github Page上，国内访问速度可能较慢，请谅解。<br /><br />在[<a href="/about/">关于</a>]页你可以看到关于作者、关于本站的相关内容；<br />在[<a href="/link/">友链</a>]页可以申请添加友情链接；<br /><br />点击右下角的设置按钮可以进行深浅色模式切换以及其他功能。
   card_recent_post:
     enable: false
     limit: 5 # if set 0 will show all
     sort: date # date or updated
     sort_order: # Don't modify the setting unless you know how it works
   card_categories:
-    enable: true
+    enable: false
     limit: 8 # if set 0 will show all
     expand: none # none/true/false
     sort_order: # Don't modify the setting unless you know how it works
@@ -253,7 +258,7 @@ aside:
     order: 1 # Sort of order. 1, asc for ascending; -1, desc for descending
     sort_order: # Don't modify the setting unless you know how it works
   card_archives:
-    enable: true
+    enable: false
     type: monthly # yearly or monthly
     format: MMMM YYYY # eg: YYYY年MM月
     order: -1 # Sort of order. 1, asc for ascending; -1, desc for descending
@@ -269,7 +274,7 @@ aside:
 # 訪問人數
 busuanzi:
   site_uv: true
-  site_pv: true
+  site_pv: false
   page_pv: true
 
 # Time difference between publish date and now (網頁運行時間)
@@ -405,7 +410,7 @@ addtoany:
 comments:
   # Up to two comments system, the first will be shown as default
   # Choose: Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo/Giscus/Remark42/Artalk
-  use: Valine,Gitalk # Valine,Disqus
+  use: Artalk,Gitalk # Valine,Disqus
   text: true # Display the comment name next to the button
   # lazyload: The comment system will be load when comment element enters the browser's viewport.
   # If you set it to true, the comment count will be invalid
@@ -445,10 +450,10 @@ gitalk:
 # valine
 # https://valine.js.org
 valine:
-  appId: FuhSApTbboDBB5LwPaKUE3fL-MdYXbMMI # leancloud application app id
-  appKey: 9a1FS7yz1OAhWUGqKyp0jQWm # leancloud application app key
+  appId: # leancloud application app id
+  appKey: # leancloud application app key
   avatar: monsterid # gravatar style https://valine.js.org/#/avatar
-  serverURLs: https://fuhsaptb.api.lncldglobal.com # This configuration is suitable for domestic custom domain name users, overseas version will be automatically detected (no need to manually fill in)
+  serverURLs: # This configuration is suitable for domestic custom domain name users, overseas version will be automatically detected (no need to manually fill in)
   bg: # valine background
   visitor: false
   option:
@@ -509,8 +514,8 @@ remark42:
 # Artalk
 # https://artalk.js.org/guide/frontend/config.html
 artalk:
-  server:
-  site:
+  server: 'https://8.130.120.163:23366'
+  site: '瞬のブログ'
   visitor: false
   option:
 
@@ -640,7 +645,7 @@ tag_ui: # 留空或 index
 # Website Background (設置網站背景)
 # can set it to color or image (可設置圖片 或者 顔色)
 # The formal of image: url(http://xxxxxx.com/xxx.jpg)
-background: # url(/img/background/bg1.jpg)
+background: url(/img/background/bg1.jpg)
 
 # Footer Background
 footer_bg: /img/background/bg4.jpg
@@ -670,7 +675,7 @@ activate_power_mode:
 # canvas_ribbon (靜止彩帶背景)
 # See: https://github.com/hustcc/ribbon.js
 canvas_ribbon:
-  enable: true
+  enable: false
   size: 150
   alpha: 0.6
   zIndex: -1
@@ -773,7 +778,7 @@ subtitle:
 
 # Loading Animation (加載動畫)
 preloader:
-  enable: true
+  enable: false
   # source
   # 1. fullpage-loading
   # 2. pace (progress bar)
@@ -947,7 +952,7 @@ CDN:
     # docsearch_js:
     # docsearch_css:
     # pjax:
-    # gitalk:
+    gitalk: /js/gitalk/gitalk.min.js
     # gitalk_css:
     # blueimp_md5:
     # valine:

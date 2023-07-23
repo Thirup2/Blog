@@ -1,16 +1,17 @@
 ---
 title: CLion入门
-date: 2023-1-31 00:00:00
+date: 2023-01-31 00:00:00
 tags:
-- 教程
-- CLion
-- CMake
+  - 教程
+  - CLion
+  - CMake
 categories:
-- C/C++
-- 工具
+  - C/C++
+  - 工具
 description: 介绍CLion集成开发环境的基本使用方法与CMake高级构建工具的入门
 top_img: /img/cover/material-2.webp
 cover: /img/cover/material-2.webp
+abbrlink: 872d1bb0
 ---
 
 ## 一、 CMake

@@ -2,14 +2,15 @@
 title: Windows环境程序乱码问题
 date: 2023-07-18 00:00:00
 tags:
-- 问题
-- 系统
+  - 问题
+  - 系统
 categories:
-- Windows
-- 字符集
+  - Windows
+  - 字符集
 description: 主要关于Windows环境下编程乱码问题的讨论，以及已知解决方案与测试
 top_img: /img/cover/material-5.webp
 cover: /img/cover/material-5.webp
+abbrlink: b8fb1066
 ---
 
 ## 一、 前言

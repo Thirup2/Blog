@@ -14,6 +14,7 @@
   "dependencies": {
     "@renbaoshuo/markdown-it-katex": "^2.0.2",
     "hexo": "^6.3.0",
+    "hexo-abbrlink": "^2.2.1",
     "hexo-deployer-git": "^4.0.0",
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-category": "^2.0.0",
@@ -21,8 +22,6 @@
     "hexo-generator-search": "^2.4.3",
     "hexo-generator-searchdb": "^1.4.1",
     "hexo-generator-tag": "^2.0.0",
-    "hexo-helper-live2d": "^3.1.1",
-    "hexo-helper-qrcode": "^1.0.2",
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-markdown-it": "^7.1.0",
     "hexo-renderer-pug": "^3.0.0",
@@ -30,7 +29,6 @@
     "hexo-server": "^3.0.0",
     "hexo-theme-landscape": "^1.0.0",
     "hexo-wordcount": "^6.0.1",
-    "katex": "^0.16.8",
-    "live2d-widget-model-koharu": "^1.0.5"
+    "katex": "^0.16.8"
   }
 }
