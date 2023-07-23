@@ -5,6 +5,6 @@ type: "about"
 description:
 keywords:
 comments: false
-top_img: /img/pages/about.jpg
+top_img:  /img/pages/about.jpg
 aside: true
 ---

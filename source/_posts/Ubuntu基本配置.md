@@ -8,8 +8,8 @@ categories:
   - Linux
   - Ubuntu
 description: Ubuntu从安装到配置，基本Linux开发环境的搭建
-top_img: /img/cover/material-1.webp
-cover: /img/cover/material-1.webp
+top_img:  /img/cover/material-1.webp
+cover:  /img/cover/material-1.webp
 abbrlink: c7af8c65
 ---
 
@@ -436,7 +436,7 @@ ln -s /opt/node/lib/node_modules/hexo-cli/bin/hexo /usr/local/bin/
 
 在等待下载的这一段时间里，我们可以点击下载按钮下方的 **系统要求**，来查看在安装之前需要做的准备：
 
-![01](/images/Ubuntu基本配置/01.png)
+![01]( /images/Ubuntu基本配置/01.png)
 
 可以看到，在 Linux 环境下，我们还需要下载一些软件包才能正常使用 ToolBox
 
@@ -464,7 +464,7 @@ tar -xvf <package-name>
 
 如果能够看到下面的界面，就说明安装成功了：
 
-![02](/images/Ubuntu基本配置/02.png)
+![02]( /images/Ubuntu基本配置/02.png)
 
 然后就可以在 ToolBox 里安装需要的软件了。
 
@@ -616,7 +616,7 @@ sudo vim ~/.bashrc
 
 添加高亮的两行即可：
 
-![08](/images/Ubuntu基本配置/08.png)
+![08]( /images/Ubuntu基本配置/08.png)
 
 具体内容是：
 

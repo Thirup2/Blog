@@ -8,8 +8,8 @@ categories:
   - Windows
   - 字符集
 description: 主要关于Windows环境下编程乱码问题的讨论，以及已知解决方案与测试
-top_img: /img/cover/material-5.webp
-cover: /img/cover/material-5.webp
+top_img:  /img/cover/material-5.webp
+cover:  /img/cover/material-5.webp
 abbrlink: b8fb1066
 ---
 
@@ -71,11 +71,11 @@ int main(void)
 
 这是Visual Studio配套的一个编译器，如果不做任何修改，它的一个编译过程如下：
 
-![01](/images/Windows环境程序乱码问题/01.jpg)
+![01]( /images/Windows环境程序乱码问题/01.jpg)
 
 其运行结果如下：
 
-![02](/images/Windows环境程序乱码问题/02.png)
+![02]( /images/Windows环境程序乱码问题/02.png)
 
 所以在默认情况下，我们使用Visual Studio生成的程序可以完美地在自己的机器上执行。但由于其产生的目标程序使用GBK编码，而我们并不希望如此。
 
@@ -85,11 +85,11 @@ int main(void)
 
 除了MSVC是默认使用GBK编码源文件之外，其他编译器基本上都是使用的UTF-8编码，不一定是GCC，但它比较有代表性，其典型过程如下图所示：
 
-![03](/images/Windows环境程序乱码问题/03.jpg)
+![03]( /images/Windows环境程序乱码问题/03.jpg)
 
 其运行结果如下：
 
-![04](/images/Windows环境程序乱码问题/04.png)
+![04]( /images/Windows环境程序乱码问题/04.png)
 
 
 
@@ -144,7 +144,7 @@ int main(void)
 
 测试结果如下：
 
-![05](/images/Windows环境程序乱码问题/05.png)
+![05]( /images/Windows环境程序乱码问题/05.png)
 
 可以看到，其输出结果和GCC过程相同了。
 
@@ -449,7 +449,7 @@ int main(void)
 
 它的具体过程如下所示：
 
-![06](/images/Windows环境程序乱码问题/06.jpg)
+![06]( /images/Windows环境程序乱码问题/06.jpg)
 
 还是简单做了个测试，过程如下：
 

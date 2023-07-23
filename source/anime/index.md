@@ -5,6 +5,6 @@ type:
 description:
 keywords:
 comments: false
-top_img: /img/pages/anime.jpg
+top_img:  /img/pages/anime.jpg
 aside: true
 ---

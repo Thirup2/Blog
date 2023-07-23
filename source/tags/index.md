@@ -7,6 +7,6 @@ order: 1
 description:
 keywords:
 comments: false
-top_img: /img/pages/tags.jpg
+top_img:  /img/pages/tags.jpg
 aside: true
 ---

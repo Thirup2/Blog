@@ -5,6 +5,6 @@ type: "categories"
 description:
 keywords:
 comments: false
-top_img: /img/pages/categories.jpg
+top_img:  /img/pages/categories.jpg
 aside: true
 ---

@@ -3,7 +3,7 @@
 # --------------------------------------
 
 nav:
-  logo: /img/avatar/circle.png
+  logo:  /img/avatar/circle.png
   display_title: true
   fixed: false # fixed navigation bar
 
@@ -19,7 +19,7 @@ menu:
     小说: /novel/ || fa-solid fa-book
     动漫: /anime/ || fa-solid fa-dragon
   图库: /gallery/ || fa-solid fa-image
-  友链: /link/ || fas fa-link
+  友人帐: /link/ || fas fa-link
   关于: /about/ || fa-solid fa-circle-info
 
 # Code Blocks (代碼相關)
@@ -37,36 +37,36 @@ code_word_wrap: false
 #   icon: link || the description || color
 social:
   fas fa-envelope: mailto:246946332@qq.com || Email || '#ffa500'
-  fa-brands fa-qq: /img/qrcode/QQ.png || QQ || '#00bfff'
-  fa-brands fa-weixin: /img/qrcode/WeChat.png || WeChat || '#1ddb3d'
+  fa-brands fa-qq:  /img/qrcode/QQ.png || QQ || '#00bfff'
+  fa-brands fa-weixin:  /img/qrcode/WeChat.png || WeChat || '#1ddb3d'
   fa-brands fa-telegram: https://t.me/SyunnT || Telegram || '#87ceeb'
 
 # Image (圖片設置)
 # --------------------------------------
 
 # Favicon（網站圖標）
-favicon: /img/avatar/circle.png
+favicon:  /img/avatar/circle.png
 
 # Avatar (頭像)
 avatar:
-  img: /img/avatar/circle.png
+  img:  /img/avatar/circle.png
   effect: false
 
 # Disable all banner image
 disable_top_img: false
 
 # The banner image of home page
-index_img: /img/background/bg1.jpg
+index_img:  /img/background/bg1.jpg
 
 # If the banner of page not setting, it will show the top_img
 default_top_img:
 
 # The banner image of archive page
-archive_img: /img/pages/timeline.jpg
+archive_img:  /img/pages/timeline.jpg
 
 # If the banner of tag page not setting, it will show the top_img
 # note: tag page, not tags page (子標籤頁面的 top_img)
-tag_img: /img/pages/tags.jpg
+tag_img:  /img/pages/tags.jpg
 
 # The banner image of tag page
 # format:
@@ -75,7 +75,7 @@ tag_per_img:
 
 # If the banner of category page not setting, it will show the top_img
 # note: category page, not categories page (子分類頁面的 top_img)
-category_img: /img/pages/categories.jpg
+category_img:  /img/pages/categories.jpg
 
 # The banner image of category page
 # format:
@@ -97,7 +97,7 @@ cover:
 # Replace Broken Images (替換無法顯示的圖片)
 error_img:
   flink: /img/friend_404.gif
-  post_page: /img/404.jpg
+  post_page:  /img/404.jpg
 
 # A simple 404 page
 error_404:
@@ -648,7 +648,7 @@ tag_ui: # 留空或 index
 background: url(/img/background/bg1.jpg)
 
 # Footer Background
-footer_bg: /img/background/bg4.jpg
+footer_bg:  /img/background/bg4.jpg
 
 # Add mask to header or footer (为 header 或 footer 添加黑色半透遮罩)
 mask:
@@ -952,7 +952,7 @@ CDN:
     # docsearch_js:
     # docsearch_css:
     # pjax:
-    gitalk: /js/gitalk/gitalk.min.js
+    # gitalk:
     # gitalk_css:
     # blueimp_md5:
     # valine:

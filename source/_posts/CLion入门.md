@@ -9,8 +9,8 @@ categories:
   - C/C++
   - 工具
 description: 介绍CLion集成开发环境的基本使用方法与CMake高级构建工具的入门
-top_img: /img/cover/material-2.webp
-cover: /img/cover/material-2.webp
+top_img:  /img/cover/material-2.webp
+cover:  /img/cover/material-2.webp
 abbrlink: 872d1bb0
 ---
 
@@ -64,7 +64,7 @@ makefile是一种脚本文件，我们提前在这个文件里写好这个项目
 
 这四种工具在 CLion 中合称“工具链”，如下图所示：
 
-![图片](https://user-images.githubusercontent.com/91216205/215761590-61c03491-5f6a-4398-a323-19e17ece2bee.png)
+![01]( /images/CLion入门/01.png)
 
 需要注意的是在工具链的配置中最主要的工具实际上是：编译器、调试器和 CMake 这三项，而生成工具实际上在配置工具链这一步并非主要，之所以需要配置，是要确保你是否有这样的一种工具。同时之所以通过 CMake 能够生成符合我们当前环境的脚本文件就是由于这个工具链，因为在配置工具链时我们要保证每一个工具都存在且能够正常运行。
 
@@ -74,7 +74,7 @@ makefile是一种脚本文件，我们提前在这个文件里写好这个项目
 
 在配置好工具链后，我们就可以来配置 CMake 了，具体的配置项如下图所示：
 
-![图片](https://user-images.githubusercontent.com/91216205/215763448-232726dc-aa46-426b-b2ee-9c50c326d2f9.png)
+![02]( /images/CLion入门/02.png)
 
 其具体的配置项如下：
 
