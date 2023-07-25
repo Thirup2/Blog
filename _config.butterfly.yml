@@ -31,7 +31,7 @@ code_word_wrap: false
 # formal:
 #   icon: link || the description || color
 social:
-  fas fa-envelope: mailto:246946332@qq.com || Email || '#ffa500'
+  fas fa-envelope: mailto:admin@syunn.cn || Email || '#ffa500'
   fa-brands fa-qq:  /img/qrcode/QQ.png || QQ || '#00bfff'
   fa-brands fa-weixin:  /img/qrcode/WeChat.png || WeChat || '#1ddb3d'
   fa-brands fa-telegram: https://t.me/SyunnT || Telegram || '#87ceeb'
