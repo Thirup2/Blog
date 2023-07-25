@@ -14,11 +14,6 @@ menu:
     时间轴: /archives/ || fa-solid fa-timeline
     标签: /tags/ || fas fa-tags
     分类: /categories/ || fas fa-folder-open
-  喜欢||fa-solid fa-heart:
-    音乐: /music/ || fas fa-music
-    小说: /novel/ || fa-solid fa-book
-    动漫: /anime/ || fa-solid fa-dragon
-  图库: /gallery/ || fa-solid fa-image
   友人帐: /link/ || fas fa-link
   关于: /about/ || fa-solid fa-circle-info
 
@@ -931,7 +926,7 @@ CDN:
   # The CDN provider of third party scripts (第三方 js 的 cdn 配置)
   # option: local/jsdelivr/unpkg/cdnjs/custom
   # when set it to local, you need to install hexo-butterfly-extjs
-  third_party_provider: jsdelivr
+  third_party_provider: cdnjs
 
   # Add version number to url, true or false
   version: false
