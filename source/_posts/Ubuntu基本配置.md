@@ -1,9 +1,12 @@
 ---
 title: Ubuntu基本配置
 date: 2022-12-01 00:00:00
+updated: 2023-07-20 00:00:00
 tags:
   - 系统
   - 教程
+  - Linux
+  - Ubuntu
 categories:
   - Linux
   - Ubuntu

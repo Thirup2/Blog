@@ -1,9 +1,11 @@
 ---
 title: Windows环境程序乱码问题
 date: 2023-07-18 00:00:00
+updated: 2023-07-20 00:00:00
 tags:
-  - 问题
   - 系统
+  - Windows
+  - 字符集
 categories:
   - Windows
   - 字符集

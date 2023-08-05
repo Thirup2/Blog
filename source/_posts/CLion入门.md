@@ -1,10 +1,12 @@
 ---
 title: CLion入门
 date: 2023-01-31 00:00:00
+updated: 2023-07-20 00:00:00
 tags:
   - 教程
   - CLion
   - CMake
+  - C/C++
 categories:
   - C/C++
   - 工具
