@@ -133,6 +133,13 @@ abbrlink:
   auto_data: false
   force: false
 
+# hexo-generator-sitemap
+sitemap:
+  path: sitemap.xml
+  rel: true
+  tags: true
+  categories: true
+
 
 # live2d
 # live2d:
