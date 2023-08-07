@@ -1,36 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>CMake入门</title>
-    <url>//posts/557a8896/</url>
-    <content><![CDATA[<h2 id="一、为什么需要-CMake">一、为什么需要 CMake</h2>
-<p>实际上这个问题在我的另一篇文章（<a href="https://blog.syunn.cn/posts/872d1bb0/#%E4%B8%80%E3%80%81-CMake">CLion入门</a>）里也写到过，这里再简单说一下。</p>
-<p>当我们需要编译的程序就只有几个甚至只有 1 个的时候，你肯定不会想去写 CMake 或是 Makefile，因为它们至少都要写几排，而使用 gcc 命令短短的一行就可以直接搞定了。</p>
-<p>而当我们的代码逐渐多起来了之后，特别是当整个项目里又有几个子项目的那种，比如一个项目包含几个动态库模块，然后主项目需要使用到这几个动态库模块的情况。在这种情况下，我们如果还是使用 gcc 来编译项目，那么可能就得先依次使用好几个 gcc 命令来编译这整个项目。如果我们的项目还在测试阶段，那每次修改了代码，每次都得在终端输入这些命令，很麻烦而且易出错。解决这个问题的办法有两个，其中之一就是 Makefile。</p>
-<p>这是一种脚本文件，大概的用法就是你在里面写上编译这个项目需要的命令，然后每次编译的时候，使用 make 工具执行一下该文件就可以了（当然，实际的 Makefile 文件需要按照规范写，不只是写上命令），这样我们是不是又回到了只用一行命令就可以解决的情况了呢。</p>
-<p>然而，即便如此，依然还是存在问题，也就是跨平台的问题。首先如果你在 Linux 上编写 Makefile 文件并测试，或许这个 Makefile 并不适合在 Windows 上进行使用。比如我刚开始学习 Makefile 的时候就遇到过，我在 Linux 上写的一个 Makefile 的删除文件命令使用了 rm 指令，但是在 Windows 的 cmd 环境下，删除文件应该使用 del 命令，而且各种命令的参数还不一样。与之类似的区别还有编译器命令的区别等等。虽然 Makefile 也有办法可以做到跨平台，但是会需要做比较多的工作，而 CMake 就是简化这样一种工作的工具。</p>
-<h2 id="二、什么是-CMake">二、什么是 CMake</h2>
-<p>CMake 是 Makefile 这类工具的上层抽象，Makefile 文件里的内容就是用于描述编译该项目的具体过程的，而 CMake 的配置文件（叫做 CMakeLists.txt）里的内容就是描述该项目本身的，比如项目名字是什么，项目用到的 C/C++ 语言的标准是什么，你有哪些子项目，这些子项目分别叫什么名字，编译的先后顺序如何，编译需要的源文件、库文件等等。</p>
-<p>通过这样的抽象，我们往往就只需要编写这样一个 CMake 配置文件就可以全平台通用了，因为我们可以通过它来生成我们需要的构建脚本。比如在 Linux 下，我们对这 CMake 说：”我需要你根据我在 CMakeLists.txt 里的描述生成一个可以编译该项目的 Makefile 文件“，然后它就会给你生成一个 Makefile 文件，你通过这个文件就可以正确编译整个项目。如果你在 Windows 下，也可以让它生成一个 Visual Studio 项目进行编译，而用于生成这些构建脚本的 CMakeLists.txt 文件都是相同的。</p>
-<p>以上是从其用途解释了一下 CMake，下面是 CMake 官方的描述：</p>
-<blockquote>
-<p>CMake is an open-source, cross-platform family of tools designed to build, test and package software. CMake is used to control the software compilation process using simple platform and compiler independent configuration files, and generate native makefiles and workspaces that can be used in the compiler environment of your choice. The suite of CMake tools were created by Kitware in response to the need for a powerful, cross-platform build environment for open-source projects such as ITK and VTK.</p>
-<p><strong>ChatGPT 3.5 翻译</strong>：CMake是一个开源的、跨平台的工具系列，旨在构建、测试和打包软件。CMake被用于通过简单的平台和编译器无关的配置文件控制软件编译过程，并生成本地的makefile和工作空间，以便在您选择的编译器环境中使用。CMake工具套件是由Kitware创建的，以满足开源项目（如ITK和VTK）对强大的跨平台构建环境的需求。</p>
-</blockquote>
-<h2 id="三、使用方法">三、使用方法</h2>
-<hr>
-]]></content>
-      <categories>
-        <category>C/C++</category>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>教程</tag>
-        <tag>CMake</tag>
-        <tag>C/C++</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CLion入门</title>
     <url>//posts/872d1bb0/</url>
     <content><![CDATA[<h2 id="一、-CMake">一、 CMake</h2>
@@ -114,9 +84,291 @@
       </categories>
       <tags>
         <tag>教程</tag>
+        <tag>CLion</tag>
         <tag>CMake</tag>
         <tag>C/C++</tag>
-        <tag>CLion</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CMake入门</title>
+    <url>//posts/557a8896/</url>
+    <content><![CDATA[<h2 id="一、为什么需要-CMake">一、为什么需要 CMake</h2>
+<p>实际上这个问题在我的另一篇文章（<a href="https://blog.syunn.cn/posts/872d1bb0/#%E4%B8%80%E3%80%81-CMake">CLion入门</a>）里也写到过，这里再简单说一下。</p>
+<p>当我们需要编译的程序就只有几个甚至只有 1 个的时候，你肯定不会想去写 CMake 或是 Makefile，因为它们至少都要写几排，而使用 gcc 命令短短的一行就可以直接搞定了。</p>
+<p>而当我们的代码逐渐多起来了之后，特别是当整个项目里又有几个子项目的那种，比如一个项目包含几个动态库模块，然后主项目需要使用到这几个动态库模块的情况。在这种情况下，我们如果还是使用 gcc 来编译项目，那么可能就得先依次使用好几个 gcc 命令来编译这整个项目。如果我们的项目还在测试阶段，那每次修改了代码，每次都得在终端输入这些命令，很麻烦而且易出错。解决这个问题的办法有两个，其中之一就是 Makefile。</p>
+<p>这是一种脚本文件，大概的用法就是你在里面写上编译这个项目需要的命令，然后每次编译的时候，使用 make 工具执行一下该文件就可以了（当然，实际的 Makefile 文件需要按照规范写，不只是写上命令），这样我们是不是又回到了只用一行命令就可以解决的情况了呢。</p>
+<p>然而，即便如此，依然还是存在问题，也就是跨平台的问题。首先如果你在 Linux 上编写 Makefile 文件并测试，或许这个 Makefile 并不适合在 Windows 上进行使用。比如我刚开始学习 Makefile 的时候就遇到过，我在 Linux 上写的一个 Makefile 的删除文件命令使用了 rm 指令，但是在 Windows 的 cmd 环境下，删除文件应该使用 del 命令，而且各种命令的参数还不一样。与之类似的区别还有编译器命令的区别等等。虽然 Makefile 也有办法可以做到跨平台，但是会需要做比较多的工作，而 CMake 就是简化这样一种工作的工具。</p>
+<h2 id="二、什么是-CMake">二、什么是 CMake</h2>
+<p>CMake 是 Makefile 这类工具的上层抽象，Makefile 文件里的内容就是用于描述编译该项目的具体过程的，而 CMake 的配置文件（叫做 CMakeLists.txt）里的内容就是描述该项目本身的，比如项目名字是什么，项目用到的 C/C++ 语言的标准是什么，你有哪些子项目，这些子项目分别叫什么名字，编译的先后顺序如何，编译需要的源文件、库文件等等。</p>
+<p>通过这样的抽象，我们往往就只需要编写这样一个 CMake 配置文件就可以全平台通用了，因为我们可以通过它来生成我们需要的构建脚本。比如在 Linux 下，我们对这 CMake 说：”我需要你根据我在 CMakeLists.txt 里的描述生成一个可以编译该项目的 Makefile 文件“，然后它就会给你生成一个 Makefile 文件，你通过这个文件就可以正确编译整个项目。如果你在 Windows 下，也可以让它生成一个 Visual Studio 项目进行编译，而用于生成这些构建脚本的 CMakeLists.txt 文件都是相同的。</p>
+<p>以上是从其用途解释了一下 CMake，下面是 CMake 官方的描述：</p>
+<blockquote>
+<p>CMake is an open-source, cross-platform family of tools designed to build, test and package software. CMake is used to control the software compilation process using simple platform and compiler independent configuration files, and generate native makefiles and workspaces that can be used in the compiler environment of your choice. The suite of CMake tools were created by Kitware in response to the need for a powerful, cross-platform build environment for open-source projects such as ITK and VTK.</p>
+<p><strong>ChatGPT 3.5 翻译</strong>：CMake是一个开源的、跨平台的工具系列，旨在构建、测试和打包软件。CMake被用于通过简单的平台和编译器无关的配置文件控制软件编译过程，并生成本地的makefile和工作空间，以便在您选择的编译器环境中使用。CMake工具套件是由Kitware创建的，以满足开源项目（如ITK和VTK）对强大的跨平台构建环境的需求。</p>
+</blockquote>
+<h2 id="三、使用方法">三、使用方法</h2>
+<hr>
+]]></content>
+      <categories>
+        <category>C/C++</category>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>教程</tag>
+        <tag>CMake</tag>
+        <tag>C/C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ubuntu基本配置</title>
+    <url>//posts/c7af8c65/</url>
+    <content><![CDATA[<h2 id="一、-准备">一、 准备</h2>
+<h3 id="1-安装环境">1. 安装环境</h3>
+<p>系统：Ubuntu-22.04.1</p>
+<p>主机：Lenovo XiaoXinAir-14ARE 2020</p>
+<p>内存：16G</p>
+<p>处理器：AMD® Ryzen 5 4600u with radeon graphics × 12</p>
+<p>显卡：AMD® Renoir</p>
+<p>硬盘：512 GB</p>
+<h3 id="2-写在前面">2. 写在前面</h3>
+<p>本文仅作为物理机安装Ubuntu系统的参考，虚拟机大部分操作类似，但如果想安装虚拟机，请寻找更合适的文章。</p>
+<p>另外，本文很大程度上是为了帮助我自己重装系统，所以很多地方的特殊性会比较强，可能不适合其他的电脑，希望大家自己判断。</p>
+<p>最后，本文参考了很多的文章，但不打算列出，因为我基本上只从那些文章中抽取出了一小部分我需要的，然后组合成了这一篇文章（主要是因为参考的文章实在是太多了 -_-，然后在我安装的时候也没有记录那些文章，只记录了需要的操作，然后这篇文章又是后来写的，所以基本上很难去找了）</p>
+<h2 id="二、-安装Ubuntu">二、 安装Ubuntu</h2>
+<h3 id="1-下载ISO文件">1. 下载ISO文件</h3>
+<p>首先我们选择一个镜像源，我选择的是北京外国语大学的镜像：<a href="https://mirrors.bfsu.edu.cn/">https://mirrors.bfsu.edu.cn/</a></p>
+<p>然后找到我们要下载的文件，是<code>/ubuntu-releases/22.04.1/</code>这个目录下的<code>ubuntu-22.04.1-desktop-amd64.iso</code>，下载即可</p>
+<h3 id="2-制作启动U盘">2. 制作启动U盘</h3>
+<p>首先我们需要一个制作启动U盘的软件，是软碟通，通过这个链接可以下载：<a href="https://cn.ultraiso.net/xiazai.html">https://cn.ultraiso.net/xiazai.html</a></p>
+<p>具体的使用方法是：进入软件-&gt;打开下载的iso文件-&gt;点击“启动-写入硬盘映像”-&gt;选择用于制作启动盘的U盘-&gt;点击&quot;写入&quot;-&gt;等待完成即可</p>
+<h3 id="3-启动BIOS设置U盘启动">3. 启动BIOS设置U盘启动</h3>
+<p>各个电脑打开BIOS的操作可能不一样，总之这一步自己查询，进到BIOS里就行了。</p>
+<p>然后设置BIOS启动即可，由于各个电脑的BIOS界面可能也不同，所以就不详细介绍了，记录一下我自己的操作：直接从<code>Boot Menu</code>中选择U盘启动即可。</p>
+<h3 id="4-开始安装">4. 开始安装</h3>
+<p>安装的其他步骤都很简单，唯一需要介绍的一步是：分区操作</p>
+<p>首先我是想安装一个和Windows的双系统，先简单介绍一下需要分配的分区：</p>
+<ul>
+<li><code>\boot</code>：由于我只有一个物理硬盘，所以从硬盘里直接分出想要的空间大小即可（这一部分空间应该显示为未分配）。如果是多个物理硬盘，那么一定要从Windows系统盘所在的硬盘中分出一部分留给<code>\boot</code>分区，这个分区是放Ubuntu的启动程序分区，由于计算机在启动时只会在一个盘里查找启动程序，如果不在同一个硬盘存放启动程序，那么启动电脑时就只会启动Windows。<code>\boot</code>分区留个300M-500M就行了。（我直接在这个盘里分了200个G用作所有的空间）</li>
+<li><code>swap</code>：还有一个比较重要的分区是<code>swap</code>分区，它相当于是内存的缓冲，如果有固态硬盘，一般也用固态硬盘来分，主要是为了更快的速度。这一块的大小根据内存的大小决定，一般内存为8G及以下的，留内存的双倍即可；如果内存大于等于16G，那留与内存相同的空间即可。我留16G即可。</li>
+<li><code>\home</code>：该分区是放置用户文件的分区，主要根据自己的使用习惯分配即可。我一般不把安装的软件放在这个目录下，所以我留了30个G左右</li>
+<li><code>\</code>：根分区里放置了所有的文件，包括刚刚分配的<code>\home</code>分区，但是由于我们将<code>\home</code>分区单独挂载了，所以为根目录分配的空间将不包括<code>\home</code>的空间，但是逻辑上还是有<code>\home</code>分区的。我把剩下的150G左右都留给了根目录</li>
+</ul>
+<p>然后简单来说一下分区的方法吧：</p>
+<ul>
+<li>首先，我们在需要分区的安装步骤处，选择最后一项：自己分区</li>
+<li>如果是新配的电脑，还没安装任何系统的话，那么这个页面应该只列出了相应的设备，即硬盘。我们选择需要分配内存的硬盘，选择新建分区表即可，然后按照下面的步骤继续</li>
+<li>我们可以看到分区表里那一个或多个后面显示“空闲”的空间，我们可以通过前面的空间大小知道它是我们之前分出来用来作哪个分区的。我们选择相应的空间，点击左下角的<code>+</code>号，然后就会进入分配空间大小及分区挂载的界面</li>
+</ul>
+<p>接下来，我们就来说一下各个分区的具体配置吧：</p>
+<ul>
+<li><code>swap</code>：大小根据之前说的方法来选择；分区选择逻辑分区；挂载点里没有<code>swap</code>挂载点，这个在挂载点上面的“用于”的下拉框中选择“交换空间”即可</li>
+<li><code>\boot</code>：大小分配300-500M；分区选择逻辑分区；类型为<code>ext4</code>；挂载点里选择<code>\boot</code></li>
+<li><code>\</code>：大小自行分配（我是150G）；分区选择逻辑分区；类型为<code>ext4</code>；挂载点里选择<code>\</code></li>
+<li><code>\home</code>：大小自行分配（我是30G）；分区选择主分区；类型为<code>ext4</code>；挂载点里选择<code>\home</code></li>
+</ul>
+<p>最后，也是最重要的一步：</p>
+<p>首先，我们可以看到安装程序已经自动为我们选择的分区分配了设备名，我们找到刚刚<code>\boot</code>分区的设备名，然后<strong>在“安装启动引导器的设备”中选择刚刚<code>\boot</code>分区的设备名即可</strong>。</p>
+<p>点击“现在安装”，等待安装完成即可。</p>
+<h2 id="三、-换源">三、 换源</h2>
+<p>由于Ubuntu官方的源下载速度很慢，所以需要换源。</p>
+<p>首先，我们选择一个镜像源，我选择的还是北京外国语大学的镜像源：<a href="https://mirrors.bfsu.edu.cn/help/ubuntu/">https://mirrors.bfsu.edu.cn/help/ubuntu/</a></p>
+<p>打开这个页面就可以看到它提供的镜像源和替换方法，这里记录一下手动替换的操作：</p>
+<ul>
+<li>首先将原本的镜像源备份：<code>sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup</code></li>
+<li>通过<code>sudo gedit /etc/apt/sources.list</code>打开并编辑镜像源文件</li>
+<li>然后将该文件里原本的内容删除，然后将网页里的内容复制粘贴到该文件里，点击保存即可</li>
+</ul>
+<p>然后我们就可以进行更新操作了，执行下面两步操作：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
+<h2 id="四、-其他安装项（可选）">四、 其他安装项（可选）</h2>
+<h3 id="1-fastgithub">1. fastgithub</h3>
+<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">下载</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>下载地址：<a href="https://github.com/dotnetcore/FastGithub/releases/download/2.1.4/fastgithub_linux-x64.zip">https://github.com/dotnetcore/FastGithub/releases/download/2.1.4/fastgithub_linux-x64.zip</a></p>
+<p>如果下载速度慢，我们可以使用下面的网站提供的加速服务：<a href="https://ghproxy.com/">https://ghproxy.com/</a></p>
+<blockquote>
+<p>上面提供的下载地址为2.1.4版本，由于版本可能更新，可以通过下面的网址查看最新版本：<a href="https://github.com/dotnetcore/FastGithub/releases">https://github.com/dotnetcore/FastGithub/releases</a> ，根据自己的系统和架构选择应该下载的软件包即可。</p>
+</blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><ul>
+<li>
+<p>我们将下载下来的软件包解压，然后将其移动到<code>/opt</code>目录下，然后自己移动到<code>fastgithub</code>文件夹下</p>
+</li>
+<li>
+<p>首次运行一下该程序，生成证书</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ./fastgithub</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>可以看到证书已经生成了，我们先不管，先设置一下代理：打开网络设置，点击网络代理后面的设置按键，选择自动，然后在下面的框中输入：<a href="http://127.0.0.1:38457">http://127.0.0.1:38457</a> 即可</p>
+</li>
+<li>
+<p>我们将刚刚生成的证书文件移动到<code>/usr/local/share/ca-certificates</code>文件夹下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> cacert/fastgithub.crt /usr/local/share/ca-certificates</span><br></pre></td></tr></table></figure>
+<p>然后执行更新操作</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo update-ca-certificates</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>同时浏览器需要导入证书，具体操作步骤如下：打开浏览器-&gt;设置-&gt;隐私与安全-&gt;证书-&gt;查看证书-&gt;证书颁发机构，导入<code>cacert/fastgithub.crt</code>，勾选“信任由此证书颁发机构来标识网站“</p>
+</li>
+<li>
+<p>然后添加一个 git 全局配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.sslverify <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>最后将程序添加软链用来快捷打开：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">ln</span> -s /opt/&lt;fastgithub软件包&gt;/fastgithub /usr/local/bin</span><br></pre></td></tr></table></figure>
+</li>
+</ul><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h3 id="2-git">2. git</h3>
+<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">安装</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">添加SSH Key</button></li><li class="tab"><button type="button" data-href="#fastgithub-3">其他配置</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>执行下面的命令即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install git</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><ol>
+<li>
+<p>首先创建SSH密钥</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;&lt;你的用户名&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>接下来会有一些输出，主要是key的存放位置和密码设置，直接默认回车即可</p>
+<p>最后看到类似如下的输出，就表示成功生成SSH key了：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Your identification has been saved in /home/Username/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/Username/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:RwvBINgH8CEt2KniltmykeyDsOseUYcwMzehFeyT86s emailnum@email.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">| o+%OO+o.        |</span><br><span class="line">|..=+%*+ ..       |</span><br><span class="line">| ..+o+o.. .      |</span><br><span class="line">|o.  o=.  o .     |</span><br><span class="line">|o oolalala S o      |</span><br><span class="line">| +.+.. . .       |</span><br><span class="line">|. .o    .        |</span><br><span class="line">|  . .  .         |</span><br><span class="line">|   . E.          |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>复制密钥</p>
+<p>密钥内容放在用户文件夹下的<code>.ssh/id_rsa.pub</code>文件中，可以打开文本编辑器进行复制；</p>
+<p>然后进入自己的github主页，依次点击：Settings-&gt;SSH and GPG keys-&gt;New SSH key按钮，Title随便输，然后在下面的文本框粘贴刚复制的内容，最后点击保存即可</p>
+</li>
+<li>
+<p>测试SSH连接</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<p>输出会首先询问是否确认连接，输入yes回车确认即可，最后会看到如下输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Hi You! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+</li>
+</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-3"><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;&lt;你的用户名&gt;&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;&lt;你的邮箱&gt;&quot;</span></span><br><span class="line">git config --global core.quotepath <span class="literal">false</span>		/* 解决中文路径显示乱码的问题 */</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h3 id="3-vscode">3. vscode</h3>
+<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">下载</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>直接在官网下载<code>.deb</code>文件：<a href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><p>通过下面的命令安装即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dpkg -i &lt;packagename&gt;</span><br></pre></td></tr></table></figure>
+<p>然后打开软件登陆同步配置即可</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h3 id="4-typora">4. typora</h3>
+<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">下载</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>直接在官网下载<code>.deb</code>文件：<a href="https://typoraio.cn/#linux">https://typoraio.cn/#linux</a></p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><p>通过下面的命令安装即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dpkg -i &lt;packagename&gt;</span><br></pre></td></tr></table></figure>
+<p>然后打开软件设置激活即可</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h3 id="5-gcc">5. gcc</h3>
+<p>直接通过下面的命令即可安装 gcc：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc</span><br><span class="line">sudo apt install g++</span><br></pre></td></tr></table></figure>
+<h3 id="6-node">6. node</h3>
+<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">安装</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">npm换源</button></li><li class="tab"><button type="button" data-href="#fastgithub-3">安装测试</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>我们通过二进制文件安装：</p>
+<p>首先，我们去官网下载二进制文件：<a href="http://nodejs.cn/download/">http://nodejs.cn/download/</a> ，选择对应的系统和架构选择下载即可，下载下来是一个压缩包，我们首先解压缩：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar xf &lt;packagename&gt;</span><br></pre></td></tr></table></figure>
+<p>然后将解压后的包移动到<code>/opt</code>目录下</p>
+<p>首先运行一下程序：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./&lt;node_packagename&gt;/bin/node -v</span><br></pre></td></tr></table></figure>
+<p>我们可以看到以下输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">v16.18.1</span><br></pre></td></tr></table></figure>
+<p>接下来我们设置软链即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /opt/&lt;node_packagename&gt;/bin/npm /usr/local/bin/</span><br><span class="line"><span class="built_in">ln</span> -s /opt/&lt;node_packagename&gt;/bin/node /usr/local/bin/</span><br></pre></td></tr></table></figure>
+<p>安装就完成了，测试一下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+<p>如果正常显示版本号就表明成功了</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><p>由于原淘宝域名即将停止解析，所以将镜像源地址更新为如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure>
+<p>通过下面这条命令更新软件源：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure>
+<p>然后通过下面的方法来验证是否成功：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config get registry</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-3"><p>首先我们查看一下npm的默认安装位置：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config get prefix</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>一般来说，18.16版本之后的 node 的默认安装位置应该都是在你解压出来的目录下，以前在一个系统目录下，会产生权限问题，现在则没有这个问题了，只不过我们在安装完后需要自行添加软链，否则无法直接使用命令。</p>
+</blockquote>
+<p>安装hexo测试：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
+<p>如果我的 node 文件夹在<code>/opt</code>目录下，则它会安装到<code>/opt/node/lib/node_modules/hexo-cli/bin/</code>下面，我们像下面这样添加软链即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /opt/node/lib/node_modules/hexo-cli/bin/hexo /usr/local/bin/</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，添加软链时地址一定是绝对地址，不要填成了相对地址。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h3 id="7-JetBrains">7. JetBrains</h3>
+<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">下载</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>主要有两种下载安装方法，对于只需要 JB 中的某一个软件的用户来说，直接去相应软件的下载页面下载即可，这里不进行详述。</p>
+<p>对于需要多个 JB 软件的用户来说，可以先下载一个 JetBrains ToolBox ，然后在这个软件里下载需要的软件，同时该软件还可以对项目进行管理，非常方便，接下来简单说一下下载方法。</p>
+<p>首先直接前往软件的下载页面：<a href="https://www.jetbrains.com/zh-cn/toolbox-app/?_gl=1*1bx53n1*_ga*OTY4ODkxMTkxLjE2NzUwNzkwOTg.*_ga_9J976DJZ68*MTY3NTE2MjgxNy4yLjEuMTY3NTE2MjgzMy4wLjAuMA..&amp;_ga=2.17468218.2027988100.1675079099-968891191.1675079098">ToolBox App</a></p>
+<p>然后直接下载页面推荐的文件格式即可（我是 Ubuntu，所以选择 .tar.gz 格式的文件），点击下载即可</p>
+<p>在等待下载的这一段时间里，我们可以点击下载按钮下方的 <strong>系统要求</strong>，来查看在安装之前需要做的准备：</p>
+<p><img src="/images/Ubuntu%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/01.png" alt="01"></p>
+<p>可以看到，在 Linux 环境下，我们还需要下载一些软件包才能正常使用 ToolBox</p>
+<p>我们打开终端，输入以下命令即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install libfuse2 libxi6 libxrender1 libxtst6 mesa-utils libfontconfig libgtk-3-bin</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><p>下载好 ToolBox 的安装包文件之后，输入下面的命令解压缩即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar -xvf &lt;package-name&gt;</span><br></pre></td></tr></table></figure>
+<p>然后运行一下解压之后的文件夹里的可执行文件即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./jetbrains-toolbox</span><br></pre></td></tr></table></figure>
+<p>如果能够看到下面的界面，就说明安装成功了：</p>
+<p><img src="/images/Ubuntu%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/02.png" alt="02"></p>
+<p>然后就可以在 ToolBox 里安装需要的软件了。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h3 id="8-Chrome">8. Chrome</h3>
+<p>首先移动到安装 Chrome 的目录，然后执行下面的命令下载最新的<code>.deb</code>软件包：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb</span><br></pre></td></tr></table></figure>
+<p>然后执行下面的命令安装即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install ./google-chrome-stable_current_amd64.deb</span><br></pre></td></tr></table></figure>
+<h2 id="五、-外观">五、 外观</h2>
+<h3 id="1-缩放与字体大小">1. 缩放与字体大小</h3>
+<p>和 Windows 的全局缩放相比，Ubuntu 的全局缩放基本上是用不了的，即使只是 125%，也看起来很模糊，所以对于小屏幕（如我的笔记本只有 14 英寸）来说，改变观感的方法只能从各个软件入手。以下设置完全以我的屏幕大小为参考：</p>
+<p><strong>vscode</strong>：在设置文件中添加如下代码即可：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;window.zoomLevel&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;settingsSync.ignoredSettings&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;-window.zoomLevel&quot;</span></span><br><span class="line"><span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一项设置窗口的缩放等级，原始大小为 0（可根据实际需要进行缩放）</li>
+<li>第二项设置将上一项设置加入默认同步设置项中（第一项设置默认不同步，如果再次安装需要重新设置）</li>
+<li>更换大屏显示器后将上述两项注释掉即可</li>
+</ul>
+<p><strong>typora</strong>：直接在 <strong>偏好设置-外观</strong> 设置中调整自己需要的字体大小即可，更换大屏显示器后将字体调回原本大小或者直接使用自动大小即可。</p>
+<p><strong>火狐浏览器</strong>：将默认缩放大小设置为 120% 或 133%（或者自己需要的大小）即可，更换大屏显示器后将设置调回 100%</p>
+<p><strong>Chrome</strong>：与 “火狐浏览器” 操作相同</p>
+<h3 id="2-安装字体">2. 安装字体</h3>
+<p>一般的设置按照自己的喜好自行设置即可。这里主要介绍一个操作：添加字体。主要是因为我写代码比较喜欢 Consolas 字体，但是 Ubuntu 里没有这个字体。</p>
+<p>首先，我们需要下载需要的字体文件，一般是个压缩文件，我们将其解压即可；</p>
+<p>然后我们在下面的文件夹新建一个字体文件夹：<code>/usr/share/fonts</code></p>
+<p>然后将所有的<code>.ttf</code>文件移动到上一步自己新建的文件夹中即可。</p>
+<p>然后修改字体权限：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> 644 /usr/share/fonts/&lt;你刚才新建的文件夹&gt;/*.ttf</span><br></pre></td></tr></table></figure>
+<p>然后进入到字体目录：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/fonts/&lt;你刚才新建的文件夹&gt;/</span><br></pre></td></tr></table></figure>
+<p>刷新并安装字体：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkfontscale &amp;&amp; sudo mkfontdir &amp;&amp; sudo fc-cache -fv</span><br></pre></td></tr></table></figure>
+<h2 id="六、-其他配置">六、 其他配置</h2>
+<h3 id="1-禁用电脑自带键盘">1. 禁用电脑自带键盘</h3>
+<p>由于为了节省空间，我常常需要把外接键盘放在笔记本上，但是很容易造成误触，所以需要将电脑自带键盘进行禁用，具体方法如下：</p>
+<ul>
+<li>
+<p>首先打开终端，输入以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput list</span><br></pre></td></tr></table></figure>
+<p>如果没有 xinput 的话，按照指示安装即可</p>
+</li>
+<li>
+<p>在 Ubuntu 22 下，通常这个命令执行之后会有一条错误信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">WARNING: running xinput against an Xwayland server. See the xinput man page for details.</span><br></pre></td></tr></table></figure>
+<p>这是因为 Ubuntu 22 默认使用了 Wayland 模式，导致 /etc/X11/xorg.conf.d/40-libinput.conf 不起作用，在这种情况下我们是无法正常禁用设备的，而且它也并不会把电脑自带键盘列出来，我们需要修改一下 /etc/gdm3/custom.conf 这个文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/gdm3/custom.conf</span><br></pre></td></tr></table></figure>
+<p>可以先观察一下这个文件的内容，它的 WaylandEnable 这一项可能是 WaylandEnable=true 也可能直接注释掉了，如我的就是直接注释掉了，我们把该项前的注释符<code>#</code>删掉，然后确认一下 WaylandEnable 的值为 false 即可。</p>
+<p>最后重启一下电脑。</p>
+<p><strong>注意</strong>：不会使用 vim 编辑器的可以尝试使用 gedit，将上述命令中的 vim 替换为 gedit 即可，没有该软件的根据终端的提示进行安装。</p>
+</li>
+<li>
+<p>在排除了问题之后，我们再次打开终端输入 <code>xinput list</code> 命令，正常情况下，输出就应该像下面这样全部输入输出设备都列出来了：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sn@Program:~/桌面$ xinput list</span><br><span class="line">⎡ Virtual core pointer                    	id=2	[master pointer  (3)]</span><br><span class="line">⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ MSFT0004:00 06CB:CD98 Mouse             	id=16	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ MSFT0004:00 06CB:CD98 Touchpad          	id=17	[slave  pointer  (2)]</span><br><span class="line">⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]</span><br><span class="line">    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=6	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=7	[slave  keyboard (3)]</span><br><span class="line">    ↳ Integrated Camera: Integrated C         	id=12	[slave  keyboard (3)]</span><br><span class="line">    ↳ Ideapad extra buttons                   	id=15	[slave  keyboard (3)]</span><br><span class="line">    ↳ AT Translated Set 2 keyboard            	id=18	[slave  keyboard (3)]</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>我们首先找到电脑自带键盘，一般名称都是 “AT Translated Set 2 keyboard”，我们需要使用该项后面的 id 值，我这里是 18，然后输入下面的命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput set-prop 18 <span class="string">&quot;Device Enabled&quot;</span> 0</span><br></pre></td></tr></table></figure>
+<p>即可禁用电脑自带键盘，命令中的 18 替换成你要禁用的设备在你自己的电脑上的 id 值，然后最后的值为 0 即为禁用，值为 1 即为启用，如，启用该设备的命令为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput set-prop 18 <span class="string">&quot;Device Enabled&quot;</span> 1</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>另外，使用命令禁用键盘之后，只要重启电脑，又会自动启用。如果想永久禁用的话，就把命令写入到 bashrc：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>添加高亮的两行即可：</p>
+<p><img src="/images/Ubuntu%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/08.png" alt="08"></p>
+<p>具体内容是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 禁用电脑自带键盘</span></span><br><span class="line">xinput set-prop <span class="string">&quot;AT Translated Set 2 keyboard&quot;</span> <span class="string">&quot;Device Enabled&quot;</span> 0</span><br></pre></td></tr></table></figure>
+<p>这里使用设备的名称而不是用 id 值是因为 id 值可能发生变化。</p>
+<p>接下来重启一下试试吧。</p>
+<hr>
+]]></content>
+      <categories>
+        <category>Linux</category>
+        <category>Ubuntu</category>
+      </categories>
+      <tags>
+        <tag>教程</tag>
+        <tag>系统</tag>
+        <tag>Linux</tag>
+        <tag>Ubuntu</tag>
       </tags>
   </entry>
   <entry>
@@ -383,258 +635,6 @@
         <tag>系统</tag>
         <tag>Windows</tag>
         <tag>字符集</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>阿里云服务器网站搭建</title>
-    <url>//posts/149af73d/</url>
-    <content><![CDATA[<div class="note primary flat"><p>本教程基于LAMP结构搭建Web服务，且在本文中仅演示其中’L’（Linux）和’A’（Apache）的部分，也就是仅仅只是静态网站的搭建教程。</p>
-</div>
-<div class="note warning flat"><p>我所选择的用于演示的服务器是阿里云的一个 ECS 云服务器，地址在香港，所以不用备案域名就可以直接解析到该服务器；我所选择的服务器的系统是阿里巴巴针对云服务器所定制的一个 Linux 系统，版本号是：Alibaba Cloud Linux 3.2104 LTS 64位。如果你选用其他的系统，可能在下面介绍的一些细节的操作上存在一些区别，请自行判断。</p>
-</div>
-<div class="note info flat"><p>另外，由于这篇文章基本上是以我自己的几个网站作为案例写下来的，所以肯定不可能适合所有人，所以如果发现我的例子不太适合你的情况，如果不太确定自己应该怎么做，请一定去找更准确的教程。</p>
-</div>
-<hr>
-<h2 id="一、-前期准备">一、 前期准备</h2>
-<h3 id="1-添加-80-端口访问">1. 添加 80 端口访问</h3>
-<div class="note primary flat"><p>我所使用的这个系统默认是不开防火墙的，也就是从外部就可以访问服务器所有的端口，这样肯定是不安全的，阿里云用了另外一种方式来管理服务器的入流量的允许端口，也就是安全组。由于Web应用默认使用 80 端口，如果是https则默认使用 443 端口，所以如果要搭建Web应用，最好是开启这两个端口，如果开启其他端口，在访问时还需要在域名后指定端口号，访问比较麻烦。</p>
-</div>
-<ul>
-<li>
-<p>购买好服务器后，我们需要首先来到 <strong>ECS控制台</strong>的<strong>安全组部分</strong>：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/01.png" alt="01"></p>
-</li>
-<li>
-<p>我们点击红框标出来的<strong>配置规则</strong>，然后进入到下面的界面：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/02.png" alt="02"></p>
-</li>
-<li>
-<p>直接选择快速添加，将 80 端口添加即可。</p>
-</li>
-</ul>
-<h3 id="2-连接服务器">2. 连接服务器</h3>
-<p>要连接到阿里云的服务器有两种方法，一种是直接通过阿里云提供的网络工具连接，另一种是直接从系统使用 ssh 连接。</p>
-<div class="tabs" id="ssh_connect"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#ssh_connect-1">阿里云网络工具连接服务器</button></li><li class="tab"><button type="button" data-href="#ssh_connect-2">使用本地ssh连接到服务器</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="ssh_connect-1"><p>我们进入到 <strong>ECS控制台</strong> 并进入到实例管理页面，然后直接点击<strong>远程连接</strong>按钮即可：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/04.png" alt="04"></p>
-<p>在弹出的窗口里直接选择<strong>立即登录</strong>即可：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/05.png" alt="05"></p>
-<p>然后就可以输入密码登陆了。</p>
-<p>由于我的服务器地址在香港，本地 ssh 连接会容易断线，所以后续的演示我们将使用该方法连接服务器。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="ssh_connect-2"><p><strong>基本使用</strong>：</p>
-<p>现在不管是 Windows 还是 Linux 几乎都已经内置了 ssh 工具，可以直接从命令行使用 ssh 命令连接，如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh User@HostName</span><br></pre></td></tr></table></figure>
-<p>即可连接到我们的服务器，接下来输入密码进入即可。在上面的命令中，<code>User</code>就是你将要登陆的服务器的用户名，而<code>HostName</code>就是你的服务器主机名，也就是阿里云给你的服务器的公网 IP，具体的使用如下：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/03.png" alt="03"></p>
-<p>其中<code>root</code>就是我要登录的用户名，而后面的 IP 地址就是主机名。</p>
-<p>回车之后，首先会询问你是否继续连接，我们选择<code>yes</code>。接着就会问你该服务器下登录用户的密码，这里输入之后并不会出现任何可视字符，不用担心你没有输进去。</p>
-<p>然后回车我们就进入了该服务器。</p>
-<p><strong>取消登录密码验证</strong>：</p>
-<p>每一次登录服务器都需要输入密码，这是理所当然的，但如果有一种不用输入密码也能保证安全的方法，那肯定更好。刚好 ssh 就有这样的功能。</p>
-<p>我们首先执行下面的命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">&quot;Name&quot;</span></span><br></pre></td></tr></table></figure>
-<p>其中<code>&quot;Name&quot;</code>的部分随你喜好填写一个可以标识你身份或你的电脑的名字就行了。</p>
-<p>执行命令之后，它会问你是否修改保存密钥文件的地址，我们默认就行。然后它会让你输入密码，但是这个密码我们可以不输入，即为空，然后确认密码即可。</p>
-<p>然后，我们就能在当前用户文件夹下的<code>.ssh</code>文件夹下找到两个文件，一个是<code>id_rsa</code>，一个是<code>id_rsa.pub</code>。其中，前者是你电脑的私钥，不能给别人的，而后者是你电脑的公钥，把它交给你想要连接的远程主机即可实现使用密钥对连接而不需要输入密码。</p>
-<p>将公钥交给远程主机的具体行为是将公钥的内容写入到远程主机的<code>.ssh/authorized_keys</code>文件中，实现该操作的方法在 Linux 和 Windows 下又有不同：</p>
-<ul>
-<li>
-<p>Linux</p>
-<p>我们直接执行下面的命令即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-copy-id User@HostName</span><br></pre></td></tr></table></figure>
-<p>它会自动将你的公钥添加到远程主机的<code>authorized_keys</code>文件中。</p>
-</li>
-<li>
-<p>Windows</p>
-<blockquote>
-<p>如果在Windows上有Git Bash之类的终端也可以像Linux一样操作</p>
-</blockquote>
-<p>由于在 Windows 中并没有<code>ssh-copy-id</code>命令，所以我们需要使用一些其他的方法，这里只介绍其中一种。</p>
-<p>首先我们执行下面的命令将公钥文件传输到远程主机：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp C:\Users\YourName\.ssh\id_rsa.pub User@HostName:~/</span><br></pre></td></tr></table></figure>
-<p>其中<code>C:\Users\YourName\</code>就是你的用户文件夹，把<code>YourName</code>改为你的用户名即可。</p>
-<p>然后先连接到你的远程主机：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh User@HostName</span><br></pre></td></tr></table></figure>
-<p>然后再将刚刚传输过去的文件的内容写入到<code>authorized_keys</code>文件中即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> id_rsa.pub &gt;&gt; .ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-<p>操作完成后删除我们之前传输的文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> id_rsa.pub</span><br></pre></td></tr></table></figure>
-<p>然后就 OK 了。</p>
-</li>
-</ul>
-<p>之后我们再从本地连接到服务器就不需要输入密码了。</p>
-<p><strong>设置别名</strong>：</p>
-<p>如果每一次登录都需要输入登录用户和主机名的话还是会比较麻烦，我们可以通过下面的方法来为服务器设置别名。</p>
-<p>首先进入到我们刚刚创建密钥所在的<code>.ssh</code>文件夹中，新建一个<code>config</code>文件，注意没有任何后缀名。</p>
-<p>然后我们往<code>config</code>里添加以下内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Host Alias</span><br><span class="line">	HostName 127.0.0.1</span><br><span class="line">	User root</span><br></pre></td></tr></table></figure>
-<p>其中<code>Alias</code>就是你的服务器的别名，然后在下面<code>HostName</code>后填上你的服务器的主机名即可（就是公网 IP，我这里填了一个 localhost 的地址代替），最后是<code>User</code>的值就是你要登陆的用户名。</p>
-<p>在这样设置完成之后就可以使用下面的命令直接进入服务器了：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh Alias</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h2 id="二、-安装使用-Apache">二、 安装使用 Apache</h2>
-<h3 id="1-安装">1. 安装</h3>
-<p>直接使用下面的命令安装即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install httpd</span><br></pre></td></tr></table></figure>
-<p>httpd 就是 Apache 的 Web 服务端程序。</p>
-<h3 id="2-重要目录">2. 重要目录</h3>
-<p>安装好 Apache 之后，有两个比较重要的目录，我们后续的操作基本上都涉及这两个目录：</p>
-<div class="tabs" id="important_dir"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#important_dir-1">/etc/httpd/</button></li><li class="tab"><button type="button" data-href="#important_dir-2">/var/www/</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="important_dir-1"><p>在这个目录下，主要包括<code>conf</code>目录、<code>conf.d</code>目录以及<code>conf.modules.d</code>目录。在<code>conf</code>目录下的<code>httpd.conf</code>文件是 Apache 的主要配置文件，当我们运行 httpd 命令时，它就会读取该配置文件。</p>
-<p>而<code>conf.d</code>目录下的配置文件可以用于补充<code>httpd.conf</code>，但如果在<code>httpd.conf</code>文件中包含了这些文件，就相当于把这些子配置文件的内容写入到<code>httpd.conf</code>文件中。对于<code>conf.modules.d</code>目录下的配置文件也是一样。</p>
-<p>在功能上，<code>conf.d</code>的配置文件主要用于补充<code>httpd.conf</code>的配置，而<code>conf.modules.d</code>下的配置文件主要用于添加某个模块。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="important_dir-2"><p>在这个目录下是 Apache 默认保存网页文件的地方，它有一个叫做<code>html</code>的目录，你可以把自己的网站文件全部放在这里面，运行 Apache 就直接能访问你的网页了。但我们之后会通过 Git 来拉取仓库，所以不用这个文件夹。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h3 id="3-认识-Apache-的配置文件">3. 认识 Apache 的配置文件</h3>
-<p>我们用 vim 打开<code>httpd.conf</code>文件，可以看到里面有下面这些比较主要的内容：</p>
-<div class="tabs" id="apache_config_file"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#apache_config_file-1">配置文件根目录</button></li><li class="tab"><button type="button" data-href="#apache_config_file-2">监听端口</button></li><li class="tab"><button type="button" data-href="#apache_config_file-3">包含目录</button></li><li class="tab"><button type="button" data-href="#apache_config_file-4">域名配置</button></li><li class="tab"><button type="button" data-href="#apache_config_file-5">网页文件根目录</button></li><li class="tab"><button type="button" data-href="#apache_config_file-6">主页文件名设置</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="apache_config_file-1"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/06.png" alt="06"></p>
-<p>这就是我们刚刚所说的最重要的其中一个目录，它表示服务器将从这个目录下读取配置文件。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-2"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/07.png" alt="07"></p>
-<p>这个配置表示使用 Apache 监听 80 端口，也就是 http 协议的默认端口，我们所有通过域名访问的操作都将默认使用 80 端口访问服务器。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-3"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/08.png" alt="08"></p>
-<p>这一行内容表示将包含所有<code>conf.modules.d</code>目录下的所有<code>.conf</code>配置文件。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-4"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/09.png" alt="09"></p>
-<p>可以看到这一行配置默认是被注释掉了的，它用来配置我们访问并解析到该服务器的域名。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-5"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/10.png" alt="10"></p>
-<p>这一段内容就是用来指示网页文件的位置以及权限的了，其中<code>DocumentRoot</code>后面的路径表示网站主页文件所在的位置，一般是<code>index.html</code>所在的位置。</p>
-<p><code>&lt;Directory &quot;/var/www&quot;&gt;</code>标签对以及其中的内容用来定义该目录下服务器所拥有的权限。</p>
-<p><code>&lt;Directory &quot;/var/www/html&quot;</code>标签对就是用来定义你的网站主页文件所在目录的权限了。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-6"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/11.png" alt="11"></p>
-<p>这一条配置是用来描述 Apache 默认查找哪个文件作为网站的主页文件的，你可以在<code>index.html</code>后面添加一个如<code>test.html</code>，它所实现的效果就是如果在你所指定的<code>DocumentRoot</code>下找不到<code>index.html</code>文件的话，就寻找<code>test.html</code>文件作为网站的主页</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h2 id="三、-搭建网站">三、 搭建网站</h2>
-<p>认识了最基本的 Apache 配置之后，我们开始搭建网站。在修改各种配置之前我们先将网页文件拉下来以及配置好相应的环境。</p>
-<p>我这里有三个网站，他们的仓库名分别是：<code>Syunn</code>、<code>Blog</code>、<code>Note</code>。我们首先演示只搭建一个网站的配置方法，用<code>Syunn</code>作为示例。然后我们将演示搭建多个网站的配置方法，此时三个仓库都将作为示例。</p>
-<p>其中<code>Blog</code>是用<code>hexo</code>进行构建的，所以我们除了<code>git</code>之外还需要<code>hexo</code>，当然要运行和下载<code>hexo</code>，那也少不了<code>nodejs</code>和<code>npm</code>。</p>
-<h3 id="1-准备">1. 准备</h3>
-<h4 id="1）git">1）git</h4>
-<p>安装 git 很简单：<code>yum install git</code>即可</p>
-<p>然后就是配置<code>ssh</code>密钥和<code>git</code>配置：</p>
-<p>通过下面的命令创建密钥对：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;Server&quot;</span></span><br></pre></td></tr></table></figure>
-<p>然后通过<code>vim</code>打开<code>id_rsa.pub</code>文件，复制其中的内容。然后打开<code>github</code>网站的<code>setting</code>下的<code>SSH and GPG keys</code>处，点击新建 SSH key，取好名字，将复制的内容填入下面的文本框即可。</p>
-<p>然后使用下面的命令测试一下 ssh 连接：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<p>如果正常说明已经能够正常连接。</p>
-<p>最后配置一下<code>git</code>即可完成<code>git</code>的安装了：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;&lt;你的用户名&gt;&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;&lt;你的邮箱&gt;&quot;</span></span><br><span class="line">git config --global core.quotepath <span class="literal">false</span>		/* 解决中文路径显示乱码的问题 */</span><br></pre></td></tr></table></figure>
-<p>当然，这些配置写不写都无所谓，因为在服务器这个不太适合编程的环境下，我们通常只需要进行<code>git pull</code>操作。</p>
-<h4 id="2）nodejs">2）nodejs</h4>
-<blockquote>
-<p>由于我的博客是用 hexo 搭建的，所以需要使用 nodejs，如果你不需要就不用安装。</p>
-</blockquote>
-<p>安装<code>nodejs</code>同样：<code>yum install nodejs</code></p>
-<p>然后测试一下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-<p>如果都正常显示版本号，则安装成功</p>
-<p>因为是在服务器上使用<code>npm</code>，所以实际上换不换源都无所谓，阿里云提供的服务器下行速度都还是又稳又快。</p>
-<p>然后安装我需要的<code>hexo</code>即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
-<p>测试一下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-<p>正常显示即可。</p>
-<h3 id="2-单网站搭建">2. 单网站搭建</h3>
-<h4 id="1）准备">1）准备</h4>
-<p>我们首先通过<code>git</code>将<code>Syunn</code>文件夹拉取到<code>/var/www/</code>目录下；</p>
-<h4 id="2）修改配置文件">2）修改配置文件</h4>
-<p>将原本的<code>httpd.conf</code>文件做一个备份，以便日后恢复：<code>cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.backup</code></p>
-<p>然后我们通过<code>vim</code>打开<code>httpd.conf</code>文件：<code>vim /etc/httpd/conf/httpd.conf</code></p>
-<p>在我们之前介绍的配置文件内容的基础上，我们需要修改的内容有以下几点：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改域名</span></span><br><span class="line">ServerName syunn.cn</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改网站根目录</span></span><br><span class="line">DocumentRoot <span class="string">&quot;/var/www/Syunn&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 以及网站根目录的权限处同样也要修改</span></span><br><span class="line"><span class="comment"># 原本是 &lt;Directory &quot;/var/www/html&quot;&gt;</span></span><br><span class="line"><span class="comment"># 变为</span></span><br><span class="line">&lt;Directory <span class="string">&quot;/var/www/Syunn&quot;</span>&gt;</span><br><span class="line">	<span class="comment"># 中间内容不变</span></span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
-<p>就这么简单就 OK 了。</p>
-<h4 id="3）运行-Apache">3）运行 Apache</h4>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start httpd</span><br></pre></td></tr></table></figure>
-<p>在运行之前实际上要先去将自己的域名解析到这个 IP 地址，才可以通过域名访问，我已经提前弄好了，直接就可以看到效果了：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/12.png" alt="12"></p>
-<h3 id="3-多网站搭建">3. 多网站搭建</h3>
-<h4 id="1）准备-2">1）准备</h4>
-<p>我希望我的博客能用子域名<code>blog.syunn.cn</code>访问以及我的笔记能用<code>note.syunn.cn</code>访问，而不是使用子目录的形式访问。</p>
-<p>Apache 的虚拟主机功能为这个问题提供了很好的解决方案。</p>
-<p>实际上这个功能用起来非常的简单，只需要往<code>httpd.conf</code>文件里添加几段内容即可。为了模块化该配置文件，我们可以将虚拟主机的功能配置写在其他配置文件中，然后用<code>httpd.conf</code>包含该文件即可。</p>
-<p>在修改配置之前，我们先将此次演示需要的两个文件夹<code>Blog</code>和<code>Note</code>拉取到<code>/var/www</code>中即可，然后在<code>Blog</code>文件夹中执行<code>npm install</code>和<code>hexo g -d</code>命令即可完成网页文件的生成。</p>
-<h4 id="2）修改配置文件-2">2）修改配置文件</h4>
-<p>首先我们在<code>conf.d</code>目录下添加一个新的配置文件，文件名随意取因为那并不是决定性因素，我们就暂定为<code>virtual.conf</code>。</p>
-<p>然后通过<code>vim</code>打开该文件，添加下面的内容：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先针对多出来的两个可浏览目录进行权限方面的规范，我们之前的 Syunn 那个目录在 httpd.conf 里已经配置过了</span></span><br><span class="line"><span class="comment"># Blog 的网页文件生成在 public 子目录下</span></span><br><span class="line">&lt;Directory <span class="string">&quot;/var/www/Blog/public&quot;</span>&gt;</span><br><span class="line">	AllowOverride None</span><br><span class="line">	Order allow,deny</span><br><span class="line">	Allow from all</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">&lt;Directory <span class="string">&quot;/var/www/Note&quot;</span>&gt;</span><br><span class="line">	AllowOverride None</span><br><span class="line">	Order allow,deny</span><br><span class="line">	Allow from all</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 针对三台主机的 DocumentRoot 进行设置</span></span><br><span class="line"><span class="comment"># *:80 表示所有对该服务器的 80 端口访问</span></span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">	ServerName syunn.cn</span><br><span class="line">	<span class="comment"># 设置别名，我希望 www.syunn.cn 可以和使用 syunn.cn 达到同样的效果</span></span><br><span class="line">	ServerAlias www.syunn.cn</span><br><span class="line">	DocumentRoot /var/www/Syunn</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">	ServerName blog.syunn.cn</span><br><span class="line">	DocumentRoot /var/www/Blog/public</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">	ServerName note.syunn.cn</span><br><span class="line">	DocumentRoot /var/www/Note</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
-<p>需要注意以下几点：</p>
-<ul>
-<li>在虚拟主机的设置上还有很多可用的功能，不过，最低的限度是需要有<code>ServerName</code>和<code>DocumentRoot</code>这两个</li>
-<li>在配置目录权限时使用到的配置项不做解释，请自行去查一查权威的用法</li>
-<li>使用了虚拟主机后，原本的主机名（<code>syunn.cn</code>）也要同时写入虚拟主机的对应中，否则这个主机名可能会不知道被丢到哪里去</li>
-</ul>
-<p>然后，我们需要在<code>httpd.conf</code>文件中包含该文件，可以选择只包含这一个文件，也可以包含<code>conf.d</code>这整个文件夹，我选择的是包含整个文件夹。</p>
-<p>在实际的操作中，我选择将这个包含配置写在包含<code>conf.modules.d</code>目录的配置项下面，这样更加的清晰：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Include conf.modules.d/*.conf</span><br><span class="line"><span class="comment"># 第一行是原文件中有的</span></span><br><span class="line"><span class="comment"># 下面是我添加的</span></span><br><span class="line">Include conf.d/*.conf</span><br></pre></td></tr></table></figure>
-<p>在<code>httpd.conf</code>文件的末尾实际上还有一条：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">IncludeOptional conf.d/*.conf</span><br></pre></td></tr></table></figure>
-<p>我们现在可以将它删掉了。</p>
-<h4 id="3）重启-Apache">3）重启 Apache</h4>
-<p>这些都弄好之后我们就可以重启 Apache 了。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart httpd</span><br></pre></td></tr></table></figure>
-<p>重启完成之后我们就可以使用三个域名分别打开三个网站了：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/14.png" alt="14"></p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/15.png" alt="15"></p>
-<h2 id="四、-使用-https">四、 使用 https</h2>
-<h3 id="1-前言">1. 前言</h3>
-<p>要使用 https 首先需要的一个东西就是 ssl 证书，这个证书说好拿也好拿，说不好拿也不好拿。</p>
-<p>首先你可以自制一个自签名的证书，这很轻松，但不幸的是，经过多次测试这样的证书大部分浏览器都不认。</p>
-<p>那么就只能去获取一个 CA 认证的证书了，但这些证书不是贵就是弄起来麻烦，所以在写这篇博客之前我一直都只使用<code>http</code>协议。</p>
-<p>但在今天我找到了一个可以轻松白嫖且轻松搭建的方法。</p>
-<h3 id="2-准备">2. 准备</h3>
-<h4 id="1）获取经过认证的免费证书">1）获取经过认证的免费证书</h4>
-<p>我们首先进入到阿里云的 ssl 证书购买界面：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/16.png" alt="16"></p>
-<p>我们首先就直接叉掉这个购买页面，然后来到红框标注的<strong>免费证书</strong>这一栏：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/17.png" alt="17"></p>
-<p>我们直接点击<strong>立即购买</strong>即可。需要注意的是免费证书一年只能购买 20 个，每个证书只能用于一个具体的域名，不能用于泛域名如<code>*.syunn.cn</code>（对我来说足够了）。另外这些证书有效期为 1 年，但是 1 年之后又可以重新免费获取 20 个的额度（简直不要太爽）。</p>
-<h4 id="2）创建证书">2）创建证书</h4>
-<p>我们购买好之后可以看见在刚刚的<strong>立即购买</strong>按钮旁边的<strong>创建证书按钮</strong>后面多了一个<code>20/20</code>，也就是我们还可以创建 20 个证书，我们直接点击创建。</p>
-<p>需要注意的是创建后的 ssl 证书还需要申请 CA 认证以及域名绑定：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/18.png" alt="18"></p>
-<p>我们点击<strong>证书申请</strong>即可，在申请页面需要填写绑定的域名（注意只能是单域名如<code>syunn.cn</code>、<code>blog.syunn.cn</code>，不能是泛域名如<code>*.syunn.cn</code>），然后一般首次申请还需要添加联系人，即申请完成后会通过该渠道发信息给你。最后还有一个所在地填写，正常填写即可。</p>
-<p>最后点击<strong>提交审核</strong>然后等待审核完成就可以了，这个时间很快，一般两三分钟就可以了，已经审核的 ssl 证书如下所示：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/19.png" alt="19"></p>
-<p>然后按照同样的操作为我们的三个域名都创建一个证书就可以了，其中<code>syunn.cn</code>只需要创建一个，因为默认该证书将同时用于<code>www.syunn.cn</code>。</p>
-<h4 id="3）添加-443-端口访问">3）添加 443 端口访问</h4>
-<p>创建好证书之后我们先不着急部署，我们先按照和添加 80 端口同样的方法将 443 端口的访问权限开通即可。</p>
-<p>443 端口就是 https 协议的默认传输端口，这里我就不再介绍具体的过程了。</p>
-<h3 id="3-部署-SSL-证书">3. 部署 SSL 证书</h3>
-<p>阿里云提供的证书有一个一键部署的功能，但由于抽象程度比较高，操作者不太清楚其中做了什么，而且也容易出错，所以我们使用更具体的部署方法。</p>
-<h4 id="1）安装-mod-ssl">1）安装 mod_ssl</h4>
-<p>我们首先需要安装<code>mod_ssl</code>模块，Apache 才能启用 https 功能。</p>
-<p>安装命令：<code>yum install mod_ssl</code></p>
-<p>安装好之后有一个非常重要的文件：<code>/etc/httpd/conf.d/ssl.conf</code>，该文件为 ssl 功能的配置文件，我们主要修改这个文件</p>
-<p>在修改之前我们还是先认识一下<code>ssl.conf</code>配置文件里的内容：</p>
-<div class="tabs" id="ssl_file"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#ssl_file-1">监听端口</button></li><li class="tab"><button type="button" data-href="#ssl_file-2">虚拟主机配置</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="ssl_file-1"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/21.png" alt="21"></p>
-<p>首先第一条配置就是先开启监听 443 端口。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="ssl_file-2"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/22.png" alt="22"></p>
-<p>然后就是一个标签对，这个标签对里的内容也是我们等会重点修改的内容，同时在搭建另外两个网站时还会新建两个标签对，就和创建虚拟主机时的操作类似。</p>
-<p>可以看到里面也有<code>DocumentRoot</code>和<code>ServerName</code>等内容，这些虽然看上去我们在<code>virtual.conf</code>配置文件里已经配置过了，但那是监听的 80 端口，而这是监听的 443 端口。也就是说，如果我们访问：<code>http://syunn.cn</code>就将进入<code>virtual.conf</code>这个配置文件，而如果访问：<code>https://syunn.cn</code>就将进入<code>ssl.conf</code>这个配置文件。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h4 id="2）下载证书">2）下载证书</h4>
-<p>在创建好的证书的后面有一个<strong>下载</strong>按钮，我们点击就会弹出下面的界面：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/20.png" alt="20"></p>
-<p>由于我们是使用的 Apache 搭建的服务，所以我们选择下载 Apache 的证书。</p>
-<p>同时在<strong>下载</strong>按钮前还有一个<strong>帮助</strong>按钮，这里提供了最新的部署方法，也是可以参考的。</p>
-<p>点击<strong>下载</strong>之后它会将证书的压缩包下载到本地，我们可以将其先解压然后通过和把<code>id_rsa.pub</code>文件传输到服务器上一样的方法将解压出来的证书传输到服务器，也可以直接将压缩包通过该方法传输到服务器，然后在服务器上安装<code>zip</code>工具通过<code>unzip</code>命令解压压缩包即可。安装命令：<code>yum install zip</code></p>
-<p>由于一个域名将有多个证书文件，所以我的建议是在<code>/etc/httpd/</code>目录下建立一个<code>certs</code>目录，然后再按照域名来建立相应的子目录，将对应的证书内容放在对应的子目录下，这样不容易产生混乱。</p>
-<h4 id="3）修改配置文件">3）修改配置文件</h4>
-<p>以配置<code>syunn.cn</code>为例，我们首先通过<code>vim</code>打开<code>/etc/httpd/conf.d/ssl.conf</code>文件，需要修改的有以下内容（有些配置项本身是被注释了的，直接删除<code>#</code>即可取消注释）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先将标签中的 _default_ 改为 *，如下所示：</span></span><br><span class="line">&lt;VirtualHost *:443&gt;</span><br><span class="line">	ServerName syunn.cn</span><br><span class="line">	ServerAlias www.syunn.cn</span><br><span class="line">	DocumentRoot /var/www/Syunn</span><br><span class="line">	</span><br><span class="line">	SSLEngine on</span><br><span class="line">	</span><br><span class="line">	SSLProtocol all -SSLv2 -SSLv3</span><br><span class="line">	</span><br><span class="line">	SSLCipherSuite HIGH:!RC4:!MD5:!aNULL:!eNULL:!NULL:!DH:!EDH:!EXP:+MEDIUM</span><br><span class="line">	SSLHonorCipherOrder on</span><br><span class="line">	<span class="comment"># 以_public.crt 结尾的那个文件</span></span><br><span class="line">	SSLCertificateFile /etc/httpd/certs/syunn/syunn.cn_public.crt</span><br><span class="line">	<span class="comment"># 以 .key 结尾的那个文件</span></span><br><span class="line">	SSLCertificateKeyFile /etc/httpd/certs/syunn/syunn.cn.key</span><br><span class="line">	<span class="comment"># 以 _chain.crt 结尾的那个文件</span></span><br><span class="line">	SSLCertificateChainFile /etc/httpd/certs/syunn/syunn.cn_chain.crt</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 其他未涉及到的内容不做修改</span></span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
-<p>如果想要添加其他的域名，就添加一对<code>&lt;VirtualHost *:443&gt;</code>标签对然后在里面把上面所涉及到的内容添加到标签对里面即可。</p>
-<p><strong>需要注意的是</strong>，新添加的<code>VirtualHost</code>标签对一定要在前一个<code>VirtualHost</code>标签对之外，注意不要看错了，因为在默认的那个<code>VirtualHost</code>标签对中还有其他标签对。</p>
-<p>大概的内容都已经涉及到了，这里就不再演示添加其他域名的操作了。</p>
-<p>添加完成后还需要确认在<code>httpd.conf</code>文件中有没有包含这个文件，由于我们之前添加包含时直接添加了整个目录，所以可以确定是包含了的。</p>
-<h4 id="4）将-http-访问转发到-https">4）将 http 访问转发到 https</h4>
-<p>我们可以强制所有对网站的访问都是 https 访问。具体做法是修改之前的监听 80 端口的那个虚拟主机配置文件。</p>
-<p>我们首先通过<code>vim</code>打开该文件，在这个文件里，我们设置了三个虚拟主机，分别代理三个域名，如果我们需要某个域名强制使用 https 访问，就在该虚拟主机的标签对里添加下面的内容：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">RewriteEngine on</span><br><span class="line">RewriteCond %&#123;SERVER_PORT&#125; !^443$</span><br><span class="line">RewriteRule ^(.*)$ https://%&#123;SERVER_NAME&#125;<span class="variable">$1</span> [L,R]</span><br></pre></td></tr></table></figure>
-<p><code>Rewrite</code>是一个重写配置，它使用正则表达式进行配置，上面的配置的含义就是当监听到 http 访问时就转发到对应的 https 访问。</p>
-<h4 id="5）重启-Apache">5）重启 Apache</h4>
-<p>按照之前的操作将 Apache 服务重启一次即可。</p>
-<p>可以看到，在地址栏旁边已经不再是**“不安全”**的提示了，已经可以使用 https 访问了：</p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/23.png" alt="23"></p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/24.png" alt="24"></p>
-<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/25.png" alt="25"></p>
-<hr>
-]]></content>
-      <categories>
-        <category>网络</category>
-        <category>服务器</category>
-      </categories>
-      <tags>
-        <tag>教程</tag>
-        <tag>网站</tag>
-        <tag>阿里云</tag>
-        <tag>服务器</tag>
-        <tag>Linux</tag>
-        <tag>Apache</tag>
       </tags>
   </entry>
   <entry>
@@ -1182,255 +1182,255 @@
       </tags>
   </entry>
   <entry>
-    <title>Ubuntu基本配置</title>
-    <url>//posts/c7af8c65/</url>
-    <content><![CDATA[<h2 id="一、-准备">一、 准备</h2>
-<h3 id="1-安装环境">1. 安装环境</h3>
-<p>系统：Ubuntu-22.04.1</p>
-<p>主机：Lenovo XiaoXinAir-14ARE 2020</p>
-<p>内存：16G</p>
-<p>处理器：AMD® Ryzen 5 4600u with radeon graphics × 12</p>
-<p>显卡：AMD® Renoir</p>
-<p>硬盘：512 GB</p>
-<h3 id="2-写在前面">2. 写在前面</h3>
-<p>本文仅作为物理机安装Ubuntu系统的参考，虚拟机大部分操作类似，但如果想安装虚拟机，请寻找更合适的文章。</p>
-<p>另外，本文很大程度上是为了帮助我自己重装系统，所以很多地方的特殊性会比较强，可能不适合其他的电脑，希望大家自己判断。</p>
-<p>最后，本文参考了很多的文章，但不打算列出，因为我基本上只从那些文章中抽取出了一小部分我需要的，然后组合成了这一篇文章（主要是因为参考的文章实在是太多了 -_-，然后在我安装的时候也没有记录那些文章，只记录了需要的操作，然后这篇文章又是后来写的，所以基本上很难去找了）</p>
-<h2 id="二、-安装Ubuntu">二、 安装Ubuntu</h2>
-<h3 id="1-下载ISO文件">1. 下载ISO文件</h3>
-<p>首先我们选择一个镜像源，我选择的是北京外国语大学的镜像：<a href="https://mirrors.bfsu.edu.cn/">https://mirrors.bfsu.edu.cn/</a></p>
-<p>然后找到我们要下载的文件，是<code>/ubuntu-releases/22.04.1/</code>这个目录下的<code>ubuntu-22.04.1-desktop-amd64.iso</code>，下载即可</p>
-<h3 id="2-制作启动U盘">2. 制作启动U盘</h3>
-<p>首先我们需要一个制作启动U盘的软件，是软碟通，通过这个链接可以下载：<a href="https://cn.ultraiso.net/xiazai.html">https://cn.ultraiso.net/xiazai.html</a></p>
-<p>具体的使用方法是：进入软件-&gt;打开下载的iso文件-&gt;点击“启动-写入硬盘映像”-&gt;选择用于制作启动盘的U盘-&gt;点击&quot;写入&quot;-&gt;等待完成即可</p>
-<h3 id="3-启动BIOS设置U盘启动">3. 启动BIOS设置U盘启动</h3>
-<p>各个电脑打开BIOS的操作可能不一样，总之这一步自己查询，进到BIOS里就行了。</p>
-<p>然后设置BIOS启动即可，由于各个电脑的BIOS界面可能也不同，所以就不详细介绍了，记录一下我自己的操作：直接从<code>Boot Menu</code>中选择U盘启动即可。</p>
-<h3 id="4-开始安装">4. 开始安装</h3>
-<p>安装的其他步骤都很简单，唯一需要介绍的一步是：分区操作</p>
-<p>首先我是想安装一个和Windows的双系统，先简单介绍一下需要分配的分区：</p>
+    <title>阿里云服务器网站搭建</title>
+    <url>//posts/149af73d/</url>
+    <content><![CDATA[<div class="note primary flat"><p>本教程基于LAMP结构搭建Web服务，且在本文中仅演示其中’L’（Linux）和’A’（Apache）的部分，也就是仅仅只是静态网站的搭建教程。</p>
+</div>
+<div class="note warning flat"><p>我所选择的用于演示的服务器是阿里云的一个 ECS 云服务器，地址在香港，所以不用备案域名就可以直接解析到该服务器；我所选择的服务器的系统是阿里巴巴针对云服务器所定制的一个 Linux 系统，版本号是：Alibaba Cloud Linux 3.2104 LTS 64位。如果你选用其他的系统，可能在下面介绍的一些细节的操作上存在一些区别，请自行判断。</p>
+</div>
+<div class="note info flat"><p>另外，由于这篇文章基本上是以我自己的几个网站作为案例写下来的，所以肯定不可能适合所有人，所以如果发现我的例子不太适合你的情况，如果不太确定自己应该怎么做，请一定去找更准确的教程。</p>
+</div>
+<hr>
+<h2 id="一、-前期准备">一、 前期准备</h2>
+<h3 id="1-添加-80-端口访问">1. 添加 80 端口访问</h3>
+<div class="note primary flat"><p>我所使用的这个系统默认是不开防火墙的，也就是从外部就可以访问服务器所有的端口，这样肯定是不安全的，阿里云用了另外一种方式来管理服务器的入流量的允许端口，也就是安全组。由于Web应用默认使用 80 端口，如果是https则默认使用 443 端口，所以如果要搭建Web应用，最好是开启这两个端口，如果开启其他端口，在访问时还需要在域名后指定端口号，访问比较麻烦。</p>
+</div>
 <ul>
-<li><code>\boot</code>：由于我只有一个物理硬盘，所以从硬盘里直接分出想要的空间大小即可（这一部分空间应该显示为未分配）。如果是多个物理硬盘，那么一定要从Windows系统盘所在的硬盘中分出一部分留给<code>\boot</code>分区，这个分区是放Ubuntu的启动程序分区，由于计算机在启动时只会在一个盘里查找启动程序，如果不在同一个硬盘存放启动程序，那么启动电脑时就只会启动Windows。<code>\boot</code>分区留个300M-500M就行了。（我直接在这个盘里分了200个G用作所有的空间）</li>
-<li><code>swap</code>：还有一个比较重要的分区是<code>swap</code>分区，它相当于是内存的缓冲，如果有固态硬盘，一般也用固态硬盘来分，主要是为了更快的速度。这一块的大小根据内存的大小决定，一般内存为8G及以下的，留内存的双倍即可；如果内存大于等于16G，那留与内存相同的空间即可。我留16G即可。</li>
-<li><code>\home</code>：该分区是放置用户文件的分区，主要根据自己的使用习惯分配即可。我一般不把安装的软件放在这个目录下，所以我留了30个G左右</li>
-<li><code>\</code>：根分区里放置了所有的文件，包括刚刚分配的<code>\home</code>分区，但是由于我们将<code>\home</code>分区单独挂载了，所以为根目录分配的空间将不包括<code>\home</code>的空间，但是逻辑上还是有<code>\home</code>分区的。我把剩下的150G左右都留给了根目录</li>
+<li>
+<p>购买好服务器后，我们需要首先来到 <strong>ECS控制台</strong>的<strong>安全组部分</strong>：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/01.png" alt="01"></p>
+</li>
+<li>
+<p>我们点击红框标出来的<strong>配置规则</strong>，然后进入到下面的界面：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/02.png" alt="02"></p>
+</li>
+<li>
+<p>直接选择快速添加，将 80 端口添加即可。</p>
+</li>
 </ul>
-<p>然后简单来说一下分区的方法吧：</p>
+<h3 id="2-连接服务器">2. 连接服务器</h3>
+<p>要连接到阿里云的服务器有两种方法，一种是直接通过阿里云提供的网络工具连接，另一种是直接从系统使用 ssh 连接。</p>
+<div class="tabs" id="ssh_connect"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#ssh_connect-1">阿里云网络工具连接服务器</button></li><li class="tab"><button type="button" data-href="#ssh_connect-2">使用本地ssh连接到服务器</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="ssh_connect-1"><p>我们进入到 <strong>ECS控制台</strong> 并进入到实例管理页面，然后直接点击<strong>远程连接</strong>按钮即可：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/04.png" alt="04"></p>
+<p>在弹出的窗口里直接选择<strong>立即登录</strong>即可：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/05.png" alt="05"></p>
+<p>然后就可以输入密码登陆了。</p>
+<p>由于我的服务器地址在香港，本地 ssh 连接会容易断线，所以后续的演示我们将使用该方法连接服务器。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="ssh_connect-2"><p><strong>基本使用</strong>：</p>
+<p>现在不管是 Windows 还是 Linux 几乎都已经内置了 ssh 工具，可以直接从命令行使用 ssh 命令连接，如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh User@HostName</span><br></pre></td></tr></table></figure>
+<p>即可连接到我们的服务器，接下来输入密码进入即可。在上面的命令中，<code>User</code>就是你将要登陆的服务器的用户名，而<code>HostName</code>就是你的服务器主机名，也就是阿里云给你的服务器的公网 IP，具体的使用如下：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/03.png" alt="03"></p>
+<p>其中<code>root</code>就是我要登录的用户名，而后面的 IP 地址就是主机名。</p>
+<p>回车之后，首先会询问你是否继续连接，我们选择<code>yes</code>。接着就会问你该服务器下登录用户的密码，这里输入之后并不会出现任何可视字符，不用担心你没有输进去。</p>
+<p>然后回车我们就进入了该服务器。</p>
+<p><strong>取消登录密码验证</strong>：</p>
+<p>每一次登录服务器都需要输入密码，这是理所当然的，但如果有一种不用输入密码也能保证安全的方法，那肯定更好。刚好 ssh 就有这样的功能。</p>
+<p>我们首先执行下面的命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">&quot;Name&quot;</span></span><br></pre></td></tr></table></figure>
+<p>其中<code>&quot;Name&quot;</code>的部分随你喜好填写一个可以标识你身份或你的电脑的名字就行了。</p>
+<p>执行命令之后，它会问你是否修改保存密钥文件的地址，我们默认就行。然后它会让你输入密码，但是这个密码我们可以不输入，即为空，然后确认密码即可。</p>
+<p>然后，我们就能在当前用户文件夹下的<code>.ssh</code>文件夹下找到两个文件，一个是<code>id_rsa</code>，一个是<code>id_rsa.pub</code>。其中，前者是你电脑的私钥，不能给别人的，而后者是你电脑的公钥，把它交给你想要连接的远程主机即可实现使用密钥对连接而不需要输入密码。</p>
+<p>将公钥交给远程主机的具体行为是将公钥的内容写入到远程主机的<code>.ssh/authorized_keys</code>文件中，实现该操作的方法在 Linux 和 Windows 下又有不同：</p>
 <ul>
-<li>首先，我们在需要分区的安装步骤处，选择最后一项：自己分区</li>
-<li>如果是新配的电脑，还没安装任何系统的话，那么这个页面应该只列出了相应的设备，即硬盘。我们选择需要分配内存的硬盘，选择新建分区表即可，然后按照下面的步骤继续</li>
-<li>我们可以看到分区表里那一个或多个后面显示“空闲”的空间，我们可以通过前面的空间大小知道它是我们之前分出来用来作哪个分区的。我们选择相应的空间，点击左下角的<code>+</code>号，然后就会进入分配空间大小及分区挂载的界面</li>
-</ul>
-<p>接下来，我们就来说一下各个分区的具体配置吧：</p>
-<ul>
-<li><code>swap</code>：大小根据之前说的方法来选择；分区选择逻辑分区；挂载点里没有<code>swap</code>挂载点，这个在挂载点上面的“用于”的下拉框中选择“交换空间”即可</li>
-<li><code>\boot</code>：大小分配300-500M；分区选择逻辑分区；类型为<code>ext4</code>；挂载点里选择<code>\boot</code></li>
-<li><code>\</code>：大小自行分配（我是150G）；分区选择逻辑分区；类型为<code>ext4</code>；挂载点里选择<code>\</code></li>
-<li><code>\home</code>：大小自行分配（我是30G）；分区选择主分区；类型为<code>ext4</code>；挂载点里选择<code>\home</code></li>
-</ul>
-<p>最后，也是最重要的一步：</p>
-<p>首先，我们可以看到安装程序已经自动为我们选择的分区分配了设备名，我们找到刚刚<code>\boot</code>分区的设备名，然后<strong>在“安装启动引导器的设备”中选择刚刚<code>\boot</code>分区的设备名即可</strong>。</p>
-<p>点击“现在安装”，等待安装完成即可。</p>
-<h2 id="三、-换源">三、 换源</h2>
-<p>由于Ubuntu官方的源下载速度很慢，所以需要换源。</p>
-<p>首先，我们选择一个镜像源，我选择的还是北京外国语大学的镜像源：<a href="https://mirrors.bfsu.edu.cn/help/ubuntu/">https://mirrors.bfsu.edu.cn/help/ubuntu/</a></p>
-<p>打开这个页面就可以看到它提供的镜像源和替换方法，这里记录一下手动替换的操作：</p>
-<ul>
-<li>首先将原本的镜像源备份：<code>sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup</code></li>
-<li>通过<code>sudo gedit /etc/apt/sources.list</code>打开并编辑镜像源文件</li>
-<li>然后将该文件里原本的内容删除，然后将网页里的内容复制粘贴到该文件里，点击保存即可</li>
-</ul>
-<p>然后我们就可以进行更新操作了，执行下面两步操作：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
-<h2 id="四、-其他安装项（可选）">四、 其他安装项（可选）</h2>
-<h3 id="1-fastgithub">1. fastgithub</h3>
-<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">下载</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>下载地址：<a href="https://github.com/dotnetcore/FastGithub/releases/download/2.1.4/fastgithub_linux-x64.zip">https://github.com/dotnetcore/FastGithub/releases/download/2.1.4/fastgithub_linux-x64.zip</a></p>
-<p>如果下载速度慢，我们可以使用下面的网站提供的加速服务：<a href="https://ghproxy.com/">https://ghproxy.com/</a></p>
+<li>
+<p>Linux</p>
+<p>我们直接执行下面的命令即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-copy-id User@HostName</span><br></pre></td></tr></table></figure>
+<p>它会自动将你的公钥添加到远程主机的<code>authorized_keys</code>文件中。</p>
+</li>
+<li>
+<p>Windows</p>
 <blockquote>
-<p>上面提供的下载地址为2.1.4版本，由于版本可能更新，可以通过下面的网址查看最新版本：<a href="https://github.com/dotnetcore/FastGithub/releases">https://github.com/dotnetcore/FastGithub/releases</a> ，根据自己的系统和架构选择应该下载的软件包即可。</p>
-</blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><ul>
-<li>
-<p>我们将下载下来的软件包解压，然后将其移动到<code>/opt</code>目录下，然后自己移动到<code>fastgithub</code>文件夹下</p>
-</li>
-<li>
-<p>首次运行一下该程序，生成证书</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ./fastgithub</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p>可以看到证书已经生成了，我们先不管，先设置一下代理：打开网络设置，点击网络代理后面的设置按键，选择自动，然后在下面的框中输入：<a href="http://127.0.0.1:38457">http://127.0.0.1:38457</a> 即可</p>
-</li>
-<li>
-<p>我们将刚刚生成的证书文件移动到<code>/usr/local/share/ca-certificates</code>文件夹下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> cacert/fastgithub.crt /usr/local/share/ca-certificates</span><br></pre></td></tr></table></figure>
-<p>然后执行更新操作</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo update-ca-certificates</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p>同时浏览器需要导入证书，具体操作步骤如下：打开浏览器-&gt;设置-&gt;隐私与安全-&gt;证书-&gt;查看证书-&gt;证书颁发机构，导入<code>cacert/fastgithub.crt</code>，勾选“信任由此证书颁发机构来标识网站“</p>
-</li>
-<li>
-<p>然后添加一个 git 全局配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.sslverify <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p>最后将程序添加软链用来快捷打开：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">ln</span> -s /opt/&lt;fastgithub软件包&gt;/fastgithub /usr/local/bin</span><br></pre></td></tr></table></figure>
-</li>
-</ul><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h3 id="2-git">2. git</h3>
-<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">安装</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">添加SSH Key</button></li><li class="tab"><button type="button" data-href="#fastgithub-3">其他配置</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>执行下面的命令即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install git</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><ol>
-<li>
-<p>首先创建SSH密钥</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;&lt;你的用户名&gt;&quot;</span></span><br></pre></td></tr></table></figure>
-<p>接下来会有一些输出，主要是key的存放位置和密码设置，直接默认回车即可</p>
-<p>最后看到类似如下的输出，就表示成功生成SSH key了：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Your identification has been saved in /home/Username/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/Username/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:RwvBINgH8CEt2KniltmykeyDsOseUYcwMzehFeyT86s emailnum@email.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">| o+%OO+o.        |</span><br><span class="line">|..=+%*+ ..       |</span><br><span class="line">| ..+o+o.. .      |</span><br><span class="line">|o.  o=.  o .     |</span><br><span class="line">|o oolalala S o      |</span><br><span class="line">| +.+.. . .       |</span><br><span class="line">|. .o    .        |</span><br><span class="line">|  . .  .         |</span><br><span class="line">|   . E.          |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p>复制密钥</p>
-<p>密钥内容放在用户文件夹下的<code>.ssh/id_rsa.pub</code>文件中，可以打开文本编辑器进行复制；</p>
-<p>然后进入自己的github主页，依次点击：Settings-&gt;SSH and GPG keys-&gt;New SSH key按钮，Title随便输，然后在下面的文本框粘贴刚复制的内容，最后点击保存即可</p>
-</li>
-<li>
-<p>测试SSH连接</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<p>输出会首先询问是否确认连接，输入yes回车确认即可，最后会看到如下输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Hi You! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-</li>
-</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-3"><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;&lt;你的用户名&gt;&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;&lt;你的邮箱&gt;&quot;</span></span><br><span class="line">git config --global core.quotepath <span class="literal">false</span>		/* 解决中文路径显示乱码的问题 */</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h3 id="3-vscode">3. vscode</h3>
-<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">下载</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>直接在官网下载<code>.deb</code>文件：<a href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><p>通过下面的命令安装即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dpkg -i &lt;packagename&gt;</span><br></pre></td></tr></table></figure>
-<p>然后打开软件登陆同步配置即可</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h3 id="4-typora">4. typora</h3>
-<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">下载</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>直接在官网下载<code>.deb</code>文件：<a href="https://typoraio.cn/#linux">https://typoraio.cn/#linux</a></p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><p>通过下面的命令安装即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dpkg -i &lt;packagename&gt;</span><br></pre></td></tr></table></figure>
-<p>然后打开软件设置激活即可</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h3 id="5-gcc">5. gcc</h3>
-<p>直接通过下面的命令即可安装 gcc：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc</span><br><span class="line">sudo apt install g++</span><br></pre></td></tr></table></figure>
-<h3 id="6-node">6. node</h3>
-<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">安装</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">npm换源</button></li><li class="tab"><button type="button" data-href="#fastgithub-3">安装测试</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>我们通过二进制文件安装：</p>
-<p>首先，我们去官网下载二进制文件：<a href="http://nodejs.cn/download/">http://nodejs.cn/download/</a> ，选择对应的系统和架构选择下载即可，下载下来是一个压缩包，我们首先解压缩：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar xf &lt;packagename&gt;</span><br></pre></td></tr></table></figure>
-<p>然后将解压后的包移动到<code>/opt</code>目录下</p>
-<p>首先运行一下程序：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./&lt;node_packagename&gt;/bin/node -v</span><br></pre></td></tr></table></figure>
-<p>我们可以看到以下输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">v16.18.1</span><br></pre></td></tr></table></figure>
-<p>接下来我们设置软链即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /opt/&lt;node_packagename&gt;/bin/npm /usr/local/bin/</span><br><span class="line"><span class="built_in">ln</span> -s /opt/&lt;node_packagename&gt;/bin/node /usr/local/bin/</span><br></pre></td></tr></table></figure>
-<p>安装就完成了，测试一下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-<p>如果正常显示版本号就表明成功了</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><p>由于原淘宝域名即将停止解析，所以将镜像源地址更新为如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure>
-<p>通过下面这条命令更新软件源：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure>
-<p>然后通过下面的方法来验证是否成功：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config get registry</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-3"><p>首先我们查看一下npm的默认安装位置：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config get prefix</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>一般来说，18.16版本之后的 node 的默认安装位置应该都是在你解压出来的目录下，以前在一个系统目录下，会产生权限问题，现在则没有这个问题了，只不过我们在安装完后需要自行添加软链，否则无法直接使用命令。</p>
+<p>如果在Windows上有Git Bash之类的终端也可以像Linux一样操作</p>
 </blockquote>
-<p>安装hexo测试：</p>
+<p>由于在 Windows 中并没有<code>ssh-copy-id</code>命令，所以我们需要使用一些其他的方法，这里只介绍其中一种。</p>
+<p>首先我们执行下面的命令将公钥文件传输到远程主机：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp C:\Users\YourName\.ssh\id_rsa.pub User@HostName:~/</span><br></pre></td></tr></table></figure>
+<p>其中<code>C:\Users\YourName\</code>就是你的用户文件夹，把<code>YourName</code>改为你的用户名即可。</p>
+<p>然后先连接到你的远程主机：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh User@HostName</span><br></pre></td></tr></table></figure>
+<p>然后再将刚刚传输过去的文件的内容写入到<code>authorized_keys</code>文件中即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> id_rsa.pub &gt;&gt; .ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<p>操作完成后删除我们之前传输的文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>然后就 OK 了。</p>
+</li>
+</ul>
+<p>之后我们再从本地连接到服务器就不需要输入密码了。</p>
+<p><strong>设置别名</strong>：</p>
+<p>如果每一次登录都需要输入登录用户和主机名的话还是会比较麻烦，我们可以通过下面的方法来为服务器设置别名。</p>
+<p>首先进入到我们刚刚创建密钥所在的<code>.ssh</code>文件夹中，新建一个<code>config</code>文件，注意没有任何后缀名。</p>
+<p>然后我们往<code>config</code>里添加以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Host Alias</span><br><span class="line">	HostName 127.0.0.1</span><br><span class="line">	User root</span><br></pre></td></tr></table></figure>
+<p>其中<code>Alias</code>就是你的服务器的别名，然后在下面<code>HostName</code>后填上你的服务器的主机名即可（就是公网 IP，我这里填了一个 localhost 的地址代替），最后是<code>User</code>的值就是你要登陆的用户名。</p>
+<p>在这样设置完成之后就可以使用下面的命令直接进入服务器了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh Alias</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="二、-安装使用-Apache">二、 安装使用 Apache</h2>
+<h3 id="1-安装">1. 安装</h3>
+<p>直接使用下面的命令安装即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install httpd</span><br></pre></td></tr></table></figure>
+<p>httpd 就是 Apache 的 Web 服务端程序。</p>
+<h3 id="2-重要目录">2. 重要目录</h3>
+<p>安装好 Apache 之后，有两个比较重要的目录，我们后续的操作基本上都涉及这两个目录：</p>
+<div class="tabs" id="important_dir"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#important_dir-1">/etc/httpd/</button></li><li class="tab"><button type="button" data-href="#important_dir-2">/var/www/</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="important_dir-1"><p>在这个目录下，主要包括<code>conf</code>目录、<code>conf.d</code>目录以及<code>conf.modules.d</code>目录。在<code>conf</code>目录下的<code>httpd.conf</code>文件是 Apache 的主要配置文件，当我们运行 httpd 命令时，它就会读取该配置文件。</p>
+<p>而<code>conf.d</code>目录下的配置文件可以用于补充<code>httpd.conf</code>，但如果在<code>httpd.conf</code>文件中包含了这些文件，就相当于把这些子配置文件的内容写入到<code>httpd.conf</code>文件中。对于<code>conf.modules.d</code>目录下的配置文件也是一样。</p>
+<p>在功能上，<code>conf.d</code>的配置文件主要用于补充<code>httpd.conf</code>的配置，而<code>conf.modules.d</code>下的配置文件主要用于添加某个模块。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="important_dir-2"><p>在这个目录下是 Apache 默认保存网页文件的地方，它有一个叫做<code>html</code>的目录，你可以把自己的网站文件全部放在这里面，运行 Apache 就直接能访问你的网页了。但我们之后会通过 Git 来拉取仓库，所以不用这个文件夹。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h3 id="3-认识-Apache-的配置文件">3. 认识 Apache 的配置文件</h3>
+<p>我们用 vim 打开<code>httpd.conf</code>文件，可以看到里面有下面这些比较主要的内容：</p>
+<div class="tabs" id="apache_config_file"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#apache_config_file-1">配置文件根目录</button></li><li class="tab"><button type="button" data-href="#apache_config_file-2">监听端口</button></li><li class="tab"><button type="button" data-href="#apache_config_file-3">包含目录</button></li><li class="tab"><button type="button" data-href="#apache_config_file-4">域名配置</button></li><li class="tab"><button type="button" data-href="#apache_config_file-5">网页文件根目录</button></li><li class="tab"><button type="button" data-href="#apache_config_file-6">主页文件名设置</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="apache_config_file-1"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/06.png" alt="06"></p>
+<p>这就是我们刚刚所说的最重要的其中一个目录，它表示服务器将从这个目录下读取配置文件。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-2"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/07.png" alt="07"></p>
+<p>这个配置表示使用 Apache 监听 80 端口，也就是 http 协议的默认端口，我们所有通过域名访问的操作都将默认使用 80 端口访问服务器。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-3"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/08.png" alt="08"></p>
+<p>这一行内容表示将包含所有<code>conf.modules.d</code>目录下的所有<code>.conf</code>配置文件。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-4"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/09.png" alt="09"></p>
+<p>可以看到这一行配置默认是被注释掉了的，它用来配置我们访问并解析到该服务器的域名。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-5"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/10.png" alt="10"></p>
+<p>这一段内容就是用来指示网页文件的位置以及权限的了，其中<code>DocumentRoot</code>后面的路径表示网站主页文件所在的位置，一般是<code>index.html</code>所在的位置。</p>
+<p><code>&lt;Directory &quot;/var/www&quot;&gt;</code>标签对以及其中的内容用来定义该目录下服务器所拥有的权限。</p>
+<p><code>&lt;Directory &quot;/var/www/html&quot;</code>标签对就是用来定义你的网站主页文件所在目录的权限了。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="apache_config_file-6"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/11.png" alt="11"></p>
+<p>这一条配置是用来描述 Apache 默认查找哪个文件作为网站的主页文件的，你可以在<code>index.html</code>后面添加一个如<code>test.html</code>，它所实现的效果就是如果在你所指定的<code>DocumentRoot</code>下找不到<code>index.html</code>文件的话，就寻找<code>test.html</code>文件作为网站的主页</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="三、-搭建网站">三、 搭建网站</h2>
+<p>认识了最基本的 Apache 配置之后，我们开始搭建网站。在修改各种配置之前我们先将网页文件拉下来以及配置好相应的环境。</p>
+<p>我这里有三个网站，他们的仓库名分别是：<code>Syunn</code>、<code>Blog</code>、<code>Note</code>。我们首先演示只搭建一个网站的配置方法，用<code>Syunn</code>作为示例。然后我们将演示搭建多个网站的配置方法，此时三个仓库都将作为示例。</p>
+<p>其中<code>Blog</code>是用<code>hexo</code>进行构建的，所以我们除了<code>git</code>之外还需要<code>hexo</code>，当然要运行和下载<code>hexo</code>，那也少不了<code>nodejs</code>和<code>npm</code>。</p>
+<h3 id="1-准备">1. 准备</h3>
+<h4 id="1）git">1）git</h4>
+<p>安装 git 很简单：<code>yum install git</code>即可</p>
+<p>然后就是配置<code>ssh</code>密钥和<code>git</code>配置：</p>
+<p>通过下面的命令创建密钥对：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;Server&quot;</span></span><br></pre></td></tr></table></figure>
+<p>然后通过<code>vim</code>打开<code>id_rsa.pub</code>文件，复制其中的内容。然后打开<code>github</code>网站的<code>setting</code>下的<code>SSH and GPG keys</code>处，点击新建 SSH key，取好名字，将复制的内容填入下面的文本框即可。</p>
+<p>然后使用下面的命令测试一下 ssh 连接：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<p>如果正常说明已经能够正常连接。</p>
+<p>最后配置一下<code>git</code>即可完成<code>git</code>的安装了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;&lt;你的用户名&gt;&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;&lt;你的邮箱&gt;&quot;</span></span><br><span class="line">git config --global core.quotepath <span class="literal">false</span>		/* 解决中文路径显示乱码的问题 */</span><br></pre></td></tr></table></figure>
+<p>当然，这些配置写不写都无所谓，因为在服务器这个不太适合编程的环境下，我们通常只需要进行<code>git pull</code>操作。</p>
+<h4 id="2）nodejs">2）nodejs</h4>
+<blockquote>
+<p>由于我的博客是用 hexo 搭建的，所以需要使用 nodejs，如果你不需要就不用安装。</p>
+</blockquote>
+<p>安装<code>nodejs</code>同样：<code>yum install nodejs</code></p>
+<p>然后测试一下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+<p>如果都正常显示版本号，则安装成功</p>
+<p>因为是在服务器上使用<code>npm</code>，所以实际上换不换源都无所谓，阿里云提供的服务器下行速度都还是又稳又快。</p>
+<p>然后安装我需要的<code>hexo</code>即可：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
-<p>如果我的 node 文件夹在<code>/opt</code>目录下，则它会安装到<code>/opt/node/lib/node_modules/hexo-cli/bin/</code>下面，我们像下面这样添加软链即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /opt/node/lib/node_modules/hexo-cli/bin/hexo /usr/local/bin/</span><br></pre></td></tr></table></figure>
-<p>需要注意的是，添加软链时地址一定是绝对地址，不要填成了相对地址。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h3 id="7-JetBrains">7. JetBrains</h3>
-<div class="tabs" id="fastgithub"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#fastgithub-1">下载</button></li><li class="tab"><button type="button" data-href="#fastgithub-2">安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="fastgithub-1"><p>主要有两种下载安装方法，对于只需要 JB 中的某一个软件的用户来说，直接去相应软件的下载页面下载即可，这里不进行详述。</p>
-<p>对于需要多个 JB 软件的用户来说，可以先下载一个 JetBrains ToolBox ，然后在这个软件里下载需要的软件，同时该软件还可以对项目进行管理，非常方便，接下来简单说一下下载方法。</p>
-<p>首先直接前往软件的下载页面：<a href="https://www.jetbrains.com/zh-cn/toolbox-app/?_gl=1*1bx53n1*_ga*OTY4ODkxMTkxLjE2NzUwNzkwOTg.*_ga_9J976DJZ68*MTY3NTE2MjgxNy4yLjEuMTY3NTE2MjgzMy4wLjAuMA..&amp;_ga=2.17468218.2027988100.1675079099-968891191.1675079098">ToolBox App</a></p>
-<p>然后直接下载页面推荐的文件格式即可（我是 Ubuntu，所以选择 .tar.gz 格式的文件），点击下载即可</p>
-<p>在等待下载的这一段时间里，我们可以点击下载按钮下方的 <strong>系统要求</strong>，来查看在安装之前需要做的准备：</p>
-<p><img src="/images/Ubuntu%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/01.png" alt="01"></p>
-<p>可以看到，在 Linux 环境下，我们还需要下载一些软件包才能正常使用 ToolBox</p>
-<p>我们打开终端，输入以下命令即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install libfuse2 libxi6 libxrender1 libxtst6 mesa-utils libfontconfig libgtk-3-bin</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="fastgithub-2"><p>下载好 ToolBox 的安装包文件之后，输入下面的命令解压缩即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar -xvf &lt;package-name&gt;</span><br></pre></td></tr></table></figure>
-<p>然后运行一下解压之后的文件夹里的可执行文件即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./jetbrains-toolbox</span><br></pre></td></tr></table></figure>
-<p>如果能够看到下面的界面，就说明安装成功了：</p>
-<p><img src="/images/Ubuntu%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/02.png" alt="02"></p>
-<p>然后就可以在 ToolBox 里安装需要的软件了。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h3 id="8-Chrome">8. Chrome</h3>
-<p>首先移动到安装 Chrome 的目录，然后执行下面的命令下载最新的<code>.deb</code>软件包：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb</span><br></pre></td></tr></table></figure>
-<p>然后执行下面的命令安装即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install ./google-chrome-stable_current_amd64.deb</span><br></pre></td></tr></table></figure>
-<h2 id="五、-外观">五、 外观</h2>
-<h3 id="1-缩放与字体大小">1. 缩放与字体大小</h3>
-<p>和 Windows 的全局缩放相比，Ubuntu 的全局缩放基本上是用不了的，即使只是 125%，也看起来很模糊，所以对于小屏幕（如我的笔记本只有 14 英寸）来说，改变观感的方法只能从各个软件入手。以下设置完全以我的屏幕大小为参考：</p>
-<p><strong>vscode</strong>：在设置文件中添加如下代码即可：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;window.zoomLevel&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;settingsSync.ignoredSettings&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;-window.zoomLevel&quot;</span></span><br><span class="line"><span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+<p>测试一下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+<p>正常显示即可。</p>
+<h3 id="2-单网站搭建">2. 单网站搭建</h3>
+<h4 id="1）准备">1）准备</h4>
+<p>我们首先通过<code>git</code>将<code>Syunn</code>文件夹拉取到<code>/var/www/</code>目录下；</p>
+<h4 id="2）修改配置文件">2）修改配置文件</h4>
+<p>将原本的<code>httpd.conf</code>文件做一个备份，以便日后恢复：<code>cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.backup</code></p>
+<p>然后我们通过<code>vim</code>打开<code>httpd.conf</code>文件：<code>vim /etc/httpd/conf/httpd.conf</code></p>
+<p>在我们之前介绍的配置文件内容的基础上，我们需要修改的内容有以下几点：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改域名</span></span><br><span class="line">ServerName syunn.cn</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改网站根目录</span></span><br><span class="line">DocumentRoot <span class="string">&quot;/var/www/Syunn&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 以及网站根目录的权限处同样也要修改</span></span><br><span class="line"><span class="comment"># 原本是 &lt;Directory &quot;/var/www/html&quot;&gt;</span></span><br><span class="line"><span class="comment"># 变为</span></span><br><span class="line">&lt;Directory <span class="string">&quot;/var/www/Syunn&quot;</span>&gt;</span><br><span class="line">	<span class="comment"># 中间内容不变</span></span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
+<p>就这么简单就 OK 了。</p>
+<h4 id="3）运行-Apache">3）运行 Apache</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start httpd</span><br></pre></td></tr></table></figure>
+<p>在运行之前实际上要先去将自己的域名解析到这个 IP 地址，才可以通过域名访问，我已经提前弄好了，直接就可以看到效果了：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/12.png" alt="12"></p>
+<h3 id="3-多网站搭建">3. 多网站搭建</h3>
+<h4 id="1）准备-2">1）准备</h4>
+<p>我希望我的博客能用子域名<code>blog.syunn.cn</code>访问以及我的笔记能用<code>note.syunn.cn</code>访问，而不是使用子目录的形式访问。</p>
+<p>Apache 的虚拟主机功能为这个问题提供了很好的解决方案。</p>
+<p>实际上这个功能用起来非常的简单，只需要往<code>httpd.conf</code>文件里添加几段内容即可。为了模块化该配置文件，我们可以将虚拟主机的功能配置写在其他配置文件中，然后用<code>httpd.conf</code>包含该文件即可。</p>
+<p>在修改配置之前，我们先将此次演示需要的两个文件夹<code>Blog</code>和<code>Note</code>拉取到<code>/var/www</code>中即可，然后在<code>Blog</code>文件夹中执行<code>npm install</code>和<code>hexo g -d</code>命令即可完成网页文件的生成。</p>
+<h4 id="2）修改配置文件-2">2）修改配置文件</h4>
+<p>首先我们在<code>conf.d</code>目录下添加一个新的配置文件，文件名随意取因为那并不是决定性因素，我们就暂定为<code>virtual.conf</code>。</p>
+<p>然后通过<code>vim</code>打开该文件，添加下面的内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先针对多出来的两个可浏览目录进行权限方面的规范，我们之前的 Syunn 那个目录在 httpd.conf 里已经配置过了</span></span><br><span class="line"><span class="comment"># Blog 的网页文件生成在 public 子目录下</span></span><br><span class="line">&lt;Directory <span class="string">&quot;/var/www/Blog/public&quot;</span>&gt;</span><br><span class="line">	AllowOverride None</span><br><span class="line">	Order allow,deny</span><br><span class="line">	Allow from all</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">&lt;Directory <span class="string">&quot;/var/www/Note&quot;</span>&gt;</span><br><span class="line">	AllowOverride None</span><br><span class="line">	Order allow,deny</span><br><span class="line">	Allow from all</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 针对三台主机的 DocumentRoot 进行设置</span></span><br><span class="line"><span class="comment"># *:80 表示所有对该服务器的 80 端口访问</span></span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">	ServerName syunn.cn</span><br><span class="line">	<span class="comment"># 设置别名，我希望 www.syunn.cn 可以和使用 syunn.cn 达到同样的效果</span></span><br><span class="line">	ServerAlias www.syunn.cn</span><br><span class="line">	DocumentRoot /var/www/Syunn</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">	ServerName blog.syunn.cn</span><br><span class="line">	DocumentRoot /var/www/Blog/public</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">	ServerName note.syunn.cn</span><br><span class="line">	DocumentRoot /var/www/Note</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>需要注意以下几点：</p>
 <ul>
-<li>第一项设置窗口的缩放等级，原始大小为 0（可根据实际需要进行缩放）</li>
-<li>第二项设置将上一项设置加入默认同步设置项中（第一项设置默认不同步，如果再次安装需要重新设置）</li>
-<li>更换大屏显示器后将上述两项注释掉即可</li>
+<li>在虚拟主机的设置上还有很多可用的功能，不过，最低的限度是需要有<code>ServerName</code>和<code>DocumentRoot</code>这两个</li>
+<li>在配置目录权限时使用到的配置项不做解释，请自行去查一查权威的用法</li>
+<li>使用了虚拟主机后，原本的主机名（<code>syunn.cn</code>）也要同时写入虚拟主机的对应中，否则这个主机名可能会不知道被丢到哪里去</li>
 </ul>
-<p><strong>typora</strong>：直接在 <strong>偏好设置-外观</strong> 设置中调整自己需要的字体大小即可，更换大屏显示器后将字体调回原本大小或者直接使用自动大小即可。</p>
-<p><strong>火狐浏览器</strong>：将默认缩放大小设置为 120% 或 133%（或者自己需要的大小）即可，更换大屏显示器后将设置调回 100%</p>
-<p><strong>Chrome</strong>：与 “火狐浏览器” 操作相同</p>
-<h3 id="2-安装字体">2. 安装字体</h3>
-<p>一般的设置按照自己的喜好自行设置即可。这里主要介绍一个操作：添加字体。主要是因为我写代码比较喜欢 Consolas 字体，但是 Ubuntu 里没有这个字体。</p>
-<p>首先，我们需要下载需要的字体文件，一般是个压缩文件，我们将其解压即可；</p>
-<p>然后我们在下面的文件夹新建一个字体文件夹：<code>/usr/share/fonts</code></p>
-<p>然后将所有的<code>.ttf</code>文件移动到上一步自己新建的文件夹中即可。</p>
-<p>然后修改字体权限：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> 644 /usr/share/fonts/&lt;你刚才新建的文件夹&gt;/*.ttf</span><br></pre></td></tr></table></figure>
-<p>然后进入到字体目录：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/fonts/&lt;你刚才新建的文件夹&gt;/</span><br></pre></td></tr></table></figure>
-<p>刷新并安装字体：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo mkfontscale &amp;&amp; sudo mkfontdir &amp;&amp; sudo fc-cache -fv</span><br></pre></td></tr></table></figure>
-<h2 id="六、-其他配置">六、 其他配置</h2>
-<h3 id="1-禁用电脑自带键盘">1. 禁用电脑自带键盘</h3>
-<p>由于为了节省空间，我常常需要把外接键盘放在笔记本上，但是很容易造成误触，所以需要将电脑自带键盘进行禁用，具体方法如下：</p>
-<ul>
-<li>
-<p>首先打开终端，输入以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput list</span><br></pre></td></tr></table></figure>
-<p>如果没有 xinput 的话，按照指示安装即可</p>
-</li>
-<li>
-<p>在 Ubuntu 22 下，通常这个命令执行之后会有一条错误信息</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">WARNING: running xinput against an Xwayland server. See the xinput man page for details.</span><br></pre></td></tr></table></figure>
-<p>这是因为 Ubuntu 22 默认使用了 Wayland 模式，导致 /etc/X11/xorg.conf.d/40-libinput.conf 不起作用，在这种情况下我们是无法正常禁用设备的，而且它也并不会把电脑自带键盘列出来，我们需要修改一下 /etc/gdm3/custom.conf 这个文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/gdm3/custom.conf</span><br></pre></td></tr></table></figure>
-<p>可以先观察一下这个文件的内容，它的 WaylandEnable 这一项可能是 WaylandEnable=true 也可能直接注释掉了，如我的就是直接注释掉了，我们把该项前的注释符<code>#</code>删掉，然后确认一下 WaylandEnable 的值为 false 即可。</p>
-<p>最后重启一下电脑。</p>
-<p><strong>注意</strong>：不会使用 vim 编辑器的可以尝试使用 gedit，将上述命令中的 vim 替换为 gedit 即可，没有该软件的根据终端的提示进行安装。</p>
-</li>
-<li>
-<p>在排除了问题之后，我们再次打开终端输入 <code>xinput list</code> 命令，正常情况下，输出就应该像下面这样全部输入输出设备都列出来了：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sn@Program:~/桌面$ xinput list</span><br><span class="line">⎡ Virtual core pointer                    	id=2	[master pointer  (3)]</span><br><span class="line">⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ MSFT0004:00 06CB:CD98 Mouse             	id=16	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ MSFT0004:00 06CB:CD98 Touchpad          	id=17	[slave  pointer  (2)]</span><br><span class="line">⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]</span><br><span class="line">    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=6	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=7	[slave  keyboard (3)]</span><br><span class="line">    ↳ Integrated Camera: Integrated C         	id=12	[slave  keyboard (3)]</span><br><span class="line">    ↳ Ideapad extra buttons                   	id=15	[slave  keyboard (3)]</span><br><span class="line">    ↳ AT Translated Set 2 keyboard            	id=18	[slave  keyboard (3)]</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p>我们首先找到电脑自带键盘，一般名称都是 “AT Translated Set 2 keyboard”，我们需要使用该项后面的 id 值，我这里是 18，然后输入下面的命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput set-prop 18 <span class="string">&quot;Device Enabled&quot;</span> 0</span><br></pre></td></tr></table></figure>
-<p>即可禁用电脑自带键盘，命令中的 18 替换成你要禁用的设备在你自己的电脑上的 id 值，然后最后的值为 0 即为禁用，值为 1 即为启用，如，启用该设备的命令为：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput set-prop 18 <span class="string">&quot;Device Enabled&quot;</span> 1</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>另外，使用命令禁用键盘之后，只要重启电脑，又会自动启用。如果想永久禁用的话，就把命令写入到 bashrc：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim ~/.bashrc</span><br></pre></td></tr></table></figure>
-<p>添加高亮的两行即可：</p>
-<p><img src="/images/Ubuntu%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/08.png" alt="08"></p>
-<p>具体内容是：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 禁用电脑自带键盘</span></span><br><span class="line">xinput set-prop <span class="string">&quot;AT Translated Set 2 keyboard&quot;</span> <span class="string">&quot;Device Enabled&quot;</span> 0</span><br></pre></td></tr></table></figure>
-<p>这里使用设备的名称而不是用 id 值是因为 id 值可能发生变化。</p>
-<p>接下来重启一下试试吧。</p>
+<p>然后，我们需要在<code>httpd.conf</code>文件中包含该文件，可以选择只包含这一个文件，也可以包含<code>conf.d</code>这整个文件夹，我选择的是包含整个文件夹。</p>
+<p>在实际的操作中，我选择将这个包含配置写在包含<code>conf.modules.d</code>目录的配置项下面，这样更加的清晰：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Include conf.modules.d/*.conf</span><br><span class="line"><span class="comment"># 第一行是原文件中有的</span></span><br><span class="line"><span class="comment"># 下面是我添加的</span></span><br><span class="line">Include conf.d/*.conf</span><br></pre></td></tr></table></figure>
+<p>在<code>httpd.conf</code>文件的末尾实际上还有一条：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">IncludeOptional conf.d/*.conf</span><br></pre></td></tr></table></figure>
+<p>我们现在可以将它删掉了。</p>
+<h4 id="3）重启-Apache">3）重启 Apache</h4>
+<p>这些都弄好之后我们就可以重启 Apache 了。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart httpd</span><br></pre></td></tr></table></figure>
+<p>重启完成之后我们就可以使用三个域名分别打开三个网站了：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/14.png" alt="14"></p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/15.png" alt="15"></p>
+<h2 id="四、-使用-https">四、 使用 https</h2>
+<h3 id="1-前言">1. 前言</h3>
+<p>要使用 https 首先需要的一个东西就是 ssl 证书，这个证书说好拿也好拿，说不好拿也不好拿。</p>
+<p>首先你可以自制一个自签名的证书，这很轻松，但不幸的是，经过多次测试这样的证书大部分浏览器都不认。</p>
+<p>那么就只能去获取一个 CA 认证的证书了，但这些证书不是贵就是弄起来麻烦，所以在写这篇博客之前我一直都只使用<code>http</code>协议。</p>
+<p>但在今天我找到了一个可以轻松白嫖且轻松搭建的方法。</p>
+<h3 id="2-准备">2. 准备</h3>
+<h4 id="1）获取经过认证的免费证书">1）获取经过认证的免费证书</h4>
+<p>我们首先进入到阿里云的 ssl 证书购买界面：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/16.png" alt="16"></p>
+<p>我们首先就直接叉掉这个购买页面，然后来到红框标注的<strong>免费证书</strong>这一栏：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/17.png" alt="17"></p>
+<p>我们直接点击<strong>立即购买</strong>即可。需要注意的是免费证书一年只能购买 20 个，每个证书只能用于一个具体的域名，不能用于泛域名如<code>*.syunn.cn</code>（对我来说足够了）。另外这些证书有效期为 1 年，但是 1 年之后又可以重新免费获取 20 个的额度（简直不要太爽）。</p>
+<h4 id="2）创建证书">2）创建证书</h4>
+<p>我们购买好之后可以看见在刚刚的<strong>立即购买</strong>按钮旁边的<strong>创建证书按钮</strong>后面多了一个<code>20/20</code>，也就是我们还可以创建 20 个证书，我们直接点击创建。</p>
+<p>需要注意的是创建后的 ssl 证书还需要申请 CA 认证以及域名绑定：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/18.png" alt="18"></p>
+<p>我们点击<strong>证书申请</strong>即可，在申请页面需要填写绑定的域名（注意只能是单域名如<code>syunn.cn</code>、<code>blog.syunn.cn</code>，不能是泛域名如<code>*.syunn.cn</code>），然后一般首次申请还需要添加联系人，即申请完成后会通过该渠道发信息给你。最后还有一个所在地填写，正常填写即可。</p>
+<p>最后点击<strong>提交审核</strong>然后等待审核完成就可以了，这个时间很快，一般两三分钟就可以了，已经审核的 ssl 证书如下所示：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/19.png" alt="19"></p>
+<p>然后按照同样的操作为我们的三个域名都创建一个证书就可以了，其中<code>syunn.cn</code>只需要创建一个，因为默认该证书将同时用于<code>www.syunn.cn</code>。</p>
+<h4 id="3）添加-443-端口访问">3）添加 443 端口访问</h4>
+<p>创建好证书之后我们先不着急部署，我们先按照和添加 80 端口同样的方法将 443 端口的访问权限开通即可。</p>
+<p>443 端口就是 https 协议的默认传输端口，这里我就不再介绍具体的过程了。</p>
+<h3 id="3-部署-SSL-证书">3. 部署 SSL 证书</h3>
+<p>阿里云提供的证书有一个一键部署的功能，但由于抽象程度比较高，操作者不太清楚其中做了什么，而且也容易出错，所以我们使用更具体的部署方法。</p>
+<h4 id="1）安装-mod-ssl">1）安装 mod_ssl</h4>
+<p>我们首先需要安装<code>mod_ssl</code>模块，Apache 才能启用 https 功能。</p>
+<p>安装命令：<code>yum install mod_ssl</code></p>
+<p>安装好之后有一个非常重要的文件：<code>/etc/httpd/conf.d/ssl.conf</code>，该文件为 ssl 功能的配置文件，我们主要修改这个文件</p>
+<p>在修改之前我们还是先认识一下<code>ssl.conf</code>配置文件里的内容：</p>
+<div class="tabs" id="ssl_file"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#ssl_file-1">监听端口</button></li><li class="tab"><button type="button" data-href="#ssl_file-2">虚拟主机配置</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="ssl_file-1"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/21.png" alt="21"></p>
+<p>首先第一条配置就是先开启监听 443 端口。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="ssl_file-2"><p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/22.png" alt="22"></p>
+<p>然后就是一个标签对，这个标签对里的内容也是我们等会重点修改的内容，同时在搭建另外两个网站时还会新建两个标签对，就和创建虚拟主机时的操作类似。</p>
+<p>可以看到里面也有<code>DocumentRoot</code>和<code>ServerName</code>等内容，这些虽然看上去我们在<code>virtual.conf</code>配置文件里已经配置过了，但那是监听的 80 端口，而这是监听的 443 端口。也就是说，如果我们访问：<code>http://syunn.cn</code>就将进入<code>virtual.conf</code>这个配置文件，而如果访问：<code>https://syunn.cn</code>就将进入<code>ssl.conf</code>这个配置文件。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h4 id="2）下载证书">2）下载证书</h4>
+<p>在创建好的证书的后面有一个<strong>下载</strong>按钮，我们点击就会弹出下面的界面：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/20.png" alt="20"></p>
+<p>由于我们是使用的 Apache 搭建的服务，所以我们选择下载 Apache 的证书。</p>
+<p>同时在<strong>下载</strong>按钮前还有一个<strong>帮助</strong>按钮，这里提供了最新的部署方法，也是可以参考的。</p>
+<p>点击<strong>下载</strong>之后它会将证书的压缩包下载到本地，我们可以将其先解压然后通过和把<code>id_rsa.pub</code>文件传输到服务器上一样的方法将解压出来的证书传输到服务器，也可以直接将压缩包通过该方法传输到服务器，然后在服务器上安装<code>zip</code>工具通过<code>unzip</code>命令解压压缩包即可。安装命令：<code>yum install zip</code></p>
+<p>由于一个域名将有多个证书文件，所以我的建议是在<code>/etc/httpd/</code>目录下建立一个<code>certs</code>目录，然后再按照域名来建立相应的子目录，将对应的证书内容放在对应的子目录下，这样不容易产生混乱。</p>
+<h4 id="3）修改配置文件">3）修改配置文件</h4>
+<p>以配置<code>syunn.cn</code>为例，我们首先通过<code>vim</code>打开<code>/etc/httpd/conf.d/ssl.conf</code>文件，需要修改的有以下内容（有些配置项本身是被注释了的，直接删除<code>#</code>即可取消注释）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先将标签中的 _default_ 改为 *，如下所示：</span></span><br><span class="line">&lt;VirtualHost *:443&gt;</span><br><span class="line">	ServerName syunn.cn</span><br><span class="line">	ServerAlias www.syunn.cn</span><br><span class="line">	DocumentRoot /var/www/Syunn</span><br><span class="line">	</span><br><span class="line">	SSLEngine on</span><br><span class="line">	</span><br><span class="line">	SSLProtocol all -SSLv2 -SSLv3</span><br><span class="line">	</span><br><span class="line">	SSLCipherSuite HIGH:!RC4:!MD5:!aNULL:!eNULL:!NULL:!DH:!EDH:!EXP:+MEDIUM</span><br><span class="line">	SSLHonorCipherOrder on</span><br><span class="line">	<span class="comment"># 以_public.crt 结尾的那个文件</span></span><br><span class="line">	SSLCertificateFile /etc/httpd/certs/syunn/syunn.cn_public.crt</span><br><span class="line">	<span class="comment"># 以 .key 结尾的那个文件</span></span><br><span class="line">	SSLCertificateKeyFile /etc/httpd/certs/syunn/syunn.cn.key</span><br><span class="line">	<span class="comment"># 以 _chain.crt 结尾的那个文件</span></span><br><span class="line">	SSLCertificateChainFile /etc/httpd/certs/syunn/syunn.cn_chain.crt</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 其他未涉及到的内容不做修改</span></span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>如果想要添加其他的域名，就添加一对<code>&lt;VirtualHost *:443&gt;</code>标签对然后在里面把上面所涉及到的内容添加到标签对里面即可。</p>
+<p><strong>需要注意的是</strong>，新添加的<code>VirtualHost</code>标签对一定要在前一个<code>VirtualHost</code>标签对之外，注意不要看错了，因为在默认的那个<code>VirtualHost</code>标签对中还有其他标签对。</p>
+<p>大概的内容都已经涉及到了，这里就不再演示添加其他域名的操作了。</p>
+<p>添加完成后还需要确认在<code>httpd.conf</code>文件中有没有包含这个文件，由于我们之前添加包含时直接添加了整个目录，所以可以确定是包含了的。</p>
+<h4 id="4）将-http-访问转发到-https">4）将 http 访问转发到 https</h4>
+<p>我们可以强制所有对网站的访问都是 https 访问。具体做法是修改之前的监听 80 端口的那个虚拟主机配置文件。</p>
+<p>我们首先通过<code>vim</code>打开该文件，在这个文件里，我们设置了三个虚拟主机，分别代理三个域名，如果我们需要某个域名强制使用 https 访问，就在该虚拟主机的标签对里添加下面的内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">RewriteEngine on</span><br><span class="line">RewriteCond %&#123;SERVER_PORT&#125; !^443$</span><br><span class="line">RewriteRule ^(.*)$ https://%&#123;SERVER_NAME&#125;<span class="variable">$1</span> [L,R]</span><br></pre></td></tr></table></figure>
+<p><code>Rewrite</code>是一个重写配置，它使用正则表达式进行配置，上面的配置的含义就是当监听到 http 访问时就转发到对应的 https 访问。</p>
+<h4 id="5）重启-Apache">5）重启 Apache</h4>
+<p>按照之前的操作将 Apache 服务重启一次即可。</p>
+<p>可以看到，在地址栏旁边已经不再是**“不安全”**的提示了，已经可以使用 https 访问了：</p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/23.png" alt="23"></p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/24.png" alt="24"></p>
+<p><img src="/images/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/25.png" alt="25"></p>
 <hr>
 ]]></content>
       <categories>
-        <category>Linux</category>
-        <category>Ubuntu</category>
+        <category>网络</category>
+        <category>服务器</category>
       </categories>
       <tags>
         <tag>教程</tag>
-        <tag>系统</tag>
         <tag>Linux</tag>
-        <tag>Ubuntu</tag>
+        <tag>网站</tag>
+        <tag>阿里云</tag>
+        <tag>服务器</tag>
+        <tag>Apache</tag>
       </tags>
   </entry>
 </search>
