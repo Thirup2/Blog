@@ -274,17 +274,16 @@
 <p>具体的编译环境与依赖可以前往官方的教程：<a target="_blank" rel="noopener" href="https://github.com/nodejs/node/blob/main/BUILDING.md#building-nodejs-on-supported-platforms">node/BUILDING.md at main · nodejs/node · GitHub</a></p>
 <p>主要关注两个地方，其一是某些工具或依赖的版本要求：</p>
 <p><img src="/images/358aad2/03.png" alt="03"></p>
-<div class="note info flat"><p>容易无法达到要求的一般是<code>gcc</code>和<code>g++</code>的版本，但实际测试下来似乎版本低一点也是可以编译成功的，我的版本是 8.5.0，在此仅作参考。</p>
-</li>
-</ol>
-</div>
+<blockquote>
+<p>容易无法达到要求的一般是<code>gcc</code>和<code>g++</code>的版本，但实际测试下来似乎版本低一点也是可以编译成功的，我的版本是 8.5.0，在此仅作参考。</p>
+</blockquote>
 <p>其二是不同包管理器下的依赖安装方法：</p>
 <p><img src="/images/358aad2/04.png" alt="04"></p>
 <blockquote>
 <p><strong>注意</strong>：</p>
 <p>由于使用包管理器安装的依赖版本可能比较落后，或许无法满足其版本要求，所以可能需要采用其他方式进行安装</p>
 </blockquote>
-<ol start="4">
+</li>
 <li>
 <p><strong>配置编译安装</strong></p>
 <p>按顺序执行以下命令：</p>
