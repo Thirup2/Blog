@@ -1,6 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>通过调控编译器选项的乱码解决方案测试</title>
+    <url>//posts/5e27120d/</url>
+    <content><![CDATA[<h2 id="一、输出测试">一、输出测试</h2>
+<h3 id="1-测试代码">1. 测试代码</h3>
+<p>使用了一个非常简单的代码进行测试：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;你好，C++！&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-测试前分析">2. 测试前分析</h3>
+<p>开始测试前我们不妨先分析一下，根据上一篇文章：【<a href="https://blog.syunn.cn/posts/c77f42f7/">编程中乱码出现的原因</a>】 所提到的关于导致乱码的两个决定性因素不难得出，我们只需要将编译器的<strong>设定1</strong>（输入源文件所使用字符集的设定项）固定为<code>utf-8</code>（因为在上一篇文章中将源文件假设固定为了<code>utf-8</code>字符集），将编译器的<strong>设定2</strong>（输出窄字符串的转换目标字符集的设定项）固定为<code>gbk</code>（在上一篇文章中假设固定为了<code>gbk</code>字符集）即可。</p>
+<p>由于 MSVC 的设定1默认不识别<code>utf-8</code>，而 GCC 的设定2默认为<code>utf-8</code>，所以很显然，如果我们使用 MSVC 进行编译，则需要显式设置设定1，而如果使用 GCC 进行编译，则需要显示设置设定2，所以实际上只需要做两组测试即可。</p>
+<p>但为了证明上一篇文章中所述理论的可靠性，还需要添加一些测试组，所有测试将分为以下几个部分：</p>
+<div class="tabs" id="test"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#test-1">MSVC部分</button></li><li class="tab"><button type="button" data-href="#test-2">GCC部分</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="test-1"><ol>
+<li>可靠性测试：又分为以下两个部分
+<ol>
+<li>预测正确测试组：编译器在缺省状态下对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 3 组测试）</li>
+<li>预测出错测试组：编译器在缺省状态下对<code>utf-8(No BOM)</code>字符集的源文件进行编译测试（一共 1 组测试）</li>
+</ol>
+</li>
+<li>正确性测试：也分为两个部分
+<ol>
+<li>预测正确测试组：将<strong>设定1</strong>设置为<code>utf-8</code>对<code>utf-8(No BOM)</code>字符集的源文件进行编译测试（一共 1 组测试）</li>
+<li>预测错误对照组：将<strong>设定2</strong>设置为<code>utf-8</code>对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>、<code>utf-8(No BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 4 组测试）</li>
+</ol>
+</li>
+</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="test-2"><ol>
+<li>可靠性测试：此部分无预测正确测试组，只包含预测错误测试组。分别是在缺省状态下对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>、<code>utf-8(No BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 4 组测试）</li>
+<li>正确性测试：此部分分为如下两个部分
+<ol>
+<li>预测正确测试组：将<strong>设定2</strong>固定为<code>gbk</code>，然后将<strong>设定1</strong>依次设置为<code>utf-16</code>、<code>gbk</code>并对对应字符集的源文件进行编译测试，另外在缺省状态下对<code>utf-8(No BOM)</code>和<code>utf-8(BOM)</code>字符集的源文件进行编译测试（一共 4 组测试）</li>
+<li>预测错误对照组：将<strong>设定2</strong>固定为<code>gbk</code>，<strong>设定1</strong>保持缺省状态对<code>utf-16</code>和<code>gbk</code>字符集的源文件进行编译测试。（一共 2 组测试）</li>
+</ol>
+</li>
+</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h3 id="3-测试及测试结果">3. 测试及测试结果</h3>
+<p>以上测试均以表格形式给出：</p>
+<div class="tabs" id="result"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#result-1">MSVC部分</button></li><li class="tab"><button type="button" data-href="#result-2">GCC部分</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="result-1"><ol>
+<li>
+<p>可靠性测试</p>
+<ol>
+<li>
+<p>预测正确测试组</p>
+<table>
+<thead>
+<tr>
+<th>设定项/组别</th>
+<th>第一组（<code>utf-16(LE)</code>）</th>
+<th>第二组（<code>utf-8(BOM)</code>）</th>
+<th>第三组（<code>gbk</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全缺省状态</td>
+<td>正确输出</td>
+<td>正确输出</td>
+<td>正确输出</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>预测出错测试组</p>
+<table>
+<thead>
+<tr>
+<th>设定项/组别</th>
+<th>第一组（<code>utf-8(No BOM)</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全缺省状态</td>
+<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</li>
+<li>
+<p>正确性测试</p>
+<ol>
+<li>
+<p>预测正确测试组</p>
+<table>
+<thead>
+<tr>
+<th>设定项/组别</th>
+<th>第一组（<code>utf-8(No BOM)</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>设定1</strong>：<code>utf-8</code></td>
+<td>正确输出</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>预测错误对照组</p>
+<table>
+<thead>
+<tr>
+<th>设定项/组别</th>
+<th>第一组（<code>utf-16(LE)</code>）</th>
+<th>第二组（<code>utf-8(BOM)</code>）</th>
+<th>第三组（<code>utf-8(No BOM)</code>）</th>
+<th>第四组（<code>gbk</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>设定2</strong>：<code>utf-8</code></td>
+<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
+<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
+<td>出现乱码<code>娴ｇ姴銈介敍瀛?+!</code></td>
+<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</li>
+</ol>
+<p><strong>分析</strong>：所有测试组都得到了预想的结果，比较不同的是正确性测试中的预测错误对照组中的第三组中出现的乱码和其他组别不相同，其原因应该是其他三组都正确识别了源文件中的内容，但在输出时与终端字符集不匹配，而第三组则是在识别源文件内容时就出现了错误，然后在输出时又因为一次不匹配导致了该乱码。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="result-2"><ol>
+<li>
+<p>可靠性测试</p>
+<table>
+<thead>
+<tr>
+<th>设定项/组别</th>
+<th>第一组（<code>utf-16(LE)</code>）</th>
+<th>第二组（<code>utf-8(BOM)</code>）</th>
+<th>第三组（<code>utf-8(No BOM)</code>）</th>
+<th>第四组（<code>gbk</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全缺省状态</td>
+<td>出现编译错误</td>
+<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
+<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
+<td><strong>正确输出</strong></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>正确性测试</p>
+<ol>
+<li>
+<p>预测正确测试组</p>
+<table>
+<thead>
+<tr>
+<th>设定项/组别</th>
+<th>第一组（<code>utf-16(LE)</code>）</th>
+<th>第二组（<code>utf-8(BOM)</code>）</th>
+<th>第三组（<code>utf-8(No BOM)</code>）</th>
+<th>第四组（<code>gbk</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>设定1</strong>：<code>utf-16</code><br /><strong>设定2</strong>：<code>gbk</code></td>
+<td>出现编译错误（和可靠性测试中的编译错误不同）</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>设定1</strong>：<code>gbk</code><br /><strong>设定2</strong>：<code>gbk</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td>正确输出</td>
+</tr>
+<tr>
+<td><strong>设定2</strong>：<code>gbk</code></td>
+<td></td>
+<td>正确输出</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>设定2</strong>：<code>gbk</code></td>
+<td></td>
+<td></td>
+<td>正确输出</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>预测错误对照组</p>
+<table>
+<thead>
+<tr>
+<th>设定项/组别</th>
+<th>第一组（<code>utf-16(LE)</code>）</th>
+<th>第二组（<code>gbk</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>设定2</strong>：<code>gbk</code></td>
+<td>出现编译错误（和可靠性测试中的编译错误相同）</td>
+<td>出现编译错误（输出字符串被识别为非法序列）</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</li>
+</ol>
+<p><strong>分析</strong>：相比于 MSVC 的测试结果，GCC 的测试结果有了更多可以说道的地方</p>
+<ol>
+<li>首先是在可靠性测试的预测错误测试中，最后一组在缺省状态下对<code>gbk</code>字符集的源文件进行编译测试得到了正确的输出，其原因应该是在读取阶段用<code>utf-8</code>解释了<code>gbk</code>字符串编码，但由于 GCC 本身的<strong>设定1</strong>和<strong>设定2</strong>在缺省状态下是相同的，所以即便字符串编码被错误解释了，但是却并未进行任何转换，所以最后在输出到<code>gbk</code>字符集的终端时得到了正确的结果</li>
+<li>整个测试中在对<code>utf-16(LE)</code>字符集的源文件进行测试时都得到了编译错误，其中第一次和第三次错误相同，第二次出现了不同的错误。根据这几组测试中的设定项可以知道第一次和第三次都是用<code>utf-8</code>去解释了<code>utf-16(LE)</code>字符集的源文件，而第二次虽然使用<code>utf-16</code>去解释了<code>utf-16(LE)</code>字符集的源文件，但仍然得到了编译错误，这可能是因为设定项并未设置正确，因为<code>utf-16</code>一共有 4 种情况，分别是大端和小端以及是否带 BOM。但在 GCC 的选项中我只找到了<code>utf-16</code>这一个值，同时我用来测试的是 vscode，其中对于<code>utf-16</code>只进行了大端小端的区分。</li>
+<li>最后一个错误是最后一个测试组中的第二组，即用<code>utf-8</code>识别<code>gbk</code>字符集的源文件，出现了编译错误。但虽然说是编译错误，但具体问题仍然出现在字符串的识别上。在 MSVC 的测试组中并没有用<code>utf-8</code>识别<code>gbk</code>文件的测试组，所以我再次用 MSVC 进行了该项测试，结果与 GCC 出现相同错误，故此处的编译错误属于正常现象。</li>
+</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="二、输入反馈测试">二、输入反馈测试</h2>
+<h3 id="1-测试代码-2">1. 测试代码</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">char</span> str[<span class="number">20</span>];</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;你的输入是：&quot;</span> &lt;&lt; str &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-测试结果及分析">2. 测试结果及分析</h3>
+<p>对于输入反馈的测试，此处不再详细描述测试环节。</p>
+<p><strong>测试结果</strong>：</p>
+<p>实际上，除了上述测试中出现编译错误的测试组外，其余测试无论输出是否正确，几乎都有正确的输入反馈。</p>
+<p>唯一出现的一个乱码错误是在使用<code>gbk</code>解释<code>utf-8</code>字符集的源文件并将字符串字面值按照<code>utf-8</code>字符集下的编码输出到<code>gbk</code>环境的终端上的测试组。另外，此错误只出现在了 MSVC 的测试中，在 GCC 中无法复现此错误，而是直接返回一个编译错误：<code>error: failure to convert gbk to UTF-8</code></p>
+<p><strong>分析</strong>：</p>
+<p>由于几乎每一组都没有出现错误，所以我推测输入的字符串与编译器的设定项没有关系，并且如果在程序中没有对输入的字符串进行任何处理而直接输出的话，其编码也不会进行任何变化（理所当然）。</p>
+<p>在输入阶段，字符串就已经通过终端转换为了<code>gbk</code>字符集下的编码，然后在程序中转了一圈此编码又输出到了终端，所以不会出现错误。</p>
+<p>而仅出现的那一个错误后续又设置了两组测试，一是将字符串字面值全删了，仅进行输入反馈，二是在原本的字符串字面值末尾添加了几个英文字符。在第一组测试中输入得到了正确的反馈，而在第二组测试中，英文字符部分的前几个字符未能成功显示，而后续字符以及输入反馈都得到了正确的显示。推测是在整个字符串从识别到输出的过程中中文字符串的末尾编码与后续字符串的前部分编码产生了合并，总之也属于乱码的一种，但输入反馈仍然满足上述的推测。</p>
+<h2 id="三、总结">三、总结</h2>
+<p>根据上述测试，我们已经可以下定论了，只要我们将编译器的设定1与源文件字符集匹配，将设定2与终端字符集匹配，则可以做到最低程度上的不乱码。</p>
+<p>而至于要处理输入字符串或者字符串字面值的情况，则暂时不进行讨论，可能在后续的文章中进行探索。</p>
+]]></content>
+      <categories>
+        <category>Windows</category>
+        <category>问题探索</category>
+      </categories>
+      <tags>
+        <tag>C</tag>
+        <tag>C++</tag>
+        <tag>Windows</tag>
+        <tag>乱码</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>编程中乱码出现的原因</title>
     <url>//posts/c77f42f7/</url>
     <content><![CDATA[<h2 id="前言">前言</h2>
