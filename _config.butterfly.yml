@@ -908,9 +908,9 @@ css_prefix: true
 # 插入代码到头部 </head> 之前 和 底部 </body> 之前
 inject:
   head:
-    # - <link rel="stylesheet" href="/xxx.css">
+    # - <link rel="stylesheet" href="third_party/Artalk.min.css">
   bottom:
-    # - <script src="xxxx"></script>
+    # - <script src="third_party/Artalk.min.js"></script>
 
 # CDN
 # Don't modify the following settings unless you know how they work
@@ -945,8 +945,11 @@ CDN:
     # docsearch_js:
     # docsearch_css:
     # pjax:
-    # gitalk:
-    # gitalk_css:
+
+    # 此处使用本地脚本，如要使用官方脚本，在 /theme/butterfly/plugins.yml 中将对应部分取消注释，并将下方代码注释掉
+    gitalk: /js/gitalk.min.js
+    gitalk_css: /css/gitalk.min.css
+
     # blueimp_md5:
     # valine:
     # disqusjs:
@@ -986,7 +989,10 @@ CDN:
     # prismjs_js:
     # prismjs_lineNumber_js:
     # prismjs_autoloader:
-    # artalk_js:
-    # artalk_css:
+
+    # 此处使用本地脚本，如要使用官方脚本，在 /theme/butterfly/plugins.yml 中将对应部分取消注释，并将下方代码注释掉
+    artalk_js: /js/Artalk.min.js
+    artalk_css: /css/Artalk.min.css
+
     # busuanzi:
     # abcjs_basic_js:

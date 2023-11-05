@@ -10,14 +10,14 @@ pjax:
   name: pjax
   file: pjax.min.js
   version: 0.2.8
-gitalk:
-  name: gitalk
-  file: dist/gitalk.min.js
-  version: 1.8.0
-gitalk_css:
-  name: gitalk
-  file: dist/gitalk.css
-  version: 1.8.0
+# gitalk:
+#   name: gitalk
+#   file: dist/gitalk.min.js
+#   version: 1.8.0
+# gitalk_css:
+#   name: gitalk
+#   file: dist/gitalk.css
+#   version: 1.8.0
 blueimp_md5:
   name: blueimp-md5
   file: js/md5.min.js
@@ -180,14 +180,14 @@ prismjs_autoloader:
   file: plugins/autoloader/prism-autoloader.min.js
   other_name: prism
   version: 1.29.0
-artalk_js:
-  name: artalk
-  file: dist/Artalk.js
-  version: 2.6.4
-artalk_css:
-  name: artalk
-  file: dist/Artalk.css
-  version: 2.6.4
+# artalk_js:
+#   name: artalk
+#   file: dist/Artalk.js
+#   version: 2.6.4
+# artalk_css:
+#   name: artalk
+#   file: dist/Artalk.css
+#   version: 2.6.4
 pace_js:
   name: pace-js
   other_name: pace
