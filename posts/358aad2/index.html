@@ -390,8 +390,8 @@ document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-
 
   if (typeof window.artalkItem === 'object') initArtalk()
   else {
-    getCSS('https://cdnjs.cloudflare.com/ajax/libs/artalk/2.6.4/Artalk.min.css').then(()=>{
-      getScript('https://cdnjs.cloudflare.com/ajax/libs/artalk/2.6.4/Artalk.min.js').then(initArtalk)
+    getCSS('/css/Artalk.min.css').then(()=>{
+      getScript('/js/Artalk.min.js').then(initArtalk)
     })
   }
 }
@@ -429,8 +429,8 @@ if ('Artalk' === 'Artalk' || !false) {
 
   if (typeof Gitalk === 'function') initGitalk()
   else {
-    getCSS('https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.css')
-    getScript('https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js').then(initGitalk)
+    getCSS('/css/gitalk.min.css')
+    getScript('/js/gitalk.min.js').then(initGitalk)
   }
 }
 
