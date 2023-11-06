@@ -7,6 +7,6 @@ tags:
 categories:
 - 
 description:
-top_img:  /img/cover/material-x.webp
-cover:  /img/cover/material-x.webp
+top_img:  /config/img/cover/material-x.webp
+cover:  /config/img/cover/material-x.webp
 ---

@@ -8,8 +8,8 @@ tags:
 categories:
   - Windows
   - 问题探索
-top_img: /img/cover/material-6.webp
-cover: /img/cover/material-6.webp
+top_img: /config/img/cover/material-6.webp
+cover: /config/img/cover/material-6.webp
 description: 对 Windows 环境下编程所出现的乱码问题的解决方案的总结，包括前篇所提到的调控编译器选项的方法和其他一些方法
 abbrlink: a15e7e9
 date: 2023-10-25 00:40:16

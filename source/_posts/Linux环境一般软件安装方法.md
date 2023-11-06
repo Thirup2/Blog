@@ -7,8 +7,8 @@ tags:
 categories:
   - Linux
   - 基本使用
-top_img: /img/cover/material-1.webp
-cover: /img/cover/material-1.webp
+top_img: /config/img/cover/material-1.webp
+cover: /config/img/cover/material-1.webp
 abbrlink: 9f09e5f1
 date: 2023-08-29 14:37:25
 updated: 2023-08-29 14:37:25

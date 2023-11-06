@@ -9,8 +9,8 @@ tags:
 categories:
   - Linux
   - 软件安装
-top_img: /img/cover/material-2.webp
-cover: /img/cover/material-2.webp
+top_img: /config/img/cover/material-2.webp
+cover: /config/img/cover/material-2.webp
 abbrlink: 4446d03b
 date: 2023-08-29 16:00:47
 updated: 2023-08-29 16:00:47

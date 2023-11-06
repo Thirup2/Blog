@@ -6,6 +6,6 @@ orderby: name
 order: 1
 description: 按照文章的类型划分
 comments: false
-top_img:  /img/pages/tags.jpg
+top_img:  /config/img/pages/tags.jpg
 aside: true
 ---
