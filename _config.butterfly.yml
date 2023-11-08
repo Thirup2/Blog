@@ -49,7 +49,7 @@ avatar:
 disable_top_img: false
 
 # The banner image of home page
-index_img:  /config/img/background/index.jpg
+index_img:  /config/img/background/index.png
 
 # If the banner of page not setting, it will show the top_img
 default_top_img:
@@ -638,7 +638,7 @@ tag_ui: # 留空或 index
 # Website Background (設置網站背景)
 # can set it to color or image (可設置圖片 或者 顔色)
 # The formal of image: url(http://xxxxxx.com/xxx.jpg)
-background: url(/config/img/background/background.jpg)
+background: url(/config/img/background/background.png)
 
 # Footer Background
 footer_bg:  /config/img/background/footimg.jpg
@@ -910,7 +910,8 @@ inject:
   head:
     # - <link rel="stylesheet" href="third_party/Artalk.min.css">
   bottom:
-    # - <script src="third_party/Artalk.min.js"></script>
+    - <script src="/config/script/FootFish/jquery.min.js"></script>
+    - <script src="/config/script/FootFish/fishes.js"></script>
 
 # CDN
 # Don't modify the following settings unless you know how they work

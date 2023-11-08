@@ -16,6 +16,14 @@ aside: true
 ## Timeline
 
 {% timeline 2023,pink %}
+<!-- timeline 11-08 -->
+博客图片大替换！
+另外，为了节流，现在博客上的图片都是压缩之后的了，如果觉得博客的图片好看想要，可以下载本博客图片之后试试网络上的搜原图工具。
+今天的最后一件事，博客页脚养鱼了，嘿嘿嘿！（养鱼效果来自于[MuJin's Blog](https://xiabor.com/714f.html#%E5%A6%82%E4%BD%95%E5%9C%A8%E9%A1%B5%E8%84%9A%E5%85%BB%E9%B1%BC)）
+<!-- endtimeline -->
+<!-- timeline 11-05 -->
+博客正式从 Github Page 更换成了正式的服务器，已经可以快速访问了
+<!-- endtimeline -->
 <!-- timeline 07-25 -->
 [butterfly](https://butterfly.js.org/)的配置阶段接近尾声，今天完善了包括本页面在内的几个小页面
 <!-- endtimeline -->
