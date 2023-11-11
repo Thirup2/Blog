@@ -2,9 +2,8 @@
 title: Windows环境编程乱码问题解决方案总结
 tags:
   - Windows
-  - 乱码
-  - C
-  - C++
+  - 编码问题
+  - C/C++
 categories:
   - Windows
   - 问题探索

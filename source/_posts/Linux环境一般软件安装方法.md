@@ -3,7 +3,6 @@ title: Linux环境一般软件安装方法
 tags:
   - Linux
   - 软件安装
-  - 教程
 categories:
   - Linux
   - 基本使用

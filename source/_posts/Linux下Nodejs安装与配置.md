@@ -4,8 +4,7 @@ tags:
   - Linux
   - Nodejs
   - npm换源
-  - 安装
-  - 教程
+  - 软件安装
 categories:
   - Linux
   - 软件安装

@@ -3,9 +3,8 @@ title: Linux下Git安装与配置
 tags:
   - Linux
   - Git
-  - 安装
-  - 配置
-  - 教程
+  - 软件安装
+  - 软件配置
 categories:
   - Linux
   - 软件安装
