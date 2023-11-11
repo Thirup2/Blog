@@ -94,9 +94,8 @@
       </categories>
       <tags>
         <tag>Windows</tag>
-        <tag>乱码</tag>
-        <tag>C</tag>
-        <tag>C++</tag>
+        <tag>编码问题</tag>
+        <tag>C/C++</tag>
       </tags>
   </entry>
   <entry>
@@ -345,9 +344,8 @@
       </categories>
       <tags>
         <tag>Windows</tag>
-        <tag>乱码</tag>
-        <tag>C</tag>
-        <tag>C++</tag>
+        <tag>编码问题</tag>
+        <tag>C/C++</tag>
       </tags>
   </entry>
   <entry>
@@ -417,9 +415,8 @@
       </categories>
       <tags>
         <tag>Windows</tag>
-        <tag>乱码</tag>
-        <tag>C</tag>
-        <tag>C++</tag>
+        <tag>编码问题</tag>
+        <tag>C/C++</tag>
       </tags>
   </entry>
   <entry>
@@ -559,8 +556,7 @@
       </categories>
       <tags>
         <tag>Linux</tag>
-        <tag>安装</tag>
-        <tag>教程</tag>
+        <tag>软件安装</tag>
         <tag>Nodejs</tag>
         <tag>npm换源</tag>
       </tags>
@@ -664,9 +660,8 @@
       <tags>
         <tag>Linux</tag>
         <tag>Git</tag>
-        <tag>安装</tag>
-        <tag>配置</tag>
-        <tag>教程</tag>
+        <tag>软件安装</tag>
+        <tag>软件配置</tag>
       </tags>
   </entry>
   <entry>
@@ -749,7 +744,6 @@
       </categories>
       <tags>
         <tag>Linux</tag>
-        <tag>教程</tag>
         <tag>软件安装</tag>
       </tags>
   </entry>
