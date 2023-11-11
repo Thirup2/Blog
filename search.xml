@@ -427,7 +427,7 @@
 <li>
 <p><strong>选择二进制包</strong></p>
 <p><a href="https://nodejs.org/en/download">Nodejs 官网</a>提供了一种二进制包，首先通过前面的链接前往其下载页面：</p>
-<p><img src="/images/358aad2/01.png" alt="01"></p>
+<p><img src="01.png" alt="01"></p>
 <p>根据你机器的架构选择对应的二进制包即可。ARM 架构的 CPU 通常是手机平板等设备使用，如果是 PC，则通常选择 x86 即可</p>
 <blockquote>
 <p><strong>注意</strong>：</p>
@@ -479,7 +479,7 @@
 <li>
 <p><strong>下载源码包</strong></p>
 <p>首先，还是先前往 <a href="https://nodejs.org/en/download">Nodejs 官网</a>，这次我们选择 Source Code</p>
-<p><img src="/images/358aad2/02.png" alt="02"></p>
+<p><img src="02.png" alt="02"></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v18.17.1/node-v18.17.1.tar.gz</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>注意</strong>：</p>
@@ -510,12 +510,12 @@
 <p><strong>安装编译环境与依赖</strong></p>
 <p>具体的编译环境与依赖可以前往官方的教程：<a href="https://github.com/nodejs/node/blob/main/BUILDING.md#building-nodejs-on-supported-platforms">node/BUILDING.md at main · nodejs/node · GitHub</a></p>
 <p>主要关注两个地方，其一是某些工具或依赖的版本要求：</p>
-<p><img src="/images/358aad2/03.png" alt="03"></p>
+<p><img src="03.png" alt="03"></p>
 <blockquote>
 <p>容易无法达到要求的一般是<code>gcc</code>和<code>g++</code>的版本，但实际测试下来似乎版本低一点也是可以编译成功的，我的版本是 8.5.0，在此仅作参考。</p>
 </blockquote>
 <p>其二是不同包管理器下的依赖安装方法：</p>
-<p><img src="/images/358aad2/04.png" alt="04"></p>
+<p><img src="04.png" alt="04"></p>
 <blockquote>
 <p><strong>注意</strong>：</p>
 <p>由于使用包管理器安装的依赖版本可能比较落后，或许无法满足其版本要求，所以可能需要采用其他方式进行安装</p>
