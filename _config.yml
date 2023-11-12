@@ -4,9 +4,9 @@
 
 # Site
 title: 瞬のブログ
-subtitle: '我的个人博客主页'
+subtitle: ''
 description: '欢迎来到我的网站！探索关于 C/C++、Linux、Windows 等技术领域的博客文章。'
-keywords: 瞬, 博客
+keywords:
 author: Syunn
 language: zh-CN
 timezone: ''

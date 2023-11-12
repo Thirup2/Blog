@@ -42,6 +42,6 @@ aside: true
 {% note primary %}
 **博客名称**：瞬のブログ
 **博客地址**：https://blog.syunn.cn/
-**博客头像**：https://blog.syunn.cn/img/avatar/square.png
+**博客头像**：https://blog.syunn.cn/config/img/avatar/square.png
 **博客描述**：C++开发、服务器搭建
 {% endnote %}
