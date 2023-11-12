@@ -4,7 +4,7 @@ date: 2023-07-20 13:38:06
 type: "about"
 description: 关于博主、关于博客网站的一些内容
 comments: true
-top_img: /config/img/pages/about.jpg
+top_img: /config/img/pages/about.png
 aside: true
 ---
 ## 关于博主

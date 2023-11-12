@@ -4,7 +4,7 @@ date: 2023-07-20 13:32:00
 type: "link"
 description: 友情链接，包括我单方面添加的大佬的链接和互相交换的链接
 comments: true
-top_img:  /config/img/pages/link.jpg
+top_img:  /config/img/pages/link.png
 aside: true 
 ---
 {% flink %}

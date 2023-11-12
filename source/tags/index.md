@@ -6,6 +6,6 @@ orderby: name
 order: 1
 description: 文章的标签，通过本页标签快速定位到相关文章
 comments: false
-top_img:  /config/img/pages/tags.jpg
+top_img:  /config/img/pages/tags.png
 aside: true
 ---
