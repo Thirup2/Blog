@@ -31,7 +31,7 @@ code_word_wrap: false
 # formal:
 #   icon: link || the description || color
 social:
-  fas fa-envelope: mailto:admin@syunn.cn || Email || '#ffa500'
+  fas fa-envelope: mailto:master@syunn.cn || Email || '#ffa500'
   fa-brands fa-telegram: https://t.me/SyunnT || Telegram || '#87ceeb'
 
 # Image (圖片設置)
