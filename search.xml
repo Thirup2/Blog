@@ -19,7 +19,17 @@
 <p>如果你喜欢使用 CLion IDE 作为日常的开发工具，那你一定对 CMake 不陌生，实际上 CMake 和 Configure 工具是同一层级的编译工具，通过更高层次的抽象，只需要在配置文件中描述一下项目的相关内容，就能自动根据这个配置文件生成具体的 Makefile 文件。</p>
 <p>由于上面所说的 MSVC 在编译此类程序时几乎没有问题，所以后续我们都以 GCC 为例。</p>
 <p>通过使用这种构建工具，我们或许能通过它来识别具体的用户字符集，然后来生成最适合本地环境的 Makefile 文件，最终生成可以正确运行的程序。</p>
-<p>但是，关于这个识别用户字符集的配置项无论是在 Configure 还是 CMake 中我都没有找到，可能是因为我找得不够深入吧，总之这种方法提供一种参考方案供大家参考。</p>
+<p>例如，如果我们使用 CMake 进行构建，可以在 CMakeLists.txt 文件中添加这样一段进行简单的配置：</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(WIN32)</span><br><span class="line">    <span class="keyword">if</span>(MSVC)</span><br><span class="line">        <span class="keyword">add_compile_options</span>(/source-charset:utf-<span class="number">8</span>)</span><br><span class="line">    <span class="keyword">elseif</span>(CMAKE_COMPILER_IS_GNUCXX)</span><br><span class="line">        <span class="keyword">execute_process</span>(<span class="keyword">COMMAND</span> PowerShell <span class="string">&quot;[System.Text.Encoding]::Default.BodyName&quot;</span> OUTPUT_VARIABLE USER_CHARSET OUTPUT_STRIP_TRAILING_WHITESPACE)</span><br><span class="line">        <span class="keyword">add_compile_options</span>(-fexec-charset=<span class="variable">$&#123;USER_CHARSET&#125;</span>)</span><br><span class="line">    <span class="keyword">endif</span> ()</span><br><span class="line"><span class="keyword">endif</span> ()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在这个例子中，只对 Windows 下的环境进行了判断，主要是由于 Linux 或其他环境下默认用户字符集都是<code>utf-8</code>，并且使用的基本上也是 GCC 或者和 GCC 类似的编译器，所以一般来说只需要特殊化 Windows 环境下的编译命令。我们用一个条件<code>WIN32</code>来区分 Windows 和其他环境</p>
+<p>紧接着，根据一个条件分支，当编译器使用 MSVC 时，直接将编译器的输入文件编码的配置选项设置为<code>utf-8</code>即可实现所有 Windows 环境的编译工作（因为我们的文件字符集被规定为<code>utf-8</code>）。</p>
+<p>然后在另一个分支中，当编译器使用 GCC 系列时，我们先是调用 PowerShell 并运行引号中的命令获取当前用户字符集，并将该结果的文本内容写到变量<code>USER_CHARSET</code>中，然后再添加编译器选项<code>-fexec-charset=$&#123;USER_CHARSET&#125;</code>，这个地方的<code>$&#123;USER_CHARSET&#125;</code>会自动替换为刚刚运行命令获取的用户字符集的内容</p>
+</blockquote>
+<p>当然，你可以再精细化一下上面的配置，使它可以灵活处理任何编译环境，具体方法请参考 <a href="https://cmake.org/cmake/help/latest/">CMake官方文档</a>。</p>
+<p>使用本方法可以做到不费太大工夫就解决程序乱码问题，比起修改用户环境这些方法好很多。但同样有缺陷，就是如果我们做的是一个全球化的软件，那可能需要为每一个地区都发布一个安装包，具体的解决方法可以参考下面一节内容。</p>
+<p>总的来说，如果你更倾向于让用户直接下载源文件并自行编译，那么这种方法毫无疑问是非常合适的，如果配置合理是肯定不会出现乱码问题的，唯一的问题可能是用户的字符集里没有收纳你的程序需要打印出来的字符，所以通常需要为每一个地区提供一个语言包。</p>
+<p>如果你更倾向于直接发布安装包让用户下载，那最好的办法还是使用下一节所讲的内容，否则你需要为每一种用户环境都编译一次。</p>
 <h2 id="二、程序内转换编码法">二、程序内转换编码法</h2>
 <h3 id="1-上述方案弊端分析">1. 上述方案弊端分析</h3>
 <p><strong>弊端一</strong>：不难发现，每到一个新机器上，程序都需要重新进行编译，当然不排除有一部分人就喜欢自行编译，但应该认识到大部分人需要的都是下载完成后能够直接安装使用的方案，而非先安装编译环境然后再编译源文件，最后才是安装使用的方案。</p>
