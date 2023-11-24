@@ -53,7 +53,32 @@ updated: 2023-10-25 00:40:16
 
 通过使用这种构建工具，我们或许能通过它来识别具体的用户字符集，然后来生成最适合本地环境的 Makefile 文件，最终生成可以正确运行的程序。
 
-但是，关于这个识别用户字符集的配置项无论是在 Configure 还是 CMake 中我都没有找到，可能是因为我找得不够深入吧，总之这种方法提供一种参考方案供大家参考。
+例如，如果我们使用 CMake 进行构建，可以在 CMakeLists.txt 文件中添加这样一段进行简单的配置：
+
+```cmake
+if(WIN32)
+    if(MSVC)
+        add_compile_options(/source-charset:utf-8)
+    elseif(CMAKE_COMPILER_IS_GNUCXX)
+        execute_process(COMMAND PowerShell "[System.Text.Encoding]::Default.BodyName" OUTPUT_VARIABLE USER_CHARSET OUTPUT_STRIP_TRAILING_WHITESPACE)
+        add_compile_options(-fexec-charset=${USER_CHARSET})
+    endif ()
+endif ()
+```
+
+> 在这个例子中，只对 Windows 下的环境进行了判断，主要是由于 Linux 或其他环境下默认用户字符集都是`utf-8`，并且使用的基本上也是 GCC 或者和 GCC 类似的编译器，所以一般来说只需要特殊化 Windows 环境下的编译命令。我们用一个条件`WIN32`来区分 Windows 和其他环境
+>
+> 紧接着，根据一个条件分支，当编译器使用 MSVC 时，直接将编译器的输入文件编码的配置选项设置为`utf-8`即可实现所有 Windows 环境的编译工作（因为我们的文件字符集被规定为`utf-8`）。
+>
+> 然后在另一个分支中，当编译器使用 GCC 系列时，我们先是调用 PowerShell 并运行引号中的命令获取当前用户字符集，并将该结果的文本内容写到变量`USER_CHARSET`中，然后再添加编译器选项`-fexec-charset=${USER_CHARSET}`，这个地方的`${USER_CHARSET}`会自动替换为刚刚运行命令获取的用户字符集的内容
+
+当然，你可以再精细化一下上面的配置，使它可以灵活处理任何编译环境，具体方法请参考 [CMake官方文档](https://cmake.org/cmake/help/latest/)。
+
+使用本方法可以做到不费太大工夫就解决程序乱码问题，比起修改用户环境这些方法好很多。但同样有缺陷，就是如果我们做的是一个全球化的软件，那可能需要为每一个地区都发布一个安装包，具体的解决方法可以参考下面一节内容。
+
+总的来说，如果你更倾向于让用户直接下载源文件并自行编译，那么这种方法毫无疑问是非常合适的，如果配置合理是肯定不会出现乱码问题的，唯一的问题可能是用户的字符集里没有收纳你的程序需要打印出来的字符，所以通常需要为每一个地区提供一个语言包。
+
+如果你更倾向于直接发布安装包让用户下载，那最好的办法还是使用下一节所讲的内容，否则你需要为每一种用户环境都编译一次。
 
 
 
