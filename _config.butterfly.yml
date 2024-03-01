@@ -507,7 +507,7 @@ remark42:
 # Artalk
 # https://artalk.js.org/guide/frontend/config.html
 artalk:
-  server: 'https://artalk.syunn.cn/'
+  server: 'https://local.syunn.cn:8090/'
   site: '瞬のブログ'
   visitor: false
   option:
