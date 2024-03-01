@@ -1,760 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>Windows环境编程乱码问题解决方案总结</title>
-    <url>//posts/a15e7e9/</url>
-    <content><![CDATA[<h2 id="前言">前言</h2>
-<p>本文主要是在 Windows 环境下编程所出现的乱码问题的解决方案的总结，其中也包括了前篇所说的调控编译器选项的乱码解决方案，同时还补充了其他的一些可行的方法。</p>
-<p>另外，虽然本文又一次提到了调控编译器选项的相关内容，但本文并不是前篇内容的复制粘贴，也不会进行各种各样的测试，本文只想聊聊在实际开发过程中应该如何使用这样的方法，以及如何将其推广到不止一种字符集环境中。</p>
-<h2 id="一、调控编译器选项法">一、调控编译器选项法</h2>
-<h3 id="1-重复命令">1. 重复命令</h3>
-<p>在我上一篇的测试中，每一组测试我都是重新写命令然后执行。</p>
-<p>毫无疑问，这样不仅容易出错，而且效率还低，如果是在一个大项目里，这种方法是绝不可行的。</p>
-<p>我们理所当然应该想到使用 Makefile 对程序进行编译。</p>
-<h3 id="2-Makefile">2. Makefile</h3>
-<p>使用 Makefile 能有效地提高每一次编译的效率，也能降低命令出错的概率。</p>
-<p>但还有一个弊端，我们仍然没有跳脱出来，那就是我们编写的命令毫无疑问只能在一种特定字符集的机器上运行，打个比方说如果在日本的 Windows 上编译此程序，那么 MSVC 所编译出的程序应该还是可行，但如果是使用 GCC 编译得到的程序就应该会出现错误了。因为 MSVC 能够自动识别用户字符集并且其<code>/execution-charset</code>选项默认就是用户字符集，而源文件只要保持<code>utf-8</code>不变，再将 MSVC 的<code>/source-charset</code>选项设定为<code>utf-8</code>，那么就基本上能够在任何环境的 Windows 下编译出正确运行的程序。而 GCC 则因为<code>-fexec-charset</code>默认为<code>utf-8</code>所以无法做到适应每一种用户字符集。</p>
-<p>另外，对于纯手写 Makefile 的方法，在项目中也通常不是最常用的方法，人们会借助 Configure 工具来自动生成 Makefile，以达到检查编译工具是否齐全以及根据环境生成最适合该环境的 Makefile 的功能。</p>
-<h3 id="3-自动生成">3. 自动生成</h3>
-<p>如果你喜欢使用 CLion IDE 作为日常的开发工具，那你一定对 CMake 不陌生，实际上 CMake 和 Configure 工具是同一层级的编译工具，通过更高层次的抽象，只需要在配置文件中描述一下项目的相关内容，就能自动根据这个配置文件生成具体的 Makefile 文件。</p>
-<p>由于上面所说的 MSVC 在编译此类程序时几乎没有问题，所以后续我们都以 GCC 为例。</p>
-<p>通过使用这种构建工具，我们或许能通过它来识别具体的用户字符集，然后来生成最适合本地环境的 Makefile 文件，最终生成可以正确运行的程序。</p>
-<p>例如，如果我们使用 CMake 进行构建，可以在 CMakeLists.txt 文件中添加这样一段进行简单的配置：</p>
-<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(WIN32)</span><br><span class="line">    <span class="keyword">if</span>(MSVC)</span><br><span class="line">        <span class="keyword">add_compile_options</span>(/source-charset:utf-<span class="number">8</span>)</span><br><span class="line">    <span class="keyword">elseif</span>(CMAKE_COMPILER_IS_GNUCXX)</span><br><span class="line">        <span class="keyword">execute_process</span>(<span class="keyword">COMMAND</span> PowerShell <span class="string">&quot;[System.Text.Encoding]::Default.BodyName&quot;</span> OUTPUT_VARIABLE USER_CHARSET OUTPUT_STRIP_TRAILING_WHITESPACE)</span><br><span class="line">        <span class="keyword">add_compile_options</span>(-fexec-charset=<span class="variable">$&#123;USER_CHARSET&#125;</span>)</span><br><span class="line">    <span class="keyword">endif</span> ()</span><br><span class="line"><span class="keyword">endif</span> ()</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>在这个例子中，只对 Windows 下的环境进行了判断，主要是由于 Linux 或其他环境下默认用户字符集都是<code>utf-8</code>，并且使用的基本上也是 GCC 或者和 GCC 类似的编译器，所以一般来说只需要特殊化 Windows 环境下的编译命令。我们用一个条件<code>WIN32</code>来区分 Windows 和其他环境</p>
-<p>紧接着，根据一个条件分支，当编译器使用 MSVC 时，直接将编译器的输入文件编码的配置选项设置为<code>utf-8</code>即可实现所有 Windows 环境的编译工作（因为我们的文件字符集被规定为<code>utf-8</code>）。</p>
-<p>然后在另一个分支中，当编译器使用 GCC 系列时，我们先是调用 PowerShell 并运行引号中的命令获取当前用户字符集，并将该结果的文本内容写到变量<code>USER_CHARSET</code>中，然后再添加编译器选项<code>-fexec-charset=$&#123;USER_CHARSET&#125;</code>，这个地方的<code>$&#123;USER_CHARSET&#125;</code>会自动替换为刚刚运行命令获取的用户字符集的内容</p>
-</blockquote>
-<p>当然，你可以再精细化一下上面的配置，使它可以灵活处理任何编译环境，具体方法请参考 <a href="https://cmake.org/cmake/help/latest/">CMake官方文档</a>。</p>
-<p>使用本方法可以做到不费太大工夫就解决程序乱码问题，比起修改用户环境这些方法好很多。但同样有缺陷，就是如果我们做的是一个全球化的软件，那可能需要为每一个地区都发布一个安装包，具体的解决方法可以参考下面一节内容。</p>
-<p>总的来说，如果你更倾向于让用户直接下载源文件并自行编译，那么这种方法毫无疑问是非常合适的，如果配置合理是肯定不会出现乱码问题的，唯一的问题可能是用户的字符集里没有收纳你的程序需要打印出来的字符，所以通常需要为每一个地区提供一个语言包。</p>
-<p>如果你更倾向于直接发布安装包让用户下载，那最好的办法还是使用下一节所讲的内容，否则你需要为每一种用户环境都编译一次。</p>
-<h2 id="二、程序内转换编码法">二、程序内转换编码法</h2>
-<h3 id="1-上述方案弊端分析">1. 上述方案弊端分析</h3>
-<p><strong>弊端一</strong>：不难发现，每到一个新机器上，程序都需要重新进行编译，当然不排除有一部分人就喜欢自行编译，但应该认识到大部分人需要的都是下载完成后能够直接安装使用的方案，而非先安装编译环境然后再编译源文件，最后才是安装使用的方案。</p>
-<p><strong>弊端二</strong>：在前面的程序中，不论是字符串字面值还是输入的字符串，我们都没有经过任何处理就直接输出了。但是更符合一般情形的却是无论是字符串字面值还是输入到程序中的字符串我们都会进行处理，而这就又将导致一个问题。如果只处理英文，那么通常单字节的<code>char</code>类型就足够了，但如果还涉及到正确处理中文字符的话，或许需要用到<code>utf-16</code>或<code>utf-32</code>，而源文件本身应该还是保持<code>utf-8</code>，同时还不改终端<code>gbk</code>或其他字符集，这个问题就再一次变得复杂了。</p>
-<h3 id="2-弊端二的解决">2. 弊端二的解决</h3>
-<p>我们先来解决弊端二的问题。</p>
-<p>将源文件的字符集设置为<code>utf-8</code>，终端保持<code>gbk</code>，然后在程序内处理<code>utf-16</code>字符集的字符串。为此我们应该需要三个转换函数：</p>
-<ol>
-<li>用于将字符串字面值编码转换为可处理编码，即<code>u8_u16</code></li>
-<li>用于将输入字符串编码转换为可处理编码的<code>gbk_u16</code></li>
-<li>用于将标准处理字符串编码输出的<code>u16_gbk</code>。</li>
-</ol>
-<p>另外，我们还需要明确一个问题，即此时编译器是否还影响乱码问题的出现。推测应该还是有影响，保险起见进行两组测试，一是将编译器的<strong>设定1</strong>（<code>/source-charset</code>或<code>-finput-charset</code>）和<strong>设定2</strong>（<code>/execution-charset</code>或<code>-fexec-charset</code>）统一的测试组，即中间不会进行任何编码的转换；二是将<strong>设定1</strong>和<strong>设定2</strong>设置为不同字符集，源文件中的字符串字面值编码应该会在编译器中发生一次转换。</p>
-<p><strong>测试代码</strong>如下：</p>
-<div class="tabs" id="code"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#code-1">convert.h</button></li><li class="tab"><button type="button" data-href="#code-2">test.cpp</button></li><li class="tab"><button type="button" data-href="#code-3">convert.cpp</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="code-1"><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::u16string <span class="title">u8_u16</span><span class="params">(<span class="type">const</span> std::string&amp; str_u8)</span></span>;</span><br><span class="line"><span class="function">std::u16string <span class="title">gbk_u16</span><span class="params">(<span class="type">const</span> std::string&amp; str_gbk)</span></span>;</span><br><span class="line"><span class="function">std::string <span class="title">u16_gbk</span><span class="params">(<span class="type">const</span> std::u16string&amp; str_u16)</span></span>;</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="code-2"><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;convert.h&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> std::string;</span><br><span class="line"><span class="keyword">using</span> std::u16string;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 定义字符串并获取输入</span></span><br><span class="line">    <span class="function">string <span class="title">out_u8</span><span class="params">(<span class="string">&quot;你刚刚输入的是：&quot;</span>)</span></span>;</span><br><span class="line">    string in_gbk;</span><br><span class="line">    std::cin &gt;&gt; in_gbk;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将以上字符串转换为用于处理的编码</span></span><br><span class="line">    u16string out_16 = <span class="built_in">u8_u16</span>(out_u8);</span><br><span class="line">    out_16 += <span class="built_in">gbk_u16</span>(in_gbk);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将输出字符串转换为 gbk</span></span><br><span class="line">    string out_gbk = <span class="built_in">u16_gbk</span>(out_16);</span><br><span class="line">    <span class="comment">// 对 utf-16 的字符串进行处理（返回其字符串长度）</span></span><br><span class="line">    std::cout &lt;&lt; out_16.<span class="built_in">length</span>() &lt;&lt; std::endl;</span><br><span class="line">    <span class="comment">// 输出 gbk 字符串</span></span><br><span class="line">    std::cout &lt;&lt; out_gbk &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="code-3"><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;convert.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::u16string <span class="title">u8_u16</span><span class="params">(<span class="type">const</span> std::string &amp;str_u8)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::u16string u16str;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (i &lt; str_u8.<span class="built_in">length</span>()) &#123;</span><br><span class="line">        <span class="comment">// Read the first byte</span></span><br><span class="line">        <span class="type">char</span> u8char = str_u8[i++];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((u8char &amp; <span class="number">0x80</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// Single-byte UTF-8 character</span></span><br><span class="line">            u16str.<span class="built_in">push_back</span>(u8char);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((u8char &amp; <span class="number">0xE0</span>) == <span class="number">0xC0</span>) &#123;</span><br><span class="line">            <span class="comment">// Two-byte UTF-8 character</span></span><br><span class="line">            <span class="type">char</span> char2 = str_u8[i++];</span><br><span class="line">            <span class="type">char16_t</span> u16char = ((u8char &amp; <span class="number">0x1F</span>) &lt;&lt; <span class="number">6</span>) | (char2 &amp; <span class="number">0x3F</span>);</span><br><span class="line">            u16str.<span class="built_in">push_back</span>(u16char);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((u8char &amp; <span class="number">0xF0</span>) == <span class="number">0xE0</span>) &#123;</span><br><span class="line">            <span class="comment">// Three-byte UTF-8 character</span></span><br><span class="line">            <span class="type">char</span> char2 = str_u8[i++];</span><br><span class="line">            <span class="type">char</span> char3 = str_u8[i++];</span><br><span class="line">            <span class="type">char16_t</span> u16char = ((u8char &amp; <span class="number">0x0F</span>) &lt;&lt; <span class="number">12</span>) | ((char2 &amp; <span class="number">0x3F</span>) &lt;&lt; <span class="number">6</span>) | (char3 &amp; <span class="number">0x3F</span>);</span><br><span class="line">            u16str.<span class="built_in">push_back</span>(u16char);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Invalid UTF-8 sequence</span></span><br><span class="line">            <span class="comment">// Handle the error as needed</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> u16str;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">std::u16string <span class="title">gbk_u16</span><span class="params">(<span class="type">const</span> std::string &amp;str_gbk)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> utf16_length = <span class="built_in">MultiByteToWideChar</span>(CP_ACP, <span class="number">0</span>, str_gbk.<span class="built_in">c_str</span>(), <span class="number">-1</span>, <span class="literal">nullptr</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (utf16_length == <span class="number">0</span>) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;MultiByteToWideChar failed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">u16string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">wchar_t</span>&gt; <span class="title">utf16_buffer</span><span class="params">(utf16_length)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">MultiByteToWideChar</span>(CP_ACP, <span class="number">0</span>, str_gbk.<span class="built_in">c_str</span>(), <span class="number">-1</span>, utf16_buffer.<span class="built_in">data</span>(), utf16_length) == <span class="number">0</span>) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;MultiByteToWideChar failed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">u16string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    std::u16string utf16_string;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; utf16_length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        utf16_string.<span class="built_in">push_back</span>(utf16_buffer[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> utf16_string;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">std::string <span class="title">u16_gbk</span><span class="params">(<span class="type">const</span> std::u16string &amp;str_u16)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> gbk_length = <span class="built_in">WideCharToMultiByte</span>(CP_ACP, <span class="number">0</span>, <span class="built_in">reinterpret_cast</span>&lt;LPCWCH&gt;(str_u16.<span class="built_in">c_str</span>()), str_u16.<span class="built_in">length</span>(), <span class="literal">nullptr</span>, <span class="number">0</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (gbk_length == <span class="number">0</span>) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;WideCharToMultiByte failed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">char</span>&gt; <span class="title">gbk_buffer</span><span class="params">(gbk_length)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">WideCharToMultiByte</span>(CP_ACP, <span class="number">0</span>, <span class="built_in">reinterpret_cast</span>&lt;LPCWCH&gt;(str_u16.<span class="built_in">c_str</span>()), str_u16.<span class="built_in">length</span>(), gbk_buffer.<span class="built_in">data</span>(), gbk_length, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;WideCharToMultiByte failed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">string</span>(gbk_buffer.<span class="built_in">begin</span>(), gbk_buffer.<span class="built_in">end</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<p><strong>正确结果示例</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ./test.exe </span><br><span class="line">你好啊</span><br><span class="line">11</span><br><span class="line">你刚刚输入的是：你好啊</span><br></pre></td></tr></table></figure>
-<p>可以看到在输出字符串长度时由于我们转换了编码，所以能够正确处理中文字符了。</p>
-<p><strong>测试结果</strong>：</p>
-<ol>
-<li>
-<p>编译器<strong>设定1</strong>和<strong>设定2</strong>统一时：</p>
-<ol>
-<li>
-<p>将源文件字符集固定为<code>utf-8</code>，使用 MSVC 和 GCC 在全缺省的情况下都能正常编译，且结果正确；</p>
-</li>
-<li>
-<p>如果将源文件字符集固定为<code>gbk</code>，则在输出时原本的字符串字面值以及输出字符串长度会输出错误，输入反馈仍然正常；</p>
-<blockquote>
-<p>原因应该是字符串字面值在文件中保存为了<code>gbk</code>编码，然后又执行了<code>u8_u16</code>的转换，故出错</p>
-</blockquote>
-</li>
-<li>
-<p>当源文件字符集固定为<code>gbk</code>，并且在字符串字面值前添加<code>u8</code>前缀后，输出正确。</p>
-<blockquote>
-<p>说明上一点的原因推测正确</p>
-</blockquote>
-</li>
-</ol>
-</li>
-<li>
-<p>编译器<strong>设定1</strong>和<strong>设定2</strong>不统一时：</p>
-<ol>
-<li>
-<p>当源文件设定为<code>gbk</code>，然后 MSVC 的设定1保持默认<code>gbk</code>，设定2设置为<code>utf-8</code>，输出结果正确。GCC 获得相同结果</p>
-</li>
-<li>
-<p>当源文件设定为<code>utf-8</code>，然后 MSVC 设定1 设置为<code>utf-8</code>，设定2保持默认<code>gbk</code>，输出结果错误。GCC 获得相同结果</p>
-<blockquote>
-<p>根据以上两次测试，可以合理猜测程序处理过程中使用的数据是经过编译器转换后的编码</p>
-</blockquote>
-</li>
-</ol>
-</li>
-</ol>
-<p><strong>结论</strong>：当我们的源文件固定为<code>utf-8</code>时，且终端字符集固定为<code>gbk</code>时，使用该方法则无需调控编译器的相关选项，只需要保证编译器的设定1和设定2一致即可。与此同时，我们还可以在程序中对中文字符串进行正确的处理，故此方案可行。</p>
-<h3 id="3-弊端一的解决">3. 弊端一的解决</h3>
-<p>解决了弊端二，同时也带来了一个新的问题：我们无法再通过 Configure 或 CMake 来自动根据环境修改编译命令，而将编码处理放在了程序中，而上面的程序只解决了在<code>gbk</code>终端环境下的问题，如果要让程序能够自动处理多种环境的转换，则可能需要实现大量字符串编码转换函数，以及使用宏来调控。</p>
-<p>如果解决了这个问题，那么弊端一也就解决了，而这个问题说到底就是编程问题，需要自己去添加转换函数并添加识别当前环境的代码并据此调控转换时使用的具体的函数。</p>
-<p>而这个功能最好分离出来，形成一个可复用的功能。我也计划写一个第三方库来实现这样的功能，当然，编码转换实际上已经第三方库实现过了，所以实际上我想写的一个第三方库目标是一个使用更方便，更智能，转换追求无感化的一个第三方库。如果该项目具有可行性，则会在项目建立之后将链接贴在此处。</p>
-<h2 id="三、修改用户环境法（极其不推荐）">三、修改用户环境法（极其不推荐）</h2>
-<p>在标题中我写上了 “极其不推荐”，但还是放在了这篇文章当中，不是为了让大家觉得这种方法还是有一定的可行性，而是因为我第一次探索乱码问题时就走入了这样的一个误区，然后还花时间做了测试和总结，然而后来才发现这个方向几乎完全错误，最后我把那篇文章删掉了，但还是有点气不过写那篇文章所花费的大量的时间，所以在这添加了这样一节做一个纪念，呜呜呜。</p>
-<p>修改用户环境有两种手段，一是让用户自行去修改，这种方案即使在那篇错误的文章中也是一个废案，因为一个程序应该做的绝不应该是要求用户先去修改日常使用的环境；第二种手段就是在程序中插入代码来修改用户环境，包括使用<code>system</code>函数调用系统命令的方法以及使用 Win32 API 和 C/C++ 标准库进行本地化的方法。</p>
-<p>经过以前的测试，即使使用第二种方法修改用户环境也是完全不好的方案，如果你有兴趣去进行实验，那你会发现即使对于字符串字面值的输出能够正确显示，其对于输入的反馈也大概率会出错。</p>
-<p>故不推荐。</p>
-<h2 id="四、总结">四、总结</h2>
-<p>本文虽然一共写了三种方案，但实际可行的只有前两种，在这两种方案之中，第二种方案即在程序内转换编码的方案应该是最好的，因为我们几乎不可能不对字符串内容进行处理，而为了处理中文字符串，就几乎必然得用到 Unicode 字符集，也就是说几乎必然需要编码转换。在这样的情况下，显然使用第二种方案是最好的方案。</p>
-]]></content>
+<search> 
+  
+  
+    
+    <entry>
+      <title>Windows环境编程乱码问题解决方案总结</title>
+      <link href="//posts/a15e7e9/"/>
+      <url>//posts/a15e7e9/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>本文主要是在 Windows 环境下编程所出现的乱码问题的解决方案的总结，其中也包括了前篇所说的调控编译器选项的乱码解决方案，同时还补充了其他的一些可行的方法。</p><p>另外，虽然本文又一次提到了调控编译器选项的相关内容，但本文并不是前篇内容的复制粘贴，也不会进行各种各样的测试，本文只想聊聊在实际开发过程中应该如何使用这样的方法，以及如何将其推广到不止一种字符集环境中。</p><h2 id="一、调控编译器选项法">一、调控编译器选项法</h2><h3 id="1-重复命令">1. 重复命令</h3><p>在我上一篇的测试中，每一组测试我都是重新写命令然后执行。</p><p>毫无疑问，这样不仅容易出错，而且效率还低，如果是在一个大项目里，这种方法是绝不可行的。</p><p>我们理所当然应该想到使用 Makefile 对程序进行编译。</p><h3 id="2-Makefile">2. Makefile</h3><p>使用 Makefile 能有效地提高每一次编译的效率，也能降低命令出错的概率。</p><p>但还有一个弊端，我们仍然没有跳脱出来，那就是我们编写的命令毫无疑问只能在一种特定字符集的机器上运行，打个比方说如果在日本的 Windows 上编译此程序，那么 MSVC 所编译出的程序应该还是可行，但如果是使用 GCC 编译得到的程序就应该会出现错误了。因为 MSVC 能够自动识别用户字符集并且其<code>/execution-charset</code>选项默认就是用户字符集，而源文件只要保持<code>utf-8</code>不变，再将 MSVC 的<code>/source-charset</code>选项设定为<code>utf-8</code>，那么就基本上能够在任何环境的 Windows 下编译出正确运行的程序。而 GCC 则因为<code>-fexec-charset</code>默认为<code>utf-8</code>所以无法做到适应每一种用户字符集。</p><p>另外，对于纯手写 Makefile 的方法，在项目中也通常不是最常用的方法，人们会借助 Configure 工具来自动生成 Makefile，以达到检查编译工具是否齐全以及根据环境生成最适合该环境的 Makefile 的功能。</p><h3 id="3-自动生成">3. 自动生成</h3><p>如果你喜欢使用 CLion IDE 作为日常的开发工具，那你一定对 CMake 不陌生，实际上 CMake 和 Configure 工具是同一层级的编译工具，通过更高层次的抽象，只需要在配置文件中描述一下项目的相关内容，就能自动根据这个配置文件生成具体的 Makefile 文件。</p><p>由于上面所说的 MSVC 在编译此类程序时几乎没有问题，所以后续我们都以 GCC 为例。</p><p>通过使用这种构建工具，我们或许能通过它来识别具体的用户字符集，然后来生成最适合本地环境的 Makefile 文件，最终生成可以正确运行的程序。</p><p>例如，如果我们使用 CMake 进行构建，可以在 CMakeLists.txt 文件中添加这样一段进行简单的配置：</p><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(WIN32)</span><br><span class="line">    <span class="keyword">if</span>(MSVC)</span><br><span class="line">        <span class="keyword">add_compile_options</span>(/source-charset:utf-<span class="number">8</span>)</span><br><span class="line">    <span class="keyword">elseif</span>(CMAKE_COMPILER_IS_GNUCXX)</span><br><span class="line">        <span class="keyword">execute_process</span>(<span class="keyword">COMMAND</span> PowerShell <span class="string">&quot;[System.Text.Encoding]::Default.BodyName&quot;</span> OUTPUT_VARIABLE USER_CHARSET OUTPUT_STRIP_TRAILING_WHITESPACE)</span><br><span class="line">        <span class="keyword">add_compile_options</span>(-fexec-charset=<span class="variable">$&#123;USER_CHARSET&#125;</span>)</span><br><span class="line">    <span class="keyword">endif</span> ()</span><br><span class="line"><span class="keyword">endif</span> ()</span><br></pre></td></tr></table></figure><blockquote><p>在这个例子中，只对 Windows 下的环境进行了判断，主要是由于 Linux 或其他环境下默认用户字符集都是<code>utf-8</code>，并且使用的基本上也是 GCC 或者和 GCC 类似的编译器，所以一般来说只需要特殊化 Windows 环境下的编译命令。我们用一个条件<code>WIN32</code>来区分 Windows 和其他环境</p><p>紧接着，根据一个条件分支，当编译器使用 MSVC 时，直接将编译器的输入文件编码的配置选项设置为<code>utf-8</code>即可实现所有 Windows 环境的编译工作（因为我们的文件字符集被规定为<code>utf-8</code>）。</p><p>然后在另一个分支中，当编译器使用 GCC 系列时，我们先是调用 PowerShell 并运行引号中的命令获取当前用户字符集，并将该结果的文本内容写到变量<code>USER_CHARSET</code>中，然后再添加编译器选项<code>-fexec-charset=$&#123;USER_CHARSET&#125;</code>，这个地方的<code>$&#123;USER_CHARSET&#125;</code>会自动替换为刚刚运行命令获取的用户字符集的内容</p></blockquote><p>当然，你可以再精细化一下上面的配置，使它可以灵活处理任何编译环境，具体方法请参考 <a href="https://cmake.org/cmake/help/latest/">CMake官方文档</a>。</p><p>使用本方法可以做到不费太大工夫就解决程序乱码问题，比起修改用户环境这些方法好很多。但同样有缺陷，就是如果我们做的是一个全球化的软件，那可能需要为每一个地区都发布一个安装包，具体的解决方法可以参考下面一节内容。</p><p>总的来说，如果你更倾向于让用户直接下载源文件并自行编译，那么这种方法毫无疑问是非常合适的，如果配置合理是肯定不会出现乱码问题的，唯一的问题可能是用户的字符集里没有收纳你的程序需要打印出来的字符，所以通常需要为每一个地区提供一个语言包。</p><p>如果你更倾向于直接发布安装包让用户下载，那最好的办法还是使用下一节所讲的内容，否则你需要为每一种用户环境都编译一次。</p><h2 id="二、程序内转换编码法">二、程序内转换编码法</h2><h3 id="1-上述方案弊端分析">1. 上述方案弊端分析</h3><p><strong>弊端一</strong>：不难发现，每到一个新机器上，程序都需要重新进行编译，当然不排除有一部分人就喜欢自行编译，但应该认识到大部分人需要的都是下载完成后能够直接安装使用的方案，而非先安装编译环境然后再编译源文件，最后才是安装使用的方案。</p><p><strong>弊端二</strong>：在前面的程序中，不论是字符串字面值还是输入的字符串，我们都没有经过任何处理就直接输出了。但是更符合一般情形的却是无论是字符串字面值还是输入到程序中的字符串我们都会进行处理，而这就又将导致一个问题。如果只处理英文，那么通常单字节的<code>char</code>类型就足够了，但如果还涉及到正确处理中文字符的话，或许需要用到<code>utf-16</code>或<code>utf-32</code>，而源文件本身应该还是保持<code>utf-8</code>，同时还不改终端<code>gbk</code>或其他字符集，这个问题就再一次变得复杂了。</p><h3 id="2-弊端二的解决">2. 弊端二的解决</h3><p>我们先来解决弊端二的问题。</p><p>将源文件的字符集设置为<code>utf-8</code>，终端保持<code>gbk</code>，然后在程序内处理<code>utf-16</code>字符集的字符串。为此我们应该需要三个转换函数：</p><ol><li>用于将字符串字面值编码转换为可处理编码，即<code>u8_u16</code></li><li>用于将输入字符串编码转换为可处理编码的<code>gbk_u16</code></li><li>用于将标准处理字符串编码输出的<code>u16_gbk</code>。</li></ol><p>另外，我们还需要明确一个问题，即此时编译器是否还影响乱码问题的出现。推测应该还是有影响，保险起见进行两组测试，一是将编译器的<strong>设定1</strong>（<code>/source-charset</code>或<code>-finput-charset</code>）和<strong>设定2</strong>（<code>/execution-charset</code>或<code>-fexec-charset</code>）统一的测试组，即中间不会进行任何编码的转换；二是将<strong>设定1</strong>和<strong>设定2</strong>设置为不同字符集，源文件中的字符串字面值编码应该会在编译器中发生一次转换。</p><p><strong>测试代码</strong>如下：</p><div class="tabs" id="code"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#code-1">convert.h</button></li><li class="tab"><button type="button" data-href="#code-2">test.cpp</button></li><li class="tab"><button type="button" data-href="#code-3">convert.cpp</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="code-1"><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::u16string <span class="title">u8_u16</span><span class="params">(<span class="type">const</span> std::string&amp; str_u8)</span></span>;</span><br><span class="line"><span class="function">std::u16string <span class="title">gbk_u16</span><span class="params">(<span class="type">const</span> std::string&amp; str_gbk)</span></span>;</span><br><span class="line"><span class="function">std::string <span class="title">u16_gbk</span><span class="params">(<span class="type">const</span> std::u16string&amp; str_u16)</span></span>;</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="code-2"><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;convert.h&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> std::string;</span><br><span class="line"><span class="keyword">using</span> std::u16string;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 定义字符串并获取输入</span></span><br><span class="line">    <span class="function">string <span class="title">out_u8</span><span class="params">(<span class="string">&quot;你刚刚输入的是：&quot;</span>)</span></span>;</span><br><span class="line">    string in_gbk;</span><br><span class="line">    std::cin &gt;&gt; in_gbk;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将以上字符串转换为用于处理的编码</span></span><br><span class="line">    u16string out_16 = <span class="built_in">u8_u16</span>(out_u8);</span><br><span class="line">    out_16 += <span class="built_in">gbk_u16</span>(in_gbk);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将输出字符串转换为 gbk</span></span><br><span class="line">    string out_gbk = <span class="built_in">u16_gbk</span>(out_16);</span><br><span class="line">    <span class="comment">// 对 utf-16 的字符串进行处理（返回其字符串长度）</span></span><br><span class="line">    std::cout &lt;&lt; out_16.<span class="built_in">length</span>() &lt;&lt; std::endl;</span><br><span class="line">    <span class="comment">// 输出 gbk 字符串</span></span><br><span class="line">    std::cout &lt;&lt; out_gbk &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="code-3"><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;convert.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::u16string <span class="title">u8_u16</span><span class="params">(<span class="type">const</span> std::string &amp;str_u8)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::u16string u16str;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (i &lt; str_u8.<span class="built_in">length</span>()) &#123;</span><br><span class="line">        <span class="comment">// Read the first byte</span></span><br><span class="line">        <span class="type">char</span> u8char = str_u8[i++];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((u8char &amp; <span class="number">0x80</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// Single-byte UTF-8 character</span></span><br><span class="line">            u16str.<span class="built_in">push_back</span>(u8char);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((u8char &amp; <span class="number">0xE0</span>) == <span class="number">0xC0</span>) &#123;</span><br><span class="line">            <span class="comment">// Two-byte UTF-8 character</span></span><br><span class="line">            <span class="type">char</span> char2 = str_u8[i++];</span><br><span class="line">            <span class="type">char16_t</span> u16char = ((u8char &amp; <span class="number">0x1F</span>) &lt;&lt; <span class="number">6</span>) | (char2 &amp; <span class="number">0x3F</span>);</span><br><span class="line">            u16str.<span class="built_in">push_back</span>(u16char);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((u8char &amp; <span class="number">0xF0</span>) == <span class="number">0xE0</span>) &#123;</span><br><span class="line">            <span class="comment">// Three-byte UTF-8 character</span></span><br><span class="line">            <span class="type">char</span> char2 = str_u8[i++];</span><br><span class="line">            <span class="type">char</span> char3 = str_u8[i++];</span><br><span class="line">            <span class="type">char16_t</span> u16char = ((u8char &amp; <span class="number">0x0F</span>) &lt;&lt; <span class="number">12</span>) | ((char2 &amp; <span class="number">0x3F</span>) &lt;&lt; <span class="number">6</span>) | (char3 &amp; <span class="number">0x3F</span>);</span><br><span class="line">            u16str.<span class="built_in">push_back</span>(u16char);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Invalid UTF-8 sequence</span></span><br><span class="line">            <span class="comment">// Handle the error as needed</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> u16str;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">std::u16string <span class="title">gbk_u16</span><span class="params">(<span class="type">const</span> std::string &amp;str_gbk)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> utf16_length = <span class="built_in">MultiByteToWideChar</span>(CP_ACP, <span class="number">0</span>, str_gbk.<span class="built_in">c_str</span>(), <span class="number">-1</span>, <span class="literal">nullptr</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (utf16_length == <span class="number">0</span>) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;MultiByteToWideChar failed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">u16string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">wchar_t</span>&gt; <span class="title">utf16_buffer</span><span class="params">(utf16_length)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">MultiByteToWideChar</span>(CP_ACP, <span class="number">0</span>, str_gbk.<span class="built_in">c_str</span>(), <span class="number">-1</span>, utf16_buffer.<span class="built_in">data</span>(), utf16_length) == <span class="number">0</span>) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;MultiByteToWideChar failed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">u16string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    std::u16string utf16_string;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; utf16_length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        utf16_string.<span class="built_in">push_back</span>(utf16_buffer[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> utf16_string;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">std::string <span class="title">u16_gbk</span><span class="params">(<span class="type">const</span> std::u16string &amp;str_u16)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> gbk_length = <span class="built_in">WideCharToMultiByte</span>(CP_ACP, <span class="number">0</span>, <span class="built_in">reinterpret_cast</span>&lt;LPCWCH&gt;(str_u16.<span class="built_in">c_str</span>()), str_u16.<span class="built_in">length</span>(), <span class="literal">nullptr</span>, <span class="number">0</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (gbk_length == <span class="number">0</span>) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;WideCharToMultiByte failed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">char</span>&gt; <span class="title">gbk_buffer</span><span class="params">(gbk_length)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">WideCharToMultiByte</span>(CP_ACP, <span class="number">0</span>, <span class="built_in">reinterpret_cast</span>&lt;LPCWCH&gt;(str_u16.<span class="built_in">c_str</span>()), str_u16.<span class="built_in">length</span>(), gbk_buffer.<span class="built_in">data</span>(), gbk_length, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;WideCharToMultiByte failed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">string</span>(gbk_buffer.<span class="built_in">begin</span>(), gbk_buffer.<span class="built_in">end</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div><p><strong>正确结果示例</strong>：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ./test.exe </span><br><span class="line">你好啊</span><br><span class="line">11</span><br><span class="line">你刚刚输入的是：你好啊</span><br></pre></td></tr></table></figure><p>可以看到在输出字符串长度时由于我们转换了编码，所以能够正确处理中文字符了。</p><p><strong>测试结果</strong>：</p><ol><li><p>编译器<strong>设定1</strong>和<strong>设定2</strong>统一时：</p><ol><li><p>将源文件字符集固定为<code>utf-8</code>，使用 MSVC 和 GCC 在全缺省的情况下都能正常编译，且结果正确；</p></li><li><p>如果将源文件字符集固定为<code>gbk</code>，则在输出时原本的字符串字面值以及输出字符串长度会输出错误，输入反馈仍然正常；</p><blockquote><p>原因应该是字符串字面值在文件中保存为了<code>gbk</code>编码，然后又执行了<code>u8_u16</code>的转换，故出错</p></blockquote></li><li><p>当源文件字符集固定为<code>gbk</code>，并且在字符串字面值前添加<code>u8</code>前缀后，输出正确。</p><blockquote><p>说明上一点的原因推测正确</p></blockquote></li></ol></li><li><p>编译器<strong>设定1</strong>和<strong>设定2</strong>不统一时：</p><ol><li><p>当源文件设定为<code>gbk</code>，然后 MSVC 的设定1保持默认<code>gbk</code>，设定2设置为<code>utf-8</code>，输出结果正确。GCC 获得相同结果</p></li><li><p>当源文件设定为<code>utf-8</code>，然后 MSVC 设定1 设置为<code>utf-8</code>，设定2保持默认<code>gbk</code>，输出结果错误。GCC 获得相同结果</p><blockquote><p>根据以上两次测试，可以合理猜测程序处理过程中使用的数据是经过编译器转换后的编码</p></blockquote></li></ol></li></ol><p><strong>结论</strong>：当我们的源文件固定为<code>utf-8</code>时，且终端字符集固定为<code>gbk</code>时，使用该方法则无需调控编译器的相关选项，只需要保证编译器的设定1和设定2一致即可。与此同时，我们还可以在程序中对中文字符串进行正确的处理，故此方案可行。</p><h3 id="3-弊端一的解决">3. 弊端一的解决</h3><p>解决了弊端二，同时也带来了一个新的问题：我们无法再通过 Configure 或 CMake 来自动根据环境修改编译命令，而将编码处理放在了程序中，而上面的程序只解决了在<code>gbk</code>终端环境下的问题，如果要让程序能够自动处理多种环境的转换，则可能需要实现大量字符串编码转换函数，以及使用宏来调控。</p><p>如果解决了这个问题，那么弊端一也就解决了，而这个问题说到底就是编程问题，需要自己去添加转换函数并添加识别当前环境的代码并据此调控转换时使用的具体的函数。</p><p>而这个功能最好分离出来，形成一个可复用的功能。我也计划写一个第三方库来实现这样的功能，当然，编码转换实际上已经第三方库实现过了，所以实际上我想写的一个第三方库目标是一个使用更方便，更智能，转换追求无感化的一个第三方库。如果该项目具有可行性，则会在项目建立之后将链接贴在此处。</p><h2 id="三、修改用户环境法（极其不推荐）">三、修改用户环境法（极其不推荐）</h2><p>在标题中我写上了 “极其不推荐”，但还是放在了这篇文章当中，不是为了让大家觉得这种方法还是有一定的可行性，而是因为我第一次探索乱码问题时就走入了这样的一个误区，然后还花时间做了测试和总结，然而后来才发现这个方向几乎完全错误，最后我把那篇文章删掉了，但还是有点气不过写那篇文章所花费的大量的时间，所以在这添加了这样一节做一个纪念，呜呜呜。</p><p>修改用户环境有两种手段，一是让用户自行去修改，这种方案即使在那篇错误的文章中也是一个废案，因为一个程序应该做的绝不应该是要求用户先去修改日常使用的环境；第二种手段就是在程序中插入代码来修改用户环境，包括使用<code>system</code>函数调用系统命令的方法以及使用 Win32 API 和 C/C++ 标准库进行本地化的方法。</p><p>经过以前的测试，即使使用第二种方法修改用户环境也是完全不好的方案，如果你有兴趣去进行实验，那你会发现即使对于字符串字面值的输出能够正确显示，其对于输入的反馈也大概率会出错。</p><p>故不推荐。</p><h2 id="四、总结">四、总结</h2><p>本文虽然一共写了三种方案，但实际可行的只有前两种，在这两种方案之中，第二种方案即在程序内转换编码的方案应该是最好的，因为我们几乎不可能不对字符串内容进行处理，而为了处理中文字符串，就几乎必然得用到 Unicode 字符集，也就是说几乎必然需要编码转换。在这样的情况下，显然使用第二种方案是最好的方案。</p>]]></content>
+      
+      
       <categories>
-        <category>Windows</category>
-        <category>问题探索</category>
+          
+          <category> Windows </category>
+          
+          <category> 问题探索 </category>
+          
       </categories>
-      <tags>
-        <tag>Windows</tag>
-        <tag>编码问题</tag>
-        <tag>C/C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>通过调控编译器选项的乱码解决方案测试</title>
-    <url>//posts/5e27120d/</url>
-    <content><![CDATA[<h2 id="一、输出测试">一、输出测试</h2>
-<h3 id="1-测试代码">1. 测试代码</h3>
-<p>使用了一个非常简单的代码进行测试：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;你好，C++！&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2-测试前分析">2. 测试前分析</h3>
-<p>开始测试前我们不妨先分析一下，根据上一篇文章：【<a href="https://blog.syunn.cn/posts/c77f42f7/">编程中乱码出现的原因</a>】 所提到的关于导致乱码的两个决定性因素不难得出，我们只需要将编译器的<strong>设定1</strong>（输入源文件所使用字符集的设定项）固定为<code>utf-8</code>（因为在上一篇文章中将源文件假设固定为了<code>utf-8</code>字符集），将编译器的<strong>设定2</strong>（输出窄字符串的转换目标字符集的设定项）固定为<code>gbk</code>（在上一篇文章中假设固定为了<code>gbk</code>字符集）即可。</p>
-<p>由于 MSVC 的设定1默认不识别<code>utf-8</code>，而 GCC 的设定2默认为<code>utf-8</code>，所以很显然，如果我们使用 MSVC 进行编译，则需要显式设置设定1，而如果使用 GCC 进行编译，则需要显示设置设定2，所以实际上只需要做两组测试即可。</p>
-<p>但为了证明上一篇文章中所述理论的可靠性，还需要添加一些测试组，所有测试将分为以下几个部分：</p>
-<div class="tabs" id="test"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#test-1">MSVC部分</button></li><li class="tab"><button type="button" data-href="#test-2">GCC部分</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="test-1"><ol>
-<li>可靠性测试：又分为以下两个部分
-<ol>
-<li>预测正确测试组：编译器在缺省状态下对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 3 组测试）</li>
-<li>预测出错测试组：编译器在缺省状态下对<code>utf-8(No BOM)</code>字符集的源文件进行编译测试（一共 1 组测试）</li>
-</ol>
-</li>
-<li>正确性测试：也分为两个部分
-<ol>
-<li>预测正确测试组：将<strong>设定1</strong>设置为<code>utf-8</code>对<code>utf-8(No BOM)</code>字符集的源文件进行编译测试（一共 1 组测试）</li>
-<li>预测错误对照组：将<strong>设定2</strong>设置为<code>utf-8</code>对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>、<code>utf-8(No BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 4 组测试）</li>
-</ol>
-</li>
-</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="test-2"><ol>
-<li>可靠性测试：此部分无预测正确测试组，只包含预测错误测试组。分别是在缺省状态下对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>、<code>utf-8(No BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 4 组测试）</li>
-<li>正确性测试：此部分分为如下两个部分
-<ol>
-<li>预测正确测试组：将<strong>设定2</strong>固定为<code>gbk</code>，然后将<strong>设定1</strong>依次设置为<code>utf-16</code>、<code>gbk</code>并对对应字符集的源文件进行编译测试，另外在缺省状态下对<code>utf-8(No BOM)</code>和<code>utf-8(BOM)</code>字符集的源文件进行编译测试（一共 4 组测试）</li>
-<li>预测错误对照组：将<strong>设定2</strong>固定为<code>gbk</code>，<strong>设定1</strong>保持缺省状态对<code>utf-16</code>和<code>gbk</code>字符集的源文件进行编译测试。（一共 2 组测试）</li>
-</ol>
-</li>
-</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h3 id="3-测试及测试结果">3. 测试及测试结果</h3>
-<p>以上测试均以表格形式给出：</p>
-<div class="tabs" id="result"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#result-1">MSVC部分</button></li><li class="tab"><button type="button" data-href="#result-2">GCC部分</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="result-1"><ol>
-<li>
-<p>可靠性测试</p>
-<ol>
-<li>
-<p>预测正确测试组</p>
-<table>
-<thead>
-<tr>
-<th>设定项/组别</th>
-<th>第一组（<code>utf-16(LE)</code>）</th>
-<th>第二组（<code>utf-8(BOM)</code>）</th>
-<th>第三组（<code>gbk</code>）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>全缺省状态</td>
-<td>正确输出</td>
-<td>正确输出</td>
-<td>正确输出</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li>
-<p>预测出错测试组</p>
-<table>
-<thead>
-<tr>
-<th>设定项/组别</th>
-<th>第一组（<code>utf-8(No BOM)</code>）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>全缺省状态</td>
-<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
-</tr>
-</tbody>
-</table>
-</li>
-</ol>
-</li>
-<li>
-<p>正确性测试</p>
-<ol>
-<li>
-<p>预测正确测试组</p>
-<table>
-<thead>
-<tr>
-<th>设定项/组别</th>
-<th>第一组（<code>utf-8(No BOM)</code>）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>设定1</strong>：<code>utf-8</code></td>
-<td>正确输出</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li>
-<p>预测错误对照组</p>
-<table>
-<thead>
-<tr>
-<th>设定项/组别</th>
-<th>第一组（<code>utf-16(LE)</code>）</th>
-<th>第二组（<code>utf-8(BOM)</code>）</th>
-<th>第三组（<code>utf-8(No BOM)</code>）</th>
-<th>第四组（<code>gbk</code>）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>设定2</strong>：<code>utf-8</code></td>
-<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
-<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
-<td>出现乱码<code>娴ｇ姴銈介敍瀛?+!</code></td>
-<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
-</tr>
-</tbody>
-</table>
-</li>
-</ol>
-</li>
-</ol>
-<p><strong>分析</strong>：所有测试组都得到了预想的结果，比较不同的是正确性测试中的预测错误对照组中的第三组中出现的乱码和其他组别不相同，其原因应该是其他三组都正确识别了源文件中的内容，但在输出时与终端字符集不匹配，而第三组则是在识别源文件内容时就出现了错误，然后在输出时又因为一次不匹配导致了该乱码。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="result-2"><ol>
-<li>
-<p>可靠性测试</p>
-<table>
-<thead>
-<tr>
-<th>设定项/组别</th>
-<th>第一组（<code>utf-16(LE)</code>）</th>
-<th>第二组（<code>utf-8(BOM)</code>）</th>
-<th>第三组（<code>utf-8(No BOM)</code>）</th>
-<th>第四组（<code>gbk</code>）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>全缺省状态</td>
-<td>出现编译错误</td>
-<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
-<td>出现乱码<code>浣犲ソ锛孋++!</code></td>
-<td><strong>正确输出</strong></td>
-</tr>
-</tbody>
-</table>
-</li>
-<li>
-<p>正确性测试</p>
-<ol>
-<li>
-<p>预测正确测试组</p>
-<table>
-<thead>
-<tr>
-<th>设定项/组别</th>
-<th>第一组（<code>utf-16(LE)</code>）</th>
-<th>第二组（<code>utf-8(BOM)</code>）</th>
-<th>第三组（<code>utf-8(No BOM)</code>）</th>
-<th>第四组（<code>gbk</code>）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>设定1</strong>：<code>utf-16</code><br /><strong>设定2</strong>：<code>gbk</code></td>
-<td>出现编译错误（和可靠性测试中的编译错误不同）</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><strong>设定1</strong>：<code>gbk</code><br /><strong>设定2</strong>：<code>gbk</code></td>
-<td></td>
-<td></td>
-<td></td>
-<td>正确输出</td>
-</tr>
-<tr>
-<td><strong>设定2</strong>：<code>gbk</code></td>
-<td></td>
-<td>正确输出</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><strong>设定2</strong>：<code>gbk</code></td>
-<td></td>
-<td></td>
-<td>正确输出</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</li>
-<li>
-<p>预测错误对照组</p>
-<table>
-<thead>
-<tr>
-<th>设定项/组别</th>
-<th>第一组（<code>utf-16(LE)</code>）</th>
-<th>第二组（<code>gbk</code>）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>设定2</strong>：<code>gbk</code></td>
-<td>出现编译错误（和可靠性测试中的编译错误相同）</td>
-<td>出现编译错误（输出字符串被识别为非法序列）</td>
-</tr>
-</tbody>
-</table>
-</li>
-</ol>
-</li>
-</ol>
-<p><strong>分析</strong>：相比于 MSVC 的测试结果，GCC 的测试结果有了更多可以说道的地方</p>
-<ol>
-<li>首先是在可靠性测试的预测错误测试中，最后一组在缺省状态下对<code>gbk</code>字符集的源文件进行编译测试得到了正确的输出，其原因应该是在读取阶段用<code>utf-8</code>解释了<code>gbk</code>字符串编码，但由于 GCC 本身的<strong>设定1</strong>和<strong>设定2</strong>在缺省状态下是相同的，所以即便字符串编码被错误解释了，但是却并未进行任何转换，所以最后在输出到<code>gbk</code>字符集的终端时得到了正确的结果</li>
-<li>整个测试中在对<code>utf-16(LE)</code>字符集的源文件进行测试时都得到了编译错误，其中第一次和第三次错误相同，第二次出现了不同的错误。根据这几组测试中的设定项可以知道第一次和第三次都是用<code>utf-8</code>去解释了<code>utf-16(LE)</code>字符集的源文件，而第二次虽然使用<code>utf-16</code>去解释了<code>utf-16(LE)</code>字符集的源文件，但仍然得到了编译错误，这可能是因为设定项并未设置正确，因为<code>utf-16</code>一共有 4 种情况，分别是大端和小端以及是否带 BOM。但在 GCC 的选项中我只找到了<code>utf-16</code>这一个值，同时我用来测试的是 vscode，其中对于<code>utf-16</code>只进行了大端小端的区分。</li>
-<li>最后一个错误是最后一个测试组中的第二组，即用<code>utf-8</code>识别<code>gbk</code>字符集的源文件，出现了编译错误。但虽然说是编译错误，但具体问题仍然出现在字符串的识别上。在 MSVC 的测试组中并没有用<code>utf-8</code>识别<code>gbk</code>文件的测试组，所以我再次用 MSVC 进行了该项测试，结果与 GCC 出现相同错误，故此处的编译错误属于正常现象。</li>
-</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h2 id="二、输入反馈测试">二、输入反馈测试</h2>
-<h3 id="1-测试代码-2">1. 测试代码</h3>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">char</span> str[<span class="number">20</span>];</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;你的输入是：&quot;</span> &lt;&lt; str &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2-测试结果及分析">2. 测试结果及分析</h3>
-<p>对于输入反馈的测试，此处不再详细描述测试环节。</p>
-<p><strong>测试结果</strong>：</p>
-<p>实际上，除了上述测试中出现编译错误的测试组外，其余测试无论输出是否正确，几乎都有正确的输入反馈。</p>
-<p>唯一出现的一个乱码错误是在使用<code>gbk</code>解释<code>utf-8</code>字符集的源文件并将字符串字面值按照<code>utf-8</code>字符集下的编码输出到<code>gbk</code>环境的终端上的测试组。另外，此错误只出现在了 MSVC 的测试中，在 GCC 中无法复现此错误，而是直接返回一个编译错误：<code>error: failure to convert gbk to UTF-8</code></p>
-<p><strong>分析</strong>：</p>
-<p>由于几乎每一组都没有出现错误，所以我推测输入的字符串与编译器的设定项没有关系，并且如果在程序中没有对输入的字符串进行任何处理而直接输出的话，其编码也不会进行任何变化（理所当然）。</p>
-<p>在输入阶段，字符串就已经通过终端转换为了<code>gbk</code>字符集下的编码，然后在程序中转了一圈此编码又输出到了终端，所以不会出现错误。</p>
-<p>而仅出现的那一个错误后续又设置了两组测试，一是将字符串字面值全删了，仅进行输入反馈，二是在原本的字符串字面值末尾添加了几个英文字符。在第一组测试中输入得到了正确的反馈，而在第二组测试中，英文字符部分的前几个字符未能成功显示，而后续字符以及输入反馈都得到了正确的显示。推测是在整个字符串从识别到输出的过程中中文字符串的末尾编码与后续字符串的前部分编码产生了合并，总之也属于乱码的一种，但输入反馈仍然满足上述的推测。</p>
-<h2 id="三、总结">三、总结</h2>
-<p>根据上述测试，我们已经可以下定论了，只要我们将编译器的设定1与源文件字符集匹配，将设定2与终端字符集匹配，则可以做到最低程度上的不乱码。</p>
-<p>而至于要处理输入字符串或者字符串字面值的情况，则暂时不进行讨论，可能在后续的文章中进行探索。</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> 编码问题 </tag>
+            
+            <tag> C/C++ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>通过调控编译器选项的乱码解决方案测试</title>
+      <link href="//posts/5e27120d/"/>
+      <url>//posts/5e27120d/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、输出测试">一、输出测试</h2><h3 id="1-测试代码">1. 测试代码</h3><p>使用了一个非常简单的代码进行测试：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;你好，C++！&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-测试前分析">2. 测试前分析</h3><p>开始测试前我们不妨先分析一下，根据上一篇文章：【<a href="https://blog.syunn.cn/posts/c77f42f7/">编程中乱码出现的原因</a>】 所提到的关于导致乱码的两个决定性因素不难得出，我们只需要将编译器的<strong>设定1</strong>（输入源文件所使用字符集的设定项）固定为<code>utf-8</code>（因为在上一篇文章中将源文件假设固定为了<code>utf-8</code>字符集），将编译器的<strong>设定2</strong>（输出窄字符串的转换目标字符集的设定项）固定为<code>gbk</code>（在上一篇文章中假设固定为了<code>gbk</code>字符集）即可。</p><p>由于 MSVC 的设定1默认不识别<code>utf-8</code>，而 GCC 的设定2默认为<code>utf-8</code>，所以很显然，如果我们使用 MSVC 进行编译，则需要显式设置设定1，而如果使用 GCC 进行编译，则需要显示设置设定2，所以实际上只需要做两组测试即可。</p><p>但为了证明上一篇文章中所述理论的可靠性，还需要添加一些测试组，所有测试将分为以下几个部分：</p><div class="tabs" id="test"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#test-1">MSVC部分</button></li><li class="tab"><button type="button" data-href="#test-2">GCC部分</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="test-1"><ol><li>可靠性测试：又分为以下两个部分<ol><li>预测正确测试组：编译器在缺省状态下对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 3 组测试）</li><li>预测出错测试组：编译器在缺省状态下对<code>utf-8(No BOM)</code>字符集的源文件进行编译测试（一共 1 组测试）</li></ol></li><li>正确性测试：也分为两个部分<ol><li>预测正确测试组：将<strong>设定1</strong>设置为<code>utf-8</code>对<code>utf-8(No BOM)</code>字符集的源文件进行编译测试（一共 1 组测试）</li><li>预测错误对照组：将<strong>设定2</strong>设置为<code>utf-8</code>对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>、<code>utf-8(No BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 4 组测试）</li></ol></li></ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="test-2"><ol><li>可靠性测试：此部分无预测正确测试组，只包含预测错误测试组。分别是在缺省状态下对<code>utf-16(LE)</code>、<code>utf-8(BOM)</code>、<code>utf-8(No BOM)</code>以及<code>gbk</code>字符集的源文件进行编译测试（一共 4 组测试）</li><li>正确性测试：此部分分为如下两个部分<ol><li>预测正确测试组：将<strong>设定2</strong>固定为<code>gbk</code>，然后将<strong>设定1</strong>依次设置为<code>utf-16</code>、<code>gbk</code>并对对应字符集的源文件进行编译测试，另外在缺省状态下对<code>utf-8(No BOM)</code>和<code>utf-8(BOM)</code>字符集的源文件进行编译测试（一共 4 组测试）</li><li>预测错误对照组：将<strong>设定2</strong>固定为<code>gbk</code>，<strong>设定1</strong>保持缺省状态对<code>utf-16</code>和<code>gbk</code>字符集的源文件进行编译测试。（一共 2 组测试）</li></ol></li></ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div><h3 id="3-测试及测试结果">3. 测试及测试结果</h3><p>以上测试均以表格形式给出：</p><div class="tabs" id="result"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#result-1">MSVC部分</button></li><li class="tab"><button type="button" data-href="#result-2">GCC部分</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="result-1"><ol><li><p>可靠性测试</p><ol><li><p>预测正确测试组</p><table><thead><tr><th>设定项/组别</th><th>第一组（<code>utf-16(LE)</code>）</th><th>第二组（<code>utf-8(BOM)</code>）</th><th>第三组（<code>gbk</code>）</th></tr></thead><tbody><tr><td>全缺省状态</td><td>正确输出</td><td>正确输出</td><td>正确输出</td></tr></tbody></table></li><li><p>预测出错测试组</p><table><thead><tr><th>设定项/组别</th><th>第一组（<code>utf-8(No BOM)</code>）</th></tr></thead><tbody><tr><td>全缺省状态</td><td>出现乱码<code>浣犲ソ锛孋++!</code></td></tr></tbody></table></li></ol></li><li><p>正确性测试</p><ol><li><p>预测正确测试组</p><table><thead><tr><th>设定项/组别</th><th>第一组（<code>utf-8(No BOM)</code>）</th></tr></thead><tbody><tr><td><strong>设定1</strong>：<code>utf-8</code></td><td>正确输出</td></tr></tbody></table></li><li><p>预测错误对照组</p><table><thead><tr><th>设定项/组别</th><th>第一组（<code>utf-16(LE)</code>）</th><th>第二组（<code>utf-8(BOM)</code>）</th><th>第三组（<code>utf-8(No BOM)</code>）</th><th>第四组（<code>gbk</code>）</th></tr></thead><tbody><tr><td><strong>设定2</strong>：<code>utf-8</code></td><td>出现乱码<code>浣犲ソ锛孋++!</code></td><td>出现乱码<code>浣犲ソ锛孋++!</code></td><td>出现乱码<code>娴ｇ姴銈介敍瀛?+!</code></td><td>出现乱码<code>浣犲ソ锛孋++!</code></td></tr></tbody></table></li></ol></li></ol><p><strong>分析</strong>：所有测试组都得到了预想的结果，比较不同的是正确性测试中的预测错误对照组中的第三组中出现的乱码和其他组别不相同，其原因应该是其他三组都正确识别了源文件中的内容，但在输出时与终端字符集不匹配，而第三组则是在识别源文件内容时就出现了错误，然后在输出时又因为一次不匹配导致了该乱码。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="result-2"><ol><li><p>可靠性测试</p><table><thead><tr><th>设定项/组别</th><th>第一组（<code>utf-16(LE)</code>）</th><th>第二组（<code>utf-8(BOM)</code>）</th><th>第三组（<code>utf-8(No BOM)</code>）</th><th>第四组（<code>gbk</code>）</th></tr></thead><tbody><tr><td>全缺省状态</td><td>出现编译错误</td><td>出现乱码<code>浣犲ソ锛孋++!</code></td><td>出现乱码<code>浣犲ソ锛孋++!</code></td><td><strong>正确输出</strong></td></tr></tbody></table></li><li><p>正确性测试</p><ol><li><p>预测正确测试组</p><table><thead><tr><th>设定项/组别</th><th>第一组（<code>utf-16(LE)</code>）</th><th>第二组（<code>utf-8(BOM)</code>）</th><th>第三组（<code>utf-8(No BOM)</code>）</th><th>第四组（<code>gbk</code>）</th></tr></thead><tbody><tr><td><strong>设定1</strong>：<code>utf-16</code><br /><strong>设定2</strong>：<code>gbk</code></td><td>出现编译错误（和可靠性测试中的编译错误不同）</td><td></td><td></td><td></td></tr><tr><td><strong>设定1</strong>：<code>gbk</code><br /><strong>设定2</strong>：<code>gbk</code></td><td></td><td></td><td></td><td>正确输出</td></tr><tr><td><strong>设定2</strong>：<code>gbk</code></td><td></td><td>正确输出</td><td></td><td></td></tr><tr><td><strong>设定2</strong>：<code>gbk</code></td><td></td><td></td><td>正确输出</td><td></td></tr></tbody></table></li><li><p>预测错误对照组</p><table><thead><tr><th>设定项/组别</th><th>第一组（<code>utf-16(LE)</code>）</th><th>第二组（<code>gbk</code>）</th></tr></thead><tbody><tr><td><strong>设定2</strong>：<code>gbk</code></td><td>出现编译错误（和可靠性测试中的编译错误相同）</td><td>出现编译错误（输出字符串被识别为非法序列）</td></tr></tbody></table></li></ol></li></ol><p><strong>分析</strong>：相比于 MSVC 的测试结果，GCC 的测试结果有了更多可以说道的地方</p><ol><li>首先是在可靠性测试的预测错误测试中，最后一组在缺省状态下对<code>gbk</code>字符集的源文件进行编译测试得到了正确的输出，其原因应该是在读取阶段用<code>utf-8</code>解释了<code>gbk</code>字符串编码，但由于 GCC 本身的<strong>设定1</strong>和<strong>设定2</strong>在缺省状态下是相同的，所以即便字符串编码被错误解释了，但是却并未进行任何转换，所以最后在输出到<code>gbk</code>字符集的终端时得到了正确的结果</li><li>整个测试中在对<code>utf-16(LE)</code>字符集的源文件进行测试时都得到了编译错误，其中第一次和第三次错误相同，第二次出现了不同的错误。根据这几组测试中的设定项可以知道第一次和第三次都是用<code>utf-8</code>去解释了<code>utf-16(LE)</code>字符集的源文件，而第二次虽然使用<code>utf-16</code>去解释了<code>utf-16(LE)</code>字符集的源文件，但仍然得到了编译错误，这可能是因为设定项并未设置正确，因为<code>utf-16</code>一共有 4 种情况，分别是大端和小端以及是否带 BOM。但在 GCC 的选项中我只找到了<code>utf-16</code>这一个值，同时我用来测试的是 vscode，其中对于<code>utf-16</code>只进行了大端小端的区分。</li><li>最后一个错误是最后一个测试组中的第二组，即用<code>utf-8</code>识别<code>gbk</code>字符集的源文件，出现了编译错误。但虽然说是编译错误，但具体问题仍然出现在字符串的识别上。在 MSVC 的测试组中并没有用<code>utf-8</code>识别<code>gbk</code>文件的测试组，所以我再次用 MSVC 进行了该项测试，结果与 GCC 出现相同错误，故此处的编译错误属于正常现象。</li></ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div><h2 id="二、输入反馈测试">二、输入反馈测试</h2><h3 id="1-测试代码-2">1. 测试代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">char</span> str[<span class="number">20</span>];</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;你的输入是：&quot;</span> &lt;&lt; str &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-测试结果及分析">2. 测试结果及分析</h3><p>对于输入反馈的测试，此处不再详细描述测试环节。</p><p><strong>测试结果</strong>：</p><p>实际上，除了上述测试中出现编译错误的测试组外，其余测试无论输出是否正确，几乎都有正确的输入反馈。</p><p>唯一出现的一个乱码错误是在使用<code>gbk</code>解释<code>utf-8</code>字符集的源文件并将字符串字面值按照<code>utf-8</code>字符集下的编码输出到<code>gbk</code>环境的终端上的测试组。另外，此错误只出现在了 MSVC 的测试中，在 GCC 中无法复现此错误，而是直接返回一个编译错误：<code>error: failure to convert gbk to UTF-8</code></p><p><strong>分析</strong>：</p><p>由于几乎每一组都没有出现错误，所以我推测输入的字符串与编译器的设定项没有关系，并且如果在程序中没有对输入的字符串进行任何处理而直接输出的话，其编码也不会进行任何变化（理所当然）。</p><p>在输入阶段，字符串就已经通过终端转换为了<code>gbk</code>字符集下的编码，然后在程序中转了一圈此编码又输出到了终端，所以不会出现错误。</p><p>而仅出现的那一个错误后续又设置了两组测试，一是将字符串字面值全删了，仅进行输入反馈，二是在原本的字符串字面值末尾添加了几个英文字符。在第一组测试中输入得到了正确的反馈，而在第二组测试中，英文字符部分的前几个字符未能成功显示，而后续字符以及输入反馈都得到了正确的显示。推测是在整个字符串从识别到输出的过程中中文字符串的末尾编码与后续字符串的前部分编码产生了合并，总之也属于乱码的一种，但输入反馈仍然满足上述的推测。</p><h2 id="三、总结">三、总结</h2><p>根据上述测试，我们已经可以下定论了，只要我们将编译器的设定1与源文件字符集匹配，将设定2与终端字符集匹配，则可以做到最低程度上的不乱码。</p><p>而至于要处理输入字符串或者字符串字面值的情况，则暂时不进行讨论，可能在后续的文章中进行探索。</p>]]></content>
+      
+      
       <categories>
-        <category>Windows</category>
-        <category>问题探索</category>
+          
+          <category> Windows </category>
+          
+          <category> 问题探索 </category>
+          
       </categories>
-      <tags>
-        <tag>Windows</tag>
-        <tag>编码问题</tag>
-        <tag>C/C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>编程中乱码出现的原因</title>
-    <url>//posts/c77f42f7/</url>
-    <content><![CDATA[<h2 id="前言">前言</h2>
-<p>本文将探索在编程过程中出现乱码问题的具体原因。之所以加了个前缀 “编程过程中” 是因为我并非是要说明乱码本身出现的原因即编码与解码阶段使用的编码不一致，这个原因很好理解并且也已经有很多人讲过了。</p>
-<p>本文所探讨的是在编程过程中由于各种中间环节的影响，即使你清楚乱码产生的原因，也仍然可能无法避免地产生乱码的问题。</p>
-<p>另外，由于在 Linux 环境下几乎不会遇到这样的问题（如果我们统一使用<code>utf-8</code>的文件格式与<code>utf-8</code>的用户字符集并且使用 GNU GCC 作为编译器的话），所以本文的全部内容都将基于 Windows 环境下的乱码问题进行介绍，中文环境将以<code>gbk</code>为准。</p>
-<h2 id="一、三大影响因素">一、三大影响因素</h2>
-<h3 id="1-源文件编码和终端字符集">1. 源文件编码和终端字符集</h3>
-<p>相信很多人遇到这个问题之后进行搜索所得到的答案基本上都是<strong>源文件的编码</strong>（1）和<strong>终端字符集</strong>（2）不匹配，这两个虽然也是乱码的两个重要影响因素，但实际上这两个因素理论上来说是不应该去改变的，即我们应该保持源文件编码和终端字符集的差异。之所以这样说，主要有以下两个方面：</p>
-<ol>
-<li>对于源文件编码，应该尽可能使用多字节编码，这样能在对源文件内容完整编码的同时最大程度上节约空间。而作为世界通用的<code>utf-8</code>和中国专用的<code>gbk</code>这两种编码来说，则通常选择<code>utf-8</code>编码，这也是开源社区最常用的编码。</li>
-<li>对于终端字符集，网上会有大量的修改本地字符集的教程，但这种办法都是治标不治本的，即使是在程序内部内置修改本地字符集的代码，我想那也不是用户想要程序去做的事情。我们要做的应该是如何在源文件编码和终端字符集都保持其差异性的情况下使程序正常地输入输出。</li>
-</ol>
-<p>为了完成这一目标，如果只了解以上所说的两个乱码影响因素是无论如何都解决不了问题的，我们还缺少一个最重要的第三因素将整个过程串联起来，从而才能找到隐藏在其中的乱码的决定性原因。</p>
-<div class="note info flat"><p><strong>关于源文件的编码</strong>：</p>
-<p>对于一个一般的 C/C++ 源文件，其内容应该分为两部分，一是组成程序的语法部分，二是数据部分。其中数据部分比较特殊的就是字符串字面值。</p>
-<p>在源文件中，其字符串字面值通常按照与源文件相同的编码进行保存，即一个<code>utf-8</code>编码的文件中的字符串字面值也将保存为<code>utf-8</code>编码。</p>
-<p>请仔细理解这一点，将成为后续理解的基础。</p>
-</div>
-<h3 id="2-编译器的作用">2. 编译器的作用</h3>
-<p>很显然，连接在源文件和终端之间的一个东西就是<strong>编译器</strong>（3），这就是我们要找的第三大因素，下面将详细讲解编译器是如何影响编码的。</p>
-<p>如果你使用 MSVC 工具集进行编译，那么你是否发现了这个现象：当源文件使用<code>utf-8</code>（带 BOM）编码时，终端字符集仍然保持<code>GBK</code>编码，此时使用 MSVC 对程序进行编译，得到的程序仍然能够进行正常的输入输出。但相应地如果使用 GCC 编译相同编码的文件，其输出则会产生乱码，这也侧面证明了编译器是在某种程度上影响着乱码问题的产生的。</p>
-<p>实际上编译器基本上都会有两类选项，一个是设定输入源文件的编码，另一个是设定输出字符的编码，其中输出字符的编码通常还分为宽字符和窄字符两个细化的设定，本文只讨论窄字符的乱码问题，对于宽字符的编码问题希望读者能够理解原理，举一反三。</p>
-<p>在后文中将编译器的这两类选项简称为<strong>设定1</strong>（输入源文件编码设定项）和<strong>设定2</strong>（输出窄字符编码设定项）。</p>
-<p>编译器的这两个设定影响编码的具体过程如下所述：</p>
-<ol>
-<li>
-<p>首先编译器将按照设定1的值对源文件编码进行解释，所以如果设定1的值和源文件编码不相同，则通常会导致乱码。</p>
-<div class="note info flat"><p>如果设定1的值和源文件编码都是多字节编码，比如一个是<code>gbk</code>，另一个是<code>utf-8</code>，那么程序通常可以正常编译，因为多字节编码的前128个字符通常是相同的，而组成程序语法部分所用到的字符全部都在这 128 个字符中。但相对的，对于数据部分的字符串则由于不同的解释，将会导致乱码。</p>
-<p>如果设定1的值是多字节编码，而源文件是双字节或四字节编码，则程序将无法通过编译，因为双字节或四字节编码与多字节编码的前128个字符编码上有差异。</p>
-</div>
-</li>
-<li>
-<p>然后编译器会根据设定2的值将字符串数据的编码从源文件编码转换为设定2的编码（实际上中间可能还会进行一次转换，即将源文件编码转换为编译器能够处理的编码，但这一步对整个乱码问题没有影响，所以此处忽略了），所以源文件中的字符串字面值编码首先通过设定1正确识别，然后根据设定2设定的字符集的值转换为对应的字符串字面值编码，最后保存在可执行文件中进行输出。</p>
-</li>
-</ol>
-<h2 id="二、两个决定性原因">二、两个决定性原因</h2>
-<p>根据上一节所述的内容可以很清楚地总结出发生乱码问题的两个原因：</p>
-<ol>
-<li>编译器设定1的值与源文件编码不一致</li>
-<li>最终输出的字符串编码所使用的字符集与终端字符集不匹配</li>
-</ol>
-<h2 id="三、编译器之间的区别">三、编译器之间的区别</h2>
-<p>本文将关注 MSVC 和 GCC 两个最常用的编译器及它们之间的区别。</p>
-<h3 id="1-MSVC">1. MSVC</h3>
-<p>首先是 MSVC，它可以自动识别<code>utf-16</code>（无论是大端还是小端，以及无论是否有 BOM）和<code>utf-8(BOM)</code>的文件，其余的编码都将默认采用用户字符集（在本文中限定为<code>gbk</code>）进行解释，包括<code>utf-8</code>（不带 BOM）也将采用改字符集进行解释。</p>
-<p>总结如下：</p>
-<ol>
-<li>设定1（<code>/source-charset:[charset]</code>）：自动跟随<code>utf-16</code>和<code>utf-8(BOM)</code>文件的编码值，否则默认使用用户字符集（在本文中限定为<code>gbk</code>）</li>
-<li>设定2（<code>/execution-charset:[charset]</code>）：默认为用户字符集（在本文中限定为<code>gbk</code>）</li>
-<li>设定3（输出宽字符编码设定项）：默认为<code>Unicode</code></li>
-</ol>
-<h3 id="2-GCC">2. GCC</h3>
-<p>相比于 MSVC，GCC 就显得并不那么灵活了，总结如下：</p>
-<ol>
-<li>设定1（<code>-finput-charset=[charset]</code>）：默认为<code>utf-8</code>（无论是否带 BOM）</li>
-<li>设定2（<code>-fexec-charset=[charset]</code>）：默认为<code>utf-8</code></li>
-<li>设定3（输出宽字符编码设定项：<code>-fwide-exec-charset=[charset]</code>）：默认为<code>utf-16</code>或<code>utf-32</code>，具体根据<code>wchar_t</code>类型的宽度决定，而<code>wchar_t</code>类型的宽度又通常依赖于平台实现，通常 Windows 实现为 2 字节宽，而 Linux 实现为 4 字节宽。</li>
-</ol>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> 编码问题 </tag>
+            
+            <tag> C/C++ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>编程中乱码出现的原因</title>
+      <link href="//posts/c77f42f7/"/>
+      <url>//posts/c77f42f7/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>本文将探索在编程过程中出现乱码问题的具体原因。之所以加了个前缀 “编程过程中” 是因为我并非是要说明乱码本身出现的原因即编码与解码阶段使用的编码不一致，这个原因很好理解并且也已经有很多人讲过了。</p><p>本文所探讨的是在编程过程中由于各种中间环节的影响，即使你清楚乱码产生的原因，也仍然可能无法避免地产生乱码的问题。</p><p>另外，由于在 Linux 环境下几乎不会遇到这样的问题（如果我们统一使用<code>utf-8</code>的文件格式与<code>utf-8</code>的用户字符集并且使用 GNU GCC 作为编译器的话），所以本文的全部内容都将基于 Windows 环境下的乱码问题进行介绍，中文环境将以<code>gbk</code>为准。</p><h2 id="一、三大影响因素">一、三大影响因素</h2><h3 id="1-源文件编码和终端字符集">1. 源文件编码和终端字符集</h3><p>相信很多人遇到这个问题之后进行搜索所得到的答案基本上都是<strong>源文件的编码</strong>（1）和<strong>终端字符集</strong>（2）不匹配，这两个虽然也是乱码的两个重要影响因素，但实际上这两个因素理论上来说是不应该去改变的，即我们应该保持源文件编码和终端字符集的差异。之所以这样说，主要有以下两个方面：</p><ol><li>对于源文件编码，应该尽可能使用多字节编码，这样能在对源文件内容完整编码的同时最大程度上节约空间。而作为世界通用的<code>utf-8</code>和中国专用的<code>gbk</code>这两种编码来说，则通常选择<code>utf-8</code>编码，这也是开源社区最常用的编码。</li><li>对于终端字符集，网上会有大量的修改本地字符集的教程，但这种办法都是治标不治本的，即使是在程序内部内置修改本地字符集的代码，我想那也不是用户想要程序去做的事情。我们要做的应该是如何在源文件编码和终端字符集都保持其差异性的情况下使程序正常地输入输出。</li></ol><p>为了完成这一目标，如果只了解以上所说的两个乱码影响因素是无论如何都解决不了问题的，我们还缺少一个最重要的第三因素将整个过程串联起来，从而才能找到隐藏在其中的乱码的决定性原因。</p><div class="note info flat"><p><strong>关于源文件的编码</strong>：</p><p>对于一个一般的 C/C++ 源文件，其内容应该分为两部分，一是组成程序的语法部分，二是数据部分。其中数据部分比较特殊的就是字符串字面值。</p><p>在源文件中，其字符串字面值通常按照与源文件相同的编码进行保存，即一个<code>utf-8</code>编码的文件中的字符串字面值也将保存为<code>utf-8</code>编码。</p><p>请仔细理解这一点，将成为后续理解的基础。</p></div><h3 id="2-编译器的作用">2. 编译器的作用</h3><p>很显然，连接在源文件和终端之间的一个东西就是<strong>编译器</strong>（3），这就是我们要找的第三大因素，下面将详细讲解编译器是如何影响编码的。</p><p>如果你使用 MSVC 工具集进行编译，那么你是否发现了这个现象：当源文件使用<code>utf-8</code>（带 BOM）编码时，终端字符集仍然保持<code>GBK</code>编码，此时使用 MSVC 对程序进行编译，得到的程序仍然能够进行正常的输入输出。但相应地如果使用 GCC 编译相同编码的文件，其输出则会产生乱码，这也侧面证明了编译器是在某种程度上影响着乱码问题的产生的。</p><p>实际上编译器基本上都会有两类选项，一个是设定输入源文件的编码，另一个是设定输出字符的编码，其中输出字符的编码通常还分为宽字符和窄字符两个细化的设定，本文只讨论窄字符的乱码问题，对于宽字符的编码问题希望读者能够理解原理，举一反三。</p><p>在后文中将编译器的这两类选项简称为<strong>设定1</strong>（输入源文件编码设定项）和<strong>设定2</strong>（输出窄字符编码设定项）。</p><p>编译器的这两个设定影响编码的具体过程如下所述：</p><ol><li><p>首先编译器将按照设定1的值对源文件编码进行解释，所以如果设定1的值和源文件编码不相同，则通常会导致乱码。</p><div class="note info flat"><p>如果设定1的值和源文件编码都是多字节编码，比如一个是<code>gbk</code>，另一个是<code>utf-8</code>，那么程序通常可以正常编译，因为多字节编码的前128个字符通常是相同的，而组成程序语法部分所用到的字符全部都在这 128 个字符中。但相对的，对于数据部分的字符串则由于不同的解释，将会导致乱码。</p><p>如果设定1的值是多字节编码，而源文件是双字节或四字节编码，则程序将无法通过编译，因为双字节或四字节编码与多字节编码的前128个字符编码上有差异。</p></div></li><li><p>然后编译器会根据设定2的值将字符串数据的编码从源文件编码转换为设定2的编码（实际上中间可能还会进行一次转换，即将源文件编码转换为编译器能够处理的编码，但这一步对整个乱码问题没有影响，所以此处忽略了），所以源文件中的字符串字面值编码首先通过设定1正确识别，然后根据设定2设定的字符集的值转换为对应的字符串字面值编码，最后保存在可执行文件中进行输出。</p></li></ol><h2 id="二、两个决定性原因">二、两个决定性原因</h2><p>根据上一节所述的内容可以很清楚地总结出发生乱码问题的两个原因：</p><ol><li>编译器设定1的值与源文件编码不一致</li><li>最终输出的字符串编码所使用的字符集与终端字符集不匹配</li></ol><h2 id="三、编译器之间的区别">三、编译器之间的区别</h2><p>本文将关注 MSVC 和 GCC 两个最常用的编译器及它们之间的区别。</p><h3 id="1-MSVC">1. MSVC</h3><p>首先是 MSVC，它可以自动识别<code>utf-16</code>（无论是大端还是小端，以及无论是否有 BOM）和<code>utf-8(BOM)</code>的文件，其余的编码都将默认采用用户字符集（在本文中限定为<code>gbk</code>）进行解释，包括<code>utf-8</code>（不带 BOM）也将采用改字符集进行解释。</p><p>总结如下：</p><ol><li>设定1（<code>/source-charset:[charset]</code>）：自动跟随<code>utf-16</code>和<code>utf-8(BOM)</code>文件的编码值，否则默认使用用户字符集（在本文中限定为<code>gbk</code>）</li><li>设定2（<code>/execution-charset:[charset]</code>）：默认为用户字符集（在本文中限定为<code>gbk</code>）</li><li>设定3（输出宽字符编码设定项）：默认为<code>Unicode</code></li></ol><h3 id="2-GCC">2. GCC</h3><p>相比于 MSVC，GCC 就显得并不那么灵活了，总结如下：</p><ol><li>设定1（<code>-finput-charset=[charset]</code>）：默认为<code>utf-8</code>（无论是否带 BOM）</li><li>设定2（<code>-fexec-charset=[charset]</code>）：默认为<code>utf-8</code></li><li>设定3（输出宽字符编码设定项：<code>-fwide-exec-charset=[charset]</code>）：默认为<code>utf-16</code>或<code>utf-32</code>，具体根据<code>wchar_t</code>类型的宽度决定，而<code>wchar_t</code>类型的宽度又通常依赖于平台实现，通常 Windows 实现为 2 字节宽，而 Linux 实现为 4 字节宽。</li></ol>]]></content>
+      
+      
       <categories>
-        <category>Windows</category>
-        <category>问题探索</category>
+          
+          <category> Windows </category>
+          
+          <category> 问题探索 </category>
+          
       </categories>
-      <tags>
-        <tag>Windows</tag>
-        <tag>编码问题</tag>
-        <tag>C/C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux下Nodejs安装与配置</title>
-    <url>//posts/358aad2/</url>
-    <content><![CDATA[<h2 id="一、安装">一、安装</h2>
-<div class="tabs" id="install_nodejs"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#install_nodejs-1">包管理器安装</button></li><li class="tab"><button type="button" data-href="#install_nodejs-2">二进制文件安装</button></li><li class="tab"><button type="button" data-href="#install_nodejs-3">源码编译安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="install_nodejs-1"><p>本篇不会特别指出任何使用包管理器安装 Nodejs 的方法，如果你对包管理器不了解或者说不知道自己的系统的包管理器如何使用，我强烈建议你移步我的另一篇文章：<a href="/posts/9f09e5f1/">Linux 环境一般软件安装方法</a>，该篇文章详细说明了使用包管理器安装软件的一般方法，以后也就不用每次安装软件时都上网搜索了！</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="install_nodejs-2"><ol>
-<li>
-<p><strong>选择二进制包</strong></p>
-<p><a href="https://nodejs.org/en/download">Nodejs 官网</a>提供了一种二进制包，首先通过前面的链接前往其下载页面：</p>
-<p><img src="01.png" alt="01"></p>
-<p>根据你机器的架构选择对应的二进制包即可。ARM 架构的 CPU 通常是手机平板等设备使用，如果是 PC，则通常选择 x86 即可</p>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<p>既然你都来搜索安装教程了，那我推荐你安装 LTS 版本（即长期支持版本），该版本比较稳定。</p>
-</blockquote>
-</li>
-<li>
-<p><strong>下载二进制包</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v18.17.1/node-v18.17.1-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<ol>
-<li>此处的链接是通过复制下载按钮链接获取的，如果你想下载最新的二进制包请自行前往官网获取</li>
-<li><code>wget</code>工具的使用方法请使用<code>wget --help</code>自行获取，本篇不涉及该工具的使用教程</li>
-</ol>
-</blockquote>
-</li>
-<li>
-<p><strong>解压</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar -xvf node-v18.17.1-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<ol>
-<li>
-<p><code>tar</code>工具的使用方法请使用<code>tar --help</code>自行获取，本篇不涉及该工具的使用教程</p>
-</li>
-<li>
-<p>解压会得到一个解压包，我解压所得到的名字是<code>node-v18.17.1-linux-x64</code>，由于你可能下载的版本和我不同，如果你是一个小白，建议你先将这个解压包按照下面的方法重命名，然后再跟着后面的教程走：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> node-v18.17.1-linux-x64 nodejs</span><br></pre></td></tr></table></figure>
-<p>该解压包被重命名为<code>nodejs</code>，后续也以该名字为准</p>
-</li>
-</ol>
-</blockquote>
-</li>
-<li>
-<p><strong>将其移动到<code>/opt</code>目录下</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> nodejs /opt/</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p><strong>添加环境变量</strong></p>
-<p>不出意外的话，此时<code>node</code>、<code>npm</code>等可执行程序应该在<code>/opt/nodejs/bin/</code>目录下，我们需要将其添加到环境变量，才能方便地使用该应用：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PATH=<span class="variable">$PATH</span>:/opt/nodejs/bin&quot;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p><strong>测试</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-</li>
-</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="install_nodejs-3"><ol>
-<li>
-<p><strong>下载源码包</strong></p>
-<p>首先，还是先前往 <a href="https://nodejs.org/en/download">Nodejs 官网</a>，这次我们选择 Source Code</p>
-<p><img src="02.png" alt="02"></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v18.17.1/node-v18.17.1.tar.gz</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<ol>
-<li><code>wget</code>工具的使用方法请通过<code>wget --help</code>自行获取，本篇不提供<code>wget</code>的使用教程</li>
-<li>此处的链接通过复制下载按钮链接得到，如果你想安装最新版请自行前往官网获取</li>
-<li>建议下载 LTS 版本（即长期支持版本）</li>
-</ol>
-</blockquote>
-</li>
-<li>
-<p><strong>解压</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar -zxvf node-v18.17.1.tar.gz</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<ol>
-<li>
-<p><code>tar</code>工具的使用方法请通过<code>tar --help</code>自行获取，本篇不提供<code>tar</code>的使用教程</p>
-</li>
-<li>
-<p>我所解压出的包名是<code>node-v18.17.1</code>，由于你下载的版本可能和我的不同，为了方便后续教程的统一性，在此将解压包名修改为<code>nodejs</code>，后续也将以该名字为准：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> node-v18.17.1 nodejs</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</blockquote>
-</li>
-<li>
-<p><strong>安装编译环境与依赖</strong></p>
-<p>具体的编译环境与依赖可以前往官方的教程：<a href="https://github.com/nodejs/node/blob/main/BUILDING.md#building-nodejs-on-supported-platforms">node/BUILDING.md at main · nodejs/node · GitHub</a></p>
-<p>主要关注两个地方，其一是某些工具或依赖的版本要求：</p>
-<p><img src="03.png" alt="03"></p>
-<blockquote>
-<p>容易无法达到要求的一般是<code>gcc</code>和<code>g++</code>的版本，但实际测试下来似乎版本低一点也是可以编译成功的，我的版本是 8.5.0，在此仅作参考。</p>
-</blockquote>
-<p>其二是不同包管理器下的依赖安装方法：</p>
-<p><img src="04.png" alt="04"></p>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<p>由于使用包管理器安装的依赖版本可能比较落后，或许无法满足其版本要求，所以可能需要采用其他方式进行安装</p>
-</blockquote>
-</li>
-<li>
-<p><strong>配置编译安装</strong></p>
-<p>按顺序执行以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> nodejs				<span class="comment"># 移动到 nodejs 源代码目录</span></span><br><span class="line"><span class="built_in">mkdir</span> /opt/nodejs			<span class="comment"># 在 /opt 下创建新目录 nodejs</span></span><br><span class="line">./configure --prefix=/opt/nodejs	<span class="comment"># 修改安装目录为 /opt/nodejs</span></span><br><span class="line">make					<span class="comment"># 编译</span></span><br><span class="line">make install				<span class="comment"># 安装</span></span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p><strong>添加环境变量</strong></p>
-<p>由于我们在配置阶段自定义了安装目录，所以可执行程序不会默认安装到系统查找目录下，所以仍然需要将可执行程序添加到环境变量中。（如果上一步你没有设置安装目录，仅仅只是执行了<code>./configure</code>就可以跳过该步骤）。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PATH=<span class="variable">$PATH</span>:/opt/nodejs/bin&quot;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p><strong>测试</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-</li>
-</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<div class="note warning flat"><p><strong>关于通过 npm 包管理器安装工具的默认安装位置</strong>：</p>
-<p>在曾经的 nodejs 版本中，通过 npm 安装工具时的默认安装位置在一个具有访问限制的目录下，虽然在该目录下安装可以直接将应用添加到系统默认查找目录从而方便使用，但在某些系统上该默认配置会导致一些权限错误以致于无法安装成功。</p>
-<p>你可以通过下面的命令查看当前 npm 包管理器安装应用时的默认位置：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config get prefix</span><br></pre></td></tr></table></figure>
-<p>如果你使用跟教程一样的版本号或者比教程更新的 nodejs 版本，并且按照上方【二进制文件安装】方法安装好 nodejs 之后，如果不出意外，则输出将会是<code>/opt/nodejs</code>。在我所使用过的 nodejs 版本中，npm 默认安装地址为二进制文件地址的版本最早大概是 18.16。</p>
-<p>如果你通过上方的命令所得到的输出和本教程不同，比如为<code>/usr/local</code>等位置，我建议你将 npm 安装地址变更为<code>nodejs</code>所在位置，在本教程中即<code>/opt/nodejs</code>，此时安装的应用会将其可执行程序添加到<code>/opt/nodejs/bin</code>目录下，由于我们已经将此目录添加到了环境变量中，所以可以实现安装即用。</p>
-</div>
-<h2 id="二、配置">二、配置</h2>
-<h3 id="npm-换源">npm 换源</h3>
-<p>通过下面这条命令即可更新软件源：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure>
-<p>然后通过下面的命令查看是否更换成功：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm config get registry</span><br></pre></td></tr></table></figure>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> 编码问题 </tag>
+            
+            <tag> C/C++ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux下Nodejs安装与配置</title>
+      <link href="//posts/358aad2/"/>
+      <url>//posts/358aad2/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、安装">一、安装</h2><div class="tabs" id="install_nodejs"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#install_nodejs-1">包管理器安装</button></li><li class="tab"><button type="button" data-href="#install_nodejs-2">二进制文件安装</button></li><li class="tab"><button type="button" data-href="#install_nodejs-3">源码编译安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="install_nodejs-1"><p>本篇不会特别指出任何使用包管理器安装 Nodejs 的方法，如果你对包管理器不了解或者说不知道自己的系统的包管理器如何使用，我强烈建议你移步我的另一篇文章：<a href="/posts/9f09e5f1/">Linux 环境一般软件安装方法</a>，该篇文章详细说明了使用包管理器安装软件的一般方法，以后也就不用每次安装软件时都上网搜索了！</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="install_nodejs-2"><ol><li><p><strong>选择二进制包</strong></p><p><a href="https://nodejs.org/en/download">Nodejs 官网</a>提供了一种二进制包，首先通过前面的链接前往其下载页面：</p><p><img src="01.png" alt="01"></p><p>根据你机器的架构选择对应的二进制包即可。ARM 架构的 CPU 通常是手机平板等设备使用，如果是 PC，则通常选择 x86 即可</p><blockquote><p><strong>注意</strong>：</p><p>既然你都来搜索安装教程了，那我推荐你安装 LTS 版本（即长期支持版本），该版本比较稳定。</p></blockquote></li><li><p><strong>下载二进制包</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v18.17.1/node-v18.17.1-linux-x64.tar.xz</span><br></pre></td></tr></table></figure><blockquote><p><strong>注意</strong>：</p><ol><li>此处的链接是通过复制下载按钮链接获取的，如果你想下载最新的二进制包请自行前往官网获取</li><li><code>wget</code>工具的使用方法请使用<code>wget --help</code>自行获取，本篇不涉及该工具的使用教程</li></ol></blockquote></li><li><p><strong>解压</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf node-v18.17.1-linux-x64.tar.xz</span><br></pre></td></tr></table></figure><blockquote><p><strong>注意</strong>：</p><ol><li><p><code>tar</code>工具的使用方法请使用<code>tar --help</code>自行获取，本篇不涉及该工具的使用教程</p></li><li><p>解压会得到一个解压包，我解压所得到的名字是<code>node-v18.17.1-linux-x64</code>，由于你可能下载的版本和我不同，如果你是一个小白，建议你先将这个解压包按照下面的方法重命名，然后再跟着后面的教程走：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> node-v18.17.1-linux-x64 nodejs</span><br></pre></td></tr></table></figure><p>该解压包被重命名为<code>nodejs</code>，后续也以该名字为准</p></li></ol></blockquote></li><li><p><strong>将其移动到<code>/opt</code>目录下</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> nodejs /opt/</span><br></pre></td></tr></table></figure></li><li><p><strong>添加环境变量</strong></p><p>不出意外的话，此时<code>node</code>、<code>npm</code>等可执行程序应该在<code>/opt/nodejs/bin/</code>目录下，我们需要将其添加到环境变量，才能方便地使用该应用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PATH=<span class="variable">$PATH</span>:/opt/nodejs/bin&quot;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure></li><li><p><strong>测试</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure></li></ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="install_nodejs-3"><ol><li><p><strong>下载源码包</strong></p><p>首先，还是先前往 <a href="https://nodejs.org/en/download">Nodejs 官网</a>，这次我们选择 Source Code</p><p><img src="02.png" alt="02"></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v18.17.1/node-v18.17.1.tar.gz</span><br></pre></td></tr></table></figure><blockquote><p><strong>注意</strong>：</p><ol><li><code>wget</code>工具的使用方法请通过<code>wget --help</code>自行获取，本篇不提供<code>wget</code>的使用教程</li><li>此处的链接通过复制下载按钮链接得到，如果你想安装最新版请自行前往官网获取</li><li>建议下载 LTS 版本（即长期支持版本）</li></ol></blockquote></li><li><p><strong>解压</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf node-v18.17.1.tar.gz</span><br></pre></td></tr></table></figure><blockquote><p><strong>注意</strong>：</p><ol><li><p><code>tar</code>工具的使用方法请通过<code>tar --help</code>自行获取，本篇不提供<code>tar</code>的使用教程</p></li><li><p>我所解压出的包名是<code>node-v18.17.1</code>，由于你下载的版本可能和我的不同，为了方便后续教程的统一性，在此将解压包名修改为<code>nodejs</code>，后续也将以该名字为准：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> node-v18.17.1 nodejs</span><br></pre></td></tr></table></figure></li></ol></blockquote></li><li><p><strong>安装编译环境与依赖</strong></p><p>具体的编译环境与依赖可以前往官方的教程：<a href="https://github.com/nodejs/node/blob/main/BUILDING.md#building-nodejs-on-supported-platforms">node/BUILDING.md at main · nodejs/node · GitHub</a></p><p>主要关注两个地方，其一是某些工具或依赖的版本要求：</p><p><img src="03.png" alt="03"></p><blockquote><p>容易无法达到要求的一般是<code>gcc</code>和<code>g++</code>的版本，但实际测试下来似乎版本低一点也是可以编译成功的，我的版本是 8.5.0，在此仅作参考。</p></blockquote><p>其二是不同包管理器下的依赖安装方法：</p><p><img src="04.png" alt="04"></p><blockquote><p><strong>注意</strong>：</p><p>由于使用包管理器安装的依赖版本可能比较落后，或许无法满足其版本要求，所以可能需要采用其他方式进行安装</p></blockquote></li><li><p><strong>配置编译安装</strong></p><p>按顺序执行以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> nodejs<span class="comment"># 移动到 nodejs 源代码目录</span></span><br><span class="line"><span class="built_in">mkdir</span> /opt/nodejs<span class="comment"># 在 /opt 下创建新目录 nodejs</span></span><br><span class="line">./configure --prefix=/opt/nodejs<span class="comment"># 修改安装目录为 /opt/nodejs</span></span><br><span class="line">make<span class="comment"># 编译</span></span><br><span class="line">make install<span class="comment"># 安装</span></span><br></pre></td></tr></table></figure></li><li><p><strong>添加环境变量</strong></p><p>由于我们在配置阶段自定义了安装目录，所以可执行程序不会默认安装到系统查找目录下，所以仍然需要将可执行程序添加到环境变量中。（如果上一步你没有设置安装目录，仅仅只是执行了<code>./configure</code>就可以跳过该步骤）。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PATH=<span class="variable">$PATH</span>:/opt/nodejs/bin&quot;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure></li><li><p><strong>测试</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure></li></ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div><div class="note warning flat"><p><strong>关于通过 npm 包管理器安装工具的默认安装位置</strong>：</p><p>在曾经的 nodejs 版本中，通过 npm 安装工具时的默认安装位置在一个具有访问限制的目录下，虽然在该目录下安装可以直接将应用添加到系统默认查找目录从而方便使用，但在某些系统上该默认配置会导致一些权限错误以致于无法安装成功。</p><p>你可以通过下面的命令查看当前 npm 包管理器安装应用时的默认位置：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config get prefix</span><br></pre></td></tr></table></figure><p>如果你使用跟教程一样的版本号或者比教程更新的 nodejs 版本，并且按照上方【二进制文件安装】方法安装好 nodejs 之后，如果不出意外，则输出将会是<code>/opt/nodejs</code>。在我所使用过的 nodejs 版本中，npm 默认安装地址为二进制文件地址的版本最早大概是 18.16。</p><p>如果你通过上方的命令所得到的输出和本教程不同，比如为<code>/usr/local</code>等位置，我建议你将 npm 安装地址变更为<code>nodejs</code>所在位置，在本教程中即<code>/opt/nodejs</code>，此时安装的应用会将其可执行程序添加到<code>/opt/nodejs/bin</code>目录下，由于我们已经将此目录添加到了环境变量中，所以可以实现安装即用。</p></div><h2 id="二、配置">二、配置</h2><h3 id="npm-换源">npm 换源</h3><p>通过下面这条命令即可更新软件源：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure><p>然后通过下面的命令查看是否更换成功：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config get registry</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
       <categories>
-        <category>Linux</category>
-        <category>软件安装</category>
+          
+          <category> Linux </category>
+          
+          <category> 软件安装 </category>
+          
       </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>软件安装</tag>
-        <tag>Nodejs</tag>
-        <tag>npm换源</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux下Git安装与配置</title>
-    <url>//posts/4446d03b/</url>
-    <content><![CDATA[<h2 id="一、安装">一、安装</h2>
-<div class="tabs" id="installgit"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#installgit-1">包管理器安装</button></li><li class="tab"><button type="button" data-href="#installgit-2">源码编译安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="installgit-1"><p>本篇不会特别指出任何使用包管理器安装 Git 的方法，如果你对包管理器不了解或者说不知道自己的系统的包管理器如何使用，我强烈建议你移步我的另一篇文章：<a href="/posts/9f09e5f1/">Linux 环境一般软件安装方法</a>，该篇文章详细说明了使用包管理器安装软件的一般方法，以后也就不用每次安装软件时都上网搜索了！</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="installgit-2"><ol>
-<li>
-<p><strong>下载源码</strong></p>
-<p>你可以在 <a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a> 看到官网上所标注的最新的源代码版本，然后通过 <a href="https://mirrors.edge.kernel.org/pub/software/scm/git/">https://mirrors.edge.kernel.org/pub/software/scm/git/</a> 找到对应的版本下载即可。我所下载的文件是：<code>git-2.42.0.tar.gz</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.42.0.tar.gz</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<ol>
-<li>可以在任何目录使用该命令，但如果是一些访问受限的系统目录下，需要登录<code>root</code>用户执行或在命令前加上<code>sudo</code>，后续命令同理</li>
-<li>关于<code>wget</code>工具的用法可以通过<code>wget --help</code>进行查看，此处不详细介绍</li>
-</ol>
-</blockquote>
-</li>
-<li>
-<p><strong>解压压缩包</strong></p>
-<p>我们下载下来的文件是一个<code>.tar.gz</code>的压缩包，需要用<code>tar</code>工具进行解压，如果没有该工具，则通过包管理器下载即可，包名称就叫<code>tar</code>。以下是解压命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar -zxvf git-2.42.0.tar.gz</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<ol>
-<li>
-<p>关于<code>tar</code>工具的用法可以通过<code>tar --help</code>进行查看，此处不详细介绍</p>
-</li>
-<li>
-<p>解压出来的目录名应该是<code>git-2.42.0</code>，考虑到本教程的通用性，我选择将其重命名为<code>git</code>：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> git-2.42.0 git</span><br></pre></td></tr></table></figure>
-<p>后续也请读者以<code>git</code>为准</p>
-</li>
-</ol>
-</blockquote>
-</li>
-<li>
-<p><strong>依赖安装</strong></p>
-<p>Git 的依赖库包含：<code>autotools</code>、<code>curl</code>、<code>zlib</code>、<code>openssl</code>、<code>expat</code>和<code>libiconv</code>。它们的包名分别是：<code>dh-autoreconf</code>、<code>curl-devel</code>、<code>expat-devel</code>、<code>gettext-devel</code>、<code>openssl-devel</code>、<code>perl-devel</code>、<code>zlib-devel</code>，请使用包管理器自行安装以上依赖库，本篇不提供包管理器的使用方法。</p>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<p>使用 RHEL 和 RHEL 衍生版，如 CentOS 和 Scientific Linux 的用户可能需要开启 EPEL 库</p>
-</blockquote>
-</li>
-<li>
-<p><strong>编译安装</strong></p>
-<p>依次执行以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> git				<span class="comment"># 进入之前解压出来的 git 源代码目录下</span></span><br><span class="line">make configure			<span class="comment"># 生成配置文件</span></span><br><span class="line"><span class="built_in">mkdir</span> /opt/git			<span class="comment"># 在 /opt 下创建一个新目录用于安装 git</span></span><br><span class="line">./configure --prefix=/opt/git	<span class="comment"># 修改配置中的安装位置到 /opt/git</span></span><br><span class="line">make				<span class="comment"># 编译</span></span><br><span class="line">make install			<span class="comment"># 安装</span></span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p><strong>将 git 安装路径添加到环境变量</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PATH=<span class="variable">$PATH</span>:/opt/git/bin&quot;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p><strong>测试 git</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git --version</span><br></pre></td></tr></table></figure>
-</li>
-</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<h2 id="二、配置">二、配置</h2>
-<h3 id="1-配置-SSH-连接">1. 配置 SSH 连接</h3>
-<div class="note info flat"><p>如果你使用 git 是为了能够往远程仓库推送内容，我推荐你配置一下 SSH 连接。而如果仅仅是为了克隆仓库到本地而不进行任何推送，则完全可以不配置 SSH 连接。</p>
-<p>首先 ssh 和 git 是两个完全分离的工具，不要将它们混到一起。ssh 是 git 支持的一种传输方式，要启用这种传输，首先需要配置 ssh 密钥，从而将本地机器和远程 Github 服务器连接起来。</p>
-</div>
-<ul>
-<li>
-<p><strong>创建 SSH Key</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;&lt;your name&gt;&quot;</span></span><br></pre></td></tr></table></figure>
-<div class="note warning flat"><p>如果以前创建过这个密钥，则可以跳过这一步，通常在<code>~/.ssh/</code>目录下就可以找到以前创建的密钥文件。</p>
-</div>
-<div class="note info flat"><p>输入该命令之后会有一些输出，也会让你输入一些内容，比如创建密钥的位置，使用密钥的密码等等，通常保持默认即可，即一路回车。</p>
-</div>
-<p>创建成功后你可以看到如下输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Your identification has been saved in /home/Username/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/Username/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:RwvBINgH8CEt2KniltmykeyDsOseUYcwMzehFeyT86s emailnum@email.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">| o+%OO+o.        |</span><br><span class="line">|..=+%*+ ..       |</span><br><span class="line">| ..+o+o.. .      |</span><br><span class="line">|o.  o=.  o .     |</span><br><span class="line">|o oolalala S o      |</span><br><span class="line">| +.+.. . .       |</span><br><span class="line">|. .o    .        |</span><br><span class="line">|  . .  .         |</span><br><span class="line">|   . E.          |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p><strong>复制公钥</strong></p>
-<p>如果按照默认配置，则你的公钥文件<code>id_rsa.pub</code>应该放在<code>~/.ssh/</code>目录下，使用任何编辑器如 vim、gedit 打开该文件都可以，然后复制其中内容</p>
-</li>
-<li>
-<p><strong>配置 Github SSH 密钥</strong></p>
-<p>进入自己的 Github 主页，依次点击【Setting】-&gt;【SSH and GPG Keys】-&gt;【New SSH Key】按钮，Title 任意内容皆可，通常我比较喜欢和自己在创建 ssh 密钥时填写的名字一样。</p>
-<p>然后将刚刚复制的密钥内容粘贴到下方文本框中，保存即可。</p>
-</li>
-<li>
-<p><strong>测试 ssh 连接</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<p>第一次使用该密钥连接时会询问是否继续连接，输入<code>yes</code>回车确认即可，最后如果看到如下输出则说明配置成功了：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Hi You! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="2-其他配置">2. 其他配置</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;&lt;你的用户名&gt;&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;&lt;你的邮箱&gt;&quot;</span></span><br><span class="line">git config --global core.quotepath <span class="literal">false</span>		<span class="comment"># 解决中文路径显示乱码的问题</span></span><br></pre></td></tr></table></figure>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> 软件安装 </tag>
+            
+            <tag> Nodejs </tag>
+            
+            <tag> npm换源 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux下Git安装与配置</title>
+      <link href="//posts/4446d03b/"/>
+      <url>//posts/4446d03b/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、安装">一、安装</h2><div class="tabs" id="installgit"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#installgit-1">包管理器安装</button></li><li class="tab"><button type="button" data-href="#installgit-2">源码编译安装</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="installgit-1"><p>本篇不会特别指出任何使用包管理器安装 Git 的方法，如果你对包管理器不了解或者说不知道自己的系统的包管理器如何使用，我强烈建议你移步我的另一篇文章：<a href="/posts/9f09e5f1/">Linux 环境一般软件安装方法</a>，该篇文章详细说明了使用包管理器安装软件的一般方法，以后也就不用每次安装软件时都上网搜索了！</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="installgit-2"><ol><li><p><strong>下载源码</strong></p><p>你可以在 <a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a> 看到官网上所标注的最新的源代码版本，然后通过 <a href="https://mirrors.edge.kernel.org/pub/software/scm/git/">https://mirrors.edge.kernel.org/pub/software/scm/git/</a> 找到对应的版本下载即可。我所下载的文件是：<code>git-2.42.0.tar.gz</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.42.0.tar.gz</span><br></pre></td></tr></table></figure><blockquote><p><strong>注意</strong>：</p><ol><li>可以在任何目录使用该命令，但如果是一些访问受限的系统目录下，需要登录<code>root</code>用户执行或在命令前加上<code>sudo</code>，后续命令同理</li><li>关于<code>wget</code>工具的用法可以通过<code>wget --help</code>进行查看，此处不详细介绍</li></ol></blockquote></li><li><p><strong>解压压缩包</strong></p><p>我们下载下来的文件是一个<code>.tar.gz</code>的压缩包，需要用<code>tar</code>工具进行解压，如果没有该工具，则通过包管理器下载即可，包名称就叫<code>tar</code>。以下是解压命令</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf git-2.42.0.tar.gz</span><br></pre></td></tr></table></figure><blockquote><p><strong>注意</strong>：</p><ol><li><p>关于<code>tar</code>工具的用法可以通过<code>tar --help</code>进行查看，此处不详细介绍</p></li><li><p>解压出来的目录名应该是<code>git-2.42.0</code>，考虑到本教程的通用性，我选择将其重命名为<code>git</code>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> git-2.42.0 git</span><br></pre></td></tr></table></figure><p>后续也请读者以<code>git</code>为准</p></li></ol></blockquote></li><li><p><strong>依赖安装</strong></p><p>Git 的依赖库包含：<code>autotools</code>、<code>curl</code>、<code>zlib</code>、<code>openssl</code>、<code>expat</code>和<code>libiconv</code>。它们的包名分别是：<code>dh-autoreconf</code>、<code>curl-devel</code>、<code>expat-devel</code>、<code>gettext-devel</code>、<code>openssl-devel</code>、<code>perl-devel</code>、<code>zlib-devel</code>，请使用包管理器自行安装以上依赖库，本篇不提供包管理器的使用方法。</p><blockquote><p><strong>注意</strong>：</p><p>使用 RHEL 和 RHEL 衍生版，如 CentOS 和 Scientific Linux 的用户可能需要开启 EPEL 库</p></blockquote></li><li><p><strong>编译安装</strong></p><p>依次执行以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> git<span class="comment"># 进入之前解压出来的 git 源代码目录下</span></span><br><span class="line">make configure<span class="comment"># 生成配置文件</span></span><br><span class="line"><span class="built_in">mkdir</span> /opt/git<span class="comment"># 在 /opt 下创建一个新目录用于安装 git</span></span><br><span class="line">./configure --prefix=/opt/git<span class="comment"># 修改配置中的安装位置到 /opt/git</span></span><br><span class="line">make<span class="comment"># 编译</span></span><br><span class="line">make install<span class="comment"># 安装</span></span><br></pre></td></tr></table></figure></li><li><p><strong>将 git 安装路径添加到环境变量</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PATH=<span class="variable">$PATH</span>:/opt/git/bin&quot;</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure></li><li><p><strong>测试 git</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git --version</span><br></pre></td></tr></table></figure></li></ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div><h2 id="二、配置">二、配置</h2><h3 id="1-配置-SSH-连接">1. 配置 SSH 连接</h3><div class="note info flat"><p>如果你使用 git 是为了能够往远程仓库推送内容，我推荐你配置一下 SSH 连接。而如果仅仅是为了克隆仓库到本地而不进行任何推送，则完全可以不配置 SSH 连接。</p><p>首先 ssh 和 git 是两个完全分离的工具，不要将它们混到一起。ssh 是 git 支持的一种传输方式，要启用这种传输，首先需要配置 ssh 密钥，从而将本地机器和远程 Github 服务器连接起来。</p></div><ul><li><p><strong>创建 SSH Key</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;&lt;your name&gt;&quot;</span></span><br></pre></td></tr></table></figure><div class="note warning flat"><p>如果以前创建过这个密钥，则可以跳过这一步，通常在<code>~/.ssh/</code>目录下就可以找到以前创建的密钥文件。</p></div><div class="note info flat"><p>输入该命令之后会有一些输出，也会让你输入一些内容，比如创建密钥的位置，使用密钥的密码等等，通常保持默认即可，即一路回车。</p></div><p>创建成功后你可以看到如下输出：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Your identification has been saved in /home/Username/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/Username/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:RwvBINgH8CEt2KniltmykeyDsOseUYcwMzehFeyT86s emailnum@email.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">| o+%OO+o.        |</span><br><span class="line">|..=+%*+ ..       |</span><br><span class="line">| ..+o+o.. .      |</span><br><span class="line">|o.  o=.  o .     |</span><br><span class="line">|o oolalala S o      |</span><br><span class="line">| +.+.. . .       |</span><br><span class="line">|. .o    .        |</span><br><span class="line">|  . .  .         |</span><br><span class="line">|   . E.          |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure></li><li><p><strong>复制公钥</strong></p><p>如果按照默认配置，则你的公钥文件<code>id_rsa.pub</code>应该放在<code>~/.ssh/</code>目录下，使用任何编辑器如 vim、gedit 打开该文件都可以，然后复制其中内容</p></li><li><p><strong>配置 Github SSH 密钥</strong></p><p>进入自己的 Github 主页，依次点击【Setting】-&gt;【SSH and GPG Keys】-&gt;【New SSH Key】按钮，Title 任意内容皆可，通常我比较喜欢和自己在创建 ssh 密钥时填写的名字一样。</p><p>然后将刚刚复制的密钥内容粘贴到下方文本框中，保存即可。</p></li><li><p><strong>测试 ssh 连接</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure><p>第一次使用该密钥连接时会询问是否继续连接，输入<code>yes</code>回车确认即可，最后如果看到如下输出则说明配置成功了：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi You! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure></li></ul><h3 id="2-其他配置">2. 其他配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;&lt;你的用户名&gt;&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;&lt;你的邮箱&gt;&quot;</span></span><br><span class="line">git config --global core.quotepath <span class="literal">false</span><span class="comment"># 解决中文路径显示乱码的问题</span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
       <categories>
-        <category>Linux</category>
-        <category>软件安装</category>
+          
+          <category> Linux </category>
+          
+          <category> 软件安装 </category>
+          
       </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>Git</tag>
-        <tag>软件安装</tag>
-        <tag>软件配置</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux环境一般软件安装方法</title>
-    <url>//posts/9f09e5f1/</url>
-    <content><![CDATA[<h2 id="前言">前言</h2>
-<p>在刚开始学习使用 Linux 系统的时候，估计大家都在网上搜索过类似于如何在 Linux 上安装某某软件之类的问题，而且通常需要指明自己所使用的 Linux 发行版才能得到一个实际可行的解决方法。而且当你想要安装另一个不同的软件的时候，你又会像之前一样重新搜索一遍，你是否会发现实际上它们的安装方法都非常类似。</p>
-<p>实际上，在 Linux 上安装某个软件，大概就是三种方法，最快速方便的方法就是使用<strong>包管理器</strong>进行安装；第二种是下载软件厂商已经为你编译好的<strong>二进制文件</strong>到系统进行安装；第三种是最耗时间也是出错率比较高的一种安装方法，即下载软件<strong>源代码</strong>，自行编译安装。</p>
-<p>使用包管理器进行安装最为方便，但缺点其实也是最多的。对于初学者来说，由于本身对于包管理器没有一个清晰的认识，所以当你到另一个使用不同的包管理器的 Linux 系统上时就可能会无从下手，这也是为什么当你搜索一个软件安装教程的时候通常需要指定实际 Linux 的发行版名称才能得到一个比较可行的教程。另外，实际上包管理器就相当于你手机的应用商店，它的所有软件资源实际上是统一放在一个服务器中供包管理器使用的，由于这个服务器中的软件往往并不是和该软件官网发布的版本同步更新的，所以这也就导致你通过包管理器进行安装的软件要比该软件官网当前版本落后几个版本。</p>
-<p>而使用二进制文件或者是使用源代码编译的方式进行安装，则不会有上述两个缺点，但相反要对软件的工作方式以及编译方法比较了解。</p>
-<div class="note info flat"><p>本篇将着重介绍包管理器以及使用包管理器的软件安装方法，而使用二进制文件以及源代码编译的安装方式则简单介绍一下，特别是源代码编译的安装方式，由于各种软件编写方式不同，所以它们通过源代码编译的安装方式多多少少也有一点区别，对于某些软件我将会单独写一篇文章来介绍如何通过二进制文件或者源代码编译的方式进行安装，本篇中主要介绍通过包管理器安装软件的通用方法。</p>
-</div>
-<h2 id="一、包管理器安装">一、包管理器安装</h2>
-<p>包管理器一般有两部分，一个是包管理器本身，另一个是包管理器的前端。比如在 Ubuntu 中，包管理器就是 dpkg，而其前端通常是 apt。二者的区别大概就是：包管理器本身如 dpkg 只负责安装现有的安装包，而包管理器的前端通常是从远程服务器下载对应安装包到系统上，然后调用包管理器来对软件进行安装。我们通常都是使用前端在远程获取安装包，但有时当远程服务器没有这个软件的时候，此时如果该软件官网提供了对应包管理器的安装包，我们也可以直接下载这样的安装包，然后使用包管理器进行安装。</p>
-<p>比较常见的包管理器及其前端以及它们的使用方法如下：</p>
-<div class="tabs" id="package_managers"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#package_managers-1">DPKG</button></li><li class="tab"><button type="button" data-href="#package_managers-2">RPM</button></li><li class="tab"><button type="button" data-href="#package_managers-3">PACMAN</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="package_managers-1"><p>dpkg 是 Debian Linux 家族的基础包管理系统，它用于安装、删除、存储和提供<code>.deb</code>包的信息。</p>
-<blockquote>
-<p><strong>常用命令</strong>：</p>
-<p>参考：<a href="https://www.linuxcool.com/dpkg">dpkg命令 – 管理软件安装包 – Linux命令大全(手册) (linuxcool.com)</a></p>
-</blockquote>
-<p><strong>前端管理器</strong>：APT</p>
-<p>由于 APT 比较常用，所以此处仅介绍 APT。</p>
-<p>这个是一个 dpkg 包管理系统的前端工具，它是一个非常受欢迎的、自由而强大的，有用的命令行包管理器系统。</p>
-<p>Debian 及其衍生版，例如 Ubuntu 和 Linux Mint 的用户应该非常熟悉这个包管理工具。</p>
-<blockquote>
-<p><strong>常用命令</strong>：</p>
-<p>参考：<a href="https://www.linuxcool.com/apt-get">apt-get命令 – 管理服务软件 – Linux命令大全(手册) (linuxcool.com)</a></p>
-</blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="package_managers-2"><p>这个是红帽创建的 Linux 基本标准（LSB）打包格式和基础包管理系统。</p>
-<blockquote>
-<p><strong>常用命令</strong>：</p>
-<p><a href="https://www.linuxcool.com/rpm">rpm命令 – RPM软件包管理器 – Linux命令大全(手册) (linuxcool.com)</a></p>
-</blockquote>
-<p><strong>前端管理器</strong>：YUM</p>
-<p>这个是一个开源、流行的命令行包管理器，它是用户使用 RPM 的界面（之一）。你可以把它和 Debian Linux 系统中的 APT 进行对比，它和 APT 拥有相同的功能。</p>
-<blockquote>
-<p><strong>常用命令</strong>：</p>
-<p><a href="https://www.linuxcool.com/yum">yum命令 – 基于RPM的软件包管理器 – Linux命令大全(手册) (linuxcool.com)</a></p>
-</blockquote>
-<p><strong>前端管理器</strong>：DNF</p>
-<p>这个也是一个用于基于 RPM 的发行版的包管理器，Fedora 18 引入了它，它是下一代 YUM。</p>
-<p>如果你用 Fedora 22 及更新版本，你肯定知道它是默认的包管理器。</p>
-<blockquote>
-<p><strong>常用命令</strong>：</p>
-<p><a href="https://www.linuxcool.com/dnf">dnf命令 – 新一代的软件包管理器 – Linux命令大全(手册) (linuxcool.com)</a></p>
-</blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="package_managers-3"><p>这个是一个流行的、强大而易用的包管理器，它用于 Arch Linux 和其他的一些小众发行版。它提供了一些其他包管理器提供的基本功能，包括安装、自动解决依赖关系、升级、卸载和降级软件。</p>
-<blockquote>
-<p><strong>常用命令</strong>：</p>
-<p><a href="https://www.linuxcool.com/pacman">pacman命令 – 软件包管理器 – Linux命令大全(手册) (linuxcool.com)</a></p>
-</blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
-<div class="note primary flat"><p><strong>关于依赖</strong></p>
-<p>Linux 和 Windows 的一个不同的地方就在于：Windows 中所安装的软件包会将自己所用到的所有的例如第三方库之类的依赖和自己的软件主体一起打包到一个安装包中，这方便了开发人员也方便了使用用户，但是却可能造成一个问题，就是有可能你某个软件里使用到了的依赖另一个软件中也用到了，但是它们在系统中却占有两份空间。而 Linux 则采用与之不同的方案，就是当你安装一个软件的时候，需要先安装好该软件的所有依赖才能正常运行，而依赖可能也有依赖，依次类推。这样的方式使软件的空间占有率得以下降，但相反的在安装时需要注意的地方就多了。</p>
-<p>当你使用包管理器安装软件的时候，大多数的包管理器都可以自动处理依赖关系，当你安装软件时，包管理器会自动为你安装该软件的所有能找到的依赖，所以通常不用过多担心。实际上，即使没有自动为你安装依赖，在安装时包管理器也会提醒你缺哪些依赖，你再像安装一般软件一样安装依赖就可以了。</p>
-</div>
-<h2 id="二、二进制文件安装">二、二进制文件安装</h2>
-<p>使用二进制文件安装软件是一个不错的选择，既可以安装到最新（或较新）的软件，过程也比较简单和通用。一般的二进制软件安装过程如下：</p>
-<ul>
-<li>下载二进制软件，并将其解压，解压包通常放置在一个统一的目录方便管理（通常会选择在<code>/opt/</code>目录）</li>
-<li>将解压包中的可执行程序添加软链到系统查找目录（如<code>/usr/local/bin/</code>、<code>/usr/bin/</code>等）</li>
-<li>在任意目录测试该可执行程序是否可以正常执行</li>
-</ul>
-<h2 id="三、源代码编译安装">三、源代码编译安装</h2>
-<p>该方法的灵活性就比较高了，但也有基本操作步骤：</p>
-<ul>
-<li>下载源代码</li>
-<li>配置编译条件</li>
-<li>编译、安装</li>
-</ul>
-<p>从源代码的下载方式，到编译条件的配置方式以及最后编译以及安装的方式都各不相同，就不在此多废话，具体的软件的源代码编译安装方法就去找对应的软件安装教程即可，但还是要提一句，在 Linux 上最常见的软件还是使用 C/C++ 编写的，并且它们的配置以及编译安装的方式也都差不多，通常保证你的系统里有 gcc、g++、make 这几个软件就可以完成编译了。</p>
-<h2 id="推荐">推荐</h2>
-<div class="note info flat"><p><strong>通过下方链接可以前往本博客已经提供的使用二进制文件方法或者源代码编译方法的安装教程：</strong></p>
-<ul>
-<li><a href="/posts/4446d03b/">Git</a></li>
-<li><a href="/posts/358aad2/">nodejs</a></li>
-</ul>
-</div>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> Git </tag>
+            
+            <tag> 软件安装 </tag>
+            
+            <tag> 软件配置 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux环境一般软件安装方法</title>
+      <link href="//posts/9f09e5f1/"/>
+      <url>//posts/9f09e5f1/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>在刚开始学习使用 Linux 系统的时候，估计大家都在网上搜索过类似于如何在 Linux 上安装某某软件之类的问题，而且通常需要指明自己所使用的 Linux 发行版才能得到一个实际可行的解决方法。而且当你想要安装另一个不同的软件的时候，你又会像之前一样重新搜索一遍，你是否会发现实际上它们的安装方法都非常类似。</p><p>实际上，在 Linux 上安装某个软件，大概就是三种方法，最快速方便的方法就是使用<strong>包管理器</strong>进行安装；第二种是下载软件厂商已经为你编译好的<strong>二进制文件</strong>到系统进行安装；第三种是最耗时间也是出错率比较高的一种安装方法，即下载软件<strong>源代码</strong>，自行编译安装。</p><p>使用包管理器进行安装最为方便，但缺点其实也是最多的。对于初学者来说，由于本身对于包管理器没有一个清晰的认识，所以当你到另一个使用不同的包管理器的 Linux 系统上时就可能会无从下手，这也是为什么当你搜索一个软件安装教程的时候通常需要指定实际 Linux 的发行版名称才能得到一个比较可行的教程。另外，实际上包管理器就相当于你手机的应用商店，它的所有软件资源实际上是统一放在一个服务器中供包管理器使用的，由于这个服务器中的软件往往并不是和该软件官网发布的版本同步更新的，所以这也就导致你通过包管理器进行安装的软件要比该软件官网当前版本落后几个版本。</p><p>而使用二进制文件或者是使用源代码编译的方式进行安装，则不会有上述两个缺点，但相反要对软件的工作方式以及编译方法比较了解。</p><div class="note info flat"><p>本篇将着重介绍包管理器以及使用包管理器的软件安装方法，而使用二进制文件以及源代码编译的安装方式则简单介绍一下，特别是源代码编译的安装方式，由于各种软件编写方式不同，所以它们通过源代码编译的安装方式多多少少也有一点区别，对于某些软件我将会单独写一篇文章来介绍如何通过二进制文件或者源代码编译的方式进行安装，本篇中主要介绍通过包管理器安装软件的通用方法。</p></div><h2 id="一、包管理器安装">一、包管理器安装</h2><p>包管理器一般有两部分，一个是包管理器本身，另一个是包管理器的前端。比如在 Ubuntu 中，包管理器就是 dpkg，而其前端通常是 apt。二者的区别大概就是：包管理器本身如 dpkg 只负责安装现有的安装包，而包管理器的前端通常是从远程服务器下载对应安装包到系统上，然后调用包管理器来对软件进行安装。我们通常都是使用前端在远程获取安装包，但有时当远程服务器没有这个软件的时候，此时如果该软件官网提供了对应包管理器的安装包，我们也可以直接下载这样的安装包，然后使用包管理器进行安装。</p><p>比较常见的包管理器及其前端以及它们的使用方法如下：</p><div class="tabs" id="package_managers"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#package_managers-1">DPKG</button></li><li class="tab"><button type="button" data-href="#package_managers-2">RPM</button></li><li class="tab"><button type="button" data-href="#package_managers-3">PACMAN</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="package_managers-1"><p>dpkg 是 Debian Linux 家族的基础包管理系统，它用于安装、删除、存储和提供<code>.deb</code>包的信息。</p><blockquote><p><strong>常用命令</strong>：</p><p>参考：<a href="https://www.linuxcool.com/dpkg">dpkg命令 – 管理软件安装包 – Linux命令大全(手册) (linuxcool.com)</a></p></blockquote><p><strong>前端管理器</strong>：APT</p><p>由于 APT 比较常用，所以此处仅介绍 APT。</p><p>这个是一个 dpkg 包管理系统的前端工具，它是一个非常受欢迎的、自由而强大的，有用的命令行包管理器系统。</p><p>Debian 及其衍生版，例如 Ubuntu 和 Linux Mint 的用户应该非常熟悉这个包管理工具。</p><blockquote><p><strong>常用命令</strong>：</p><p>参考：<a href="https://www.linuxcool.com/apt-get">apt-get命令 – 管理服务软件 – Linux命令大全(手册) (linuxcool.com)</a></p></blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="package_managers-2"><p>这个是红帽创建的 Linux 基本标准（LSB）打包格式和基础包管理系统。</p><blockquote><p><strong>常用命令</strong>：</p><p><a href="https://www.linuxcool.com/rpm">rpm命令 – RPM软件包管理器 – Linux命令大全(手册) (linuxcool.com)</a></p></blockquote><p><strong>前端管理器</strong>：YUM</p><p>这个是一个开源、流行的命令行包管理器，它是用户使用 RPM 的界面（之一）。你可以把它和 Debian Linux 系统中的 APT 进行对比，它和 APT 拥有相同的功能。</p><blockquote><p><strong>常用命令</strong>：</p><p><a href="https://www.linuxcool.com/yum">yum命令 – 基于RPM的软件包管理器 – Linux命令大全(手册) (linuxcool.com)</a></p></blockquote><p><strong>前端管理器</strong>：DNF</p><p>这个也是一个用于基于 RPM 的发行版的包管理器，Fedora 18 引入了它，它是下一代 YUM。</p><p>如果你用 Fedora 22 及更新版本，你肯定知道它是默认的包管理器。</p><blockquote><p><strong>常用命令</strong>：</p><p><a href="https://www.linuxcool.com/dnf">dnf命令 – 新一代的软件包管理器 – Linux命令大全(手册) (linuxcool.com)</a></p></blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="package_managers-3"><p>这个是一个流行的、强大而易用的包管理器，它用于 Arch Linux 和其他的一些小众发行版。它提供了一些其他包管理器提供的基本功能，包括安装、自动解决依赖关系、升级、卸载和降级软件。</p><blockquote><p><strong>常用命令</strong>：</p><p><a href="https://www.linuxcool.com/pacman">pacman命令 – 软件包管理器 – Linux命令大全(手册) (linuxcool.com)</a></p></blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div><div class="note primary flat"><p><strong>关于依赖</strong></p><p>Linux 和 Windows 的一个不同的地方就在于：Windows 中所安装的软件包会将自己所用到的所有的例如第三方库之类的依赖和自己的软件主体一起打包到一个安装包中，这方便了开发人员也方便了使用用户，但是却可能造成一个问题，就是有可能你某个软件里使用到了的依赖另一个软件中也用到了，但是它们在系统中却占有两份空间。而 Linux 则采用与之不同的方案，就是当你安装一个软件的时候，需要先安装好该软件的所有依赖才能正常运行，而依赖可能也有依赖，依次类推。这样的方式使软件的空间占有率得以下降，但相反的在安装时需要注意的地方就多了。</p><p>当你使用包管理器安装软件的时候，大多数的包管理器都可以自动处理依赖关系，当你安装软件时，包管理器会自动为你安装该软件的所有能找到的依赖，所以通常不用过多担心。实际上，即使没有自动为你安装依赖，在安装时包管理器也会提醒你缺哪些依赖，你再像安装一般软件一样安装依赖就可以了。</p></div><h2 id="二、二进制文件安装">二、二进制文件安装</h2><p>使用二进制文件安装软件是一个不错的选择，既可以安装到最新（或较新）的软件，过程也比较简单和通用。一般的二进制软件安装过程如下：</p><ul><li>下载二进制软件，并将其解压，解压包通常放置在一个统一的目录方便管理（通常会选择在<code>/opt/</code>目录）</li><li>将解压包中的可执行程序添加软链到系统查找目录（如<code>/usr/local/bin/</code>、<code>/usr/bin/</code>等）</li><li>在任意目录测试该可执行程序是否可以正常执行</li></ul><h2 id="三、源代码编译安装">三、源代码编译安装</h2><p>该方法的灵活性就比较高了，但也有基本操作步骤：</p><ul><li>下载源代码</li><li>配置编译条件</li><li>编译、安装</li></ul><p>从源代码的下载方式，到编译条件的配置方式以及最后编译以及安装的方式都各不相同，就不在此多废话，具体的软件的源代码编译安装方法就去找对应的软件安装教程即可，但还是要提一句，在 Linux 上最常见的软件还是使用 C/C++ 编写的，并且它们的配置以及编译安装的方式也都差不多，通常保证你的系统里有 gcc、g++、make 这几个软件就可以完成编译了。</p><h2 id="推荐">推荐</h2><div class="note info flat"><p><strong>通过下方链接可以前往本博客已经提供的使用二进制文件方法或者源代码编译方法的安装教程：</strong></p><ul><li><a href="/posts/4446d03b/">Git</a></li><li><a href="/posts/358aad2/">nodejs</a></li></ul></div>]]></content>
+      
+      
       <categories>
-        <category>Linux</category>
-        <category>基本使用</category>
+          
+          <category> Linux </category>
+          
+          <category> 基本使用 </category>
+          
       </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>软件安装</tag>
-      </tags>
-  </entry>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> 软件安装 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
 </search>
