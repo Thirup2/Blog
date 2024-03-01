@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://local.syunn.cn:8081/link/</loc>
+    <loc>https://blog.syunn.cn/link/</loc>
     
     <lastmod>2024-03-01</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/</loc>
+    <loc>https://blog.syunn.cn/tags/</loc>
     
     <lastmod>2024-03-01</lastmod>
     
@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/about/</loc>
+    <loc>https://blog.syunn.cn/about/</loc>
     
     <lastmod>2024-03-01</lastmod>
     
@@ -29,7 +29,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/categories/</loc>
+    <loc>https://blog.syunn.cn/categories/</loc>
     
     <lastmod>2024-03-01</lastmod>
     
@@ -38,7 +38,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/posts/a15e7e9/</loc>
+    <loc>https://blog.syunn.cn/posts/a15e7e9/</loc>
     
     <lastmod>2023-10-25</lastmod>
     
@@ -47,7 +47,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/posts/5e27120d/</loc>
+    <loc>https://blog.syunn.cn/posts/5e27120d/</loc>
     
     <lastmod>2023-10-24</lastmod>
     
@@ -56,7 +56,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/posts/c77f42f7/</loc>
+    <loc>https://blog.syunn.cn/posts/c77f42f7/</loc>
     
     <lastmod>2023-10-24</lastmod>
     
@@ -65,7 +65,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/posts/358aad2/</loc>
+    <loc>https://blog.syunn.cn/posts/358aad2/</loc>
     
     <lastmod>2023-08-30</lastmod>
     
@@ -74,7 +74,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/posts/4446d03b/</loc>
+    <loc>https://blog.syunn.cn/posts/4446d03b/</loc>
     
     <lastmod>2023-08-29</lastmod>
     
@@ -83,7 +83,7 @@
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/posts/9f09e5f1/</loc>
+    <loc>https://blog.syunn.cn/posts/9f09e5f1/</loc>
     
     <lastmod>2023-08-29</lastmod>
     
@@ -93,7 +93,7 @@
   
 
   <url>
-    <loc>https://local.syunn.cn:8081/</loc>
+    <loc>https://blog.syunn.cn/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -101,63 +101,63 @@
 
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/Linux/</loc>
+    <loc>https://blog.syunn.cn/tags/Linux/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/Git/</loc>
+    <loc>https://blog.syunn.cn/tags/Git/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</loc>
+    <loc>https://blog.syunn.cn/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/</loc>
+    <loc>https://blog.syunn.cn/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/Nodejs/</loc>
+    <loc>https://blog.syunn.cn/tags/Nodejs/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/npm%E6%8D%A2%E6%BA%90/</loc>
+    <loc>https://blog.syunn.cn/tags/npm%E6%8D%A2%E6%BA%90/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/Windows/</loc>
+    <loc>https://blog.syunn.cn/tags/Windows/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/</loc>
+    <loc>https://blog.syunn.cn/tags/%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/tags/C-C/</loc>
+    <loc>https://blog.syunn.cn/tags/C-C/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -166,35 +166,35 @@
 
   
   <url>
-    <loc>https://local.syunn.cn:8081/categories/Linux/</loc>
+    <loc>https://blog.syunn.cn/categories/Linux/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/categories/Windows/</loc>
+    <loc>https://blog.syunn.cn/categories/Windows/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/categories/Linux/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</loc>
+    <loc>https://blog.syunn.cn/categories/Linux/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/categories/Linux/%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/</loc>
+    <loc>https://blog.syunn.cn/categories/Linux/%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://local.syunn.cn:8081/categories/Windows/%E9%97%AE%E9%A2%98%E6%8E%A2%E7%B4%A2/</loc>
+    <loc>https://blog.syunn.cn/categories/Windows/%E9%97%AE%E9%A2%98%E6%8E%A2%E7%B4%A2/</loc>
     <lastmod>2024-03-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
