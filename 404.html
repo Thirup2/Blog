@@ -1,14 +1,14 @@
 <!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>页面没有找到 | 瞬のブログ</title><meta name="author" content="Syunn"><meta name="copyright" content="Syunn"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="欢迎来到我的网站！探索关于 C&#x2F;C++、Linux、Windows 等技术领域的博客文章。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="瞬のブログ">
-<meta property="og:url" content="http://blog.syunn.cn/404">
+<meta property="og:url" content="https://local.syunn.cn:8081/404">
 <meta property="og:site_name" content="瞬のブログ">
 <meta property="og:description" content="欢迎来到我的网站！探索关于 C&#x2F;C++、Linux、Windows 等技术领域的博客文章。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.syunn.cn/config/img/avatar/circle.png">
+<meta property="og:image" content="https://local.syunn.cn:8081/config/img/avatar/circle.png">
 <meta property="article:author" content="Syunn">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.syunn.cn/config/img/avatar/circle.png"><link rel="shortcut icon" href="/config/img/avatar/circle.png"><link rel="canonical" href="http://blog.syunn.cn/404"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.19/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+<meta name="twitter:image" content="https://local.syunn.cn:8081/config/img/avatar/circle.png"><link rel="shortcut icon" href="/config/img/avatar/circle.png"><link rel="canonical" href="https://local.syunn.cn:8081/404"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.19/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
   root: '/',
   algolia: undefined,
   localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
@@ -55,7 +55,7 @@
   isHome: false,
   isHighlightShrink: undefined,
   isToc: false,
-  postUpdate: '2024-03-01 06:25:43'
+  postUpdate: '2024-03-01 12:24:18'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-
 
   const getSetting = async () => {
     try {
-      const res = await fetch('https://artalk.syunn.cn//api/conf', { method: 'GET' })
+      const res = await fetch('https://local.syunn.cn:8090//api/conf', { method: 'GET' })
       return await res.json()
     } catch (e) {
       console.log(e)
@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-
 
   const getComment = async () => {
     try {
-      const res = await fetch('https://artalk.syunn.cn//api/stat', headerList)
+      const res = await fetch('https://local.syunn.cn:8090//api/stat', headerList)
       const result = await res.json()
       const avatarStr = await getSetting()
       const { mirror, params, default:defaults } = avatarStr.data.frontend_conf.gravatar
