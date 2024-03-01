@@ -55,7 +55,7 @@
   isHome: false,
   isHighlightShrink: undefined,
   isToc: false,
-  postUpdate: '2024-03-01 13:20:17'
+  postUpdate: '2024-03-01 13:47:22'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -247,6 +247,54 @@ document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-
     return content
   }
 
+  const findTrueUrl = (array) => {
+    Promise.all(array.map(item =>
+      fetch(item.url).then(resp => resp.json()).then(data => {
+        const urlArray = data.body.match(/(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig)
+        if (data.user.login === 'utterances-bot') {
+          return urlArray.pop()
+        } else {
+          return urlArray.shift()
+        }
+      })
+    )).then(res => {
+        array = array.map((i,index)=> {
+          return {
+            ...i,
+            url: res[index]
+          }
+        })
+
+        saveToLocal.set('github-newest-comments', JSON.stringify(array), 10/(60*24))
+        generateHtml(array)
+    });
+  }
+
+  const getComment = () => {
+    fetch('https://api.github.com/repos/Thirup2/Blog/issues/comments?sort=updated&direction=desc&per_page=6&page=1',{
+      "headers": {
+        Accept: 'application/vnd.github.v3.html+json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        const githubArray = data.map(item => {
+          return {
+            'avatar': item.user.avatar_url,
+            'content': changeContent(item.body_html),
+            'nick': item.user.login,
+            'url': item.issue_url,
+            'date': item.updated_at,
+            'githubUrl': item.html_url
+          }
+        })
+        findTrueUrl(githubArray)
+      }).catch(e => {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+  }
+
   const generateHtml = array => {
     let result = ''
 
@@ -274,58 +322,9 @@ document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-
     window.pjax && window.pjax.refresh($dom)
   }
 
-  const getSetting = async () => {
-    try {
-      const res = await fetch('https://local.syunn.cn:8090//api/conf', { method: 'GET' })
-      return await res.json()
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  const headerList = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Origin': window.location.origin
-    },
-    body: new URLSearchParams({
-      'site_name': '瞬のブログ',
-      'limit': '6',
-      'type':'latest_comments'
-    })
-  }
-
-  const getComment = async () => {
-    try {
-      const res = await fetch('https://local.syunn.cn:8090//api/stat', headerList)
-      const result = await res.json()
-      const avatarStr = await getSetting()
-      const { mirror, params, default:defaults } = avatarStr.data.frontend_conf.gravatar
-      const avatarCdn = false || mirror
-      let avatarDefault = false || params || defaults
-      avatarDefault = avatarDefault.startsWith('d=') ? avatarDefault : `d=${avatarDefault}`
-      const artalk = result.data.map(function (e) {
-        return {
-          'avatar': `${avatarCdn}${e.email_encrypted}?${avatarDefault}`,
-          'content': changeContent(e.content_marked),
-          'nick': e.nick,
-          'url': e.page_url,
-          'date': e.date,
-        }
-      })
-      saveToLocal.set('artalk-newest-comments', JSON.stringify(artalk), 10/(60*24))
-      generateHtml(artalk)
-    } catch (e) {
-      console.log(e)
-      const $dom = document.querySelector('#card-newest-comments .aside-list')
-      $dom.innerHTML= "无法获取评论，请确认相关配置是否正确"
-    }
-  }
-
   const newestCommentInit = () => {
     if (document.querySelector('#card-newest-comments .aside-list')) {
-      const data = saveToLocal.get('artalk-newest-comments')
+      const data = saveToLocal.get('github-newest-comments')
       if (data) {
         generateHtml(JSON.parse(data))
       } else {
