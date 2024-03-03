@@ -1,11 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C/C++链接库简介</title>
+    <url>//posts/16812f7c/</url>
+    <content><![CDATA[<h2 id="简介">简介</h2>
+<h3 id="本文的组成">本文的组成</h3>
+<p>本文的内容包含以下几个部分：</p>
+<ul>
+<li>一个典型 C/C++ 程序的编译过程</li>
+<li>认识静态链接库</li>
+<li>认识动态链接库</li>
+<li>二者的联系与区别</li>
+</ul>
+<h3 id="系列文章">系列文章</h3>
+<ul>
+<li><a href="/posts/6e4f8e4a">C/C++ 链接库（准备工作）</a></li>
+<li>本文：<a href="#">C/C++ 链接库简介</a></li>
+<li><a href="#">C/C++ 链接库生成与使用：Windows 篇</a>（待写）</li>
+<li><a href="#">C/C++ 链接库生成与使用：Linux 篇</a>（待写）</li>
+</ul>
+<h2 id="一、编译过程">一、编译过程</h2>
+<p>当我们第一次使用 gcc 这个编译器的时候，一般执行的第一个命令就是：<code>gcc main.c</code>，它将我们的源文件 <code>main.c</code> “编译” 后生成了一个可执行文件：<code>a.out</code>（Windows下为<code>a.exe</code>）。于是，很多人可能就会有一个误解：编译就一个步骤，即编译本身。</p>
+<p>但实际上整个编译过程并非只有一个步骤，而是由以下几个步骤组成：</p>
+<p>假设我们有一个程序<code>main.c</code>如下所示：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello World!\n&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后执行以下命令：<code>gcc main.c</code>，然后 gcc 编译器就会执行下面的步骤：</p>
+<div class="tabs" id="compile_process"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#compile_process-1">预处理</button></li><li class="tab"><button type="button" data-href="#compile_process-2">编译</button></li><li class="tab"><button type="button" data-href="#compile_process-3">汇编</button></li><li class="tab"><button type="button" data-href="#compile_process-4">链接</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="compile_process-1"><p>该过程将所有的<code>#define</code>、<code>#include</code>等进行替换。</p>
+<blockquote>
+<p><strong>库和头文件的区别</strong>：</p>
+<p>相信很多刚开始学习计算机知识以及刚开始学习 C 语言或 C++ 的小伙伴一定对这两个名词很疑惑，理解起来很混乱。</p>
+<p><strong>头文件</strong>大家都不陌生，能够通过<code>#include</code>包含的都算是头文件，但是我们在包含<code>&lt;stdio.h&gt;</code>这类标准库的时候，为什么要叫它标准库而不是标准头文件呢。</p>
+<p>因为实际上标准库正如其名提供的是一个库文件，这个库文件里也包含着可执行代码，只不过库文件向外的接口往往都是以头文件的形式。其他代码必须要使用这个头文件提供的接口来调用标准库这个库文件中的可执行代码。</p>
+</blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="compile_process-2"><p>将预处理之后的<code>main.c</code>进行编译过程，这个编译过程通常是根据当前的机器将源文件翻译成对应的汇编程序源文件，用后缀<code>.s</code>表示，即<code>main.c</code>被翻译为<code>main.s</code>，这个文件是汇编语言写成的程序。之所以要进行这一步，是因为在不同的机器上，相同指令的机器代码是不同的。我们使用的 C/C++ 语言则是高度抽象的语言，不因机器而异，但是我们最终得到的可执行程序却与机器相关，所以我们首先需要将其转换成与机器相关的文件。汇编语言是机器码的第一层抽象，也与机器相关，所以我们将 C 语言源文件先翻译成汇编语言源文件，然后再生成可执行文件</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="compile_process-3"><p>也就是将上一步我们得到的汇编语言源文件进行汇编得到一个后缀为<code>.o</code>的文件，即<code>main.o</code>，这类文件叫做<strong>可重定向目标文件</strong>，这个文件里面已经就是我们的机器将要执行的机器码了，是一个二进制文件，但为什么不是<code>a.out</code>或者说是<code>a.exe</code>文件呢？因为整个编译过程还有一个阶段没做</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="compile_process-4"><p>这一步对于 C/C++ 语言的初学者来说好像基本上遇不到，但实际上你编写的几乎每个程序都有这个过程，因为我们免不了使用标准库提供的函数。如果我们使用非标准库也就是第三方库，那么在 gcc 的命令中需要显式地链接这个库文件，这个库文件里就是我们之前包含的一个只有接口没有实现的头文件的实现部分。而只使用标准库的文件为什么在 gcc 命令中不需要显式地链接呢？其原因就是因为几乎每个程序都需要用到标准库提供的函数，而每一次使用 gcc 命令都要显式链接一下标准库实在太麻烦了，所以 gcc 都是隐式地链接了标准库，就不需要我们再动手链接了。在链接好之后我们就可以得到最终的可执行程序了，即<code>a.out</code>或<code>a.exe</code></p>
+<p>前面我们说标准库提供的是一个库文件，其中包含着的是可执行代码。实际在链接这一步中，如果你使用了标准库中的函数例如<code>printf</code>、<code>scanf</code>等，编译器就会将标准库中的这两个函数对应的可执行代码链接到源文件生成的可重定向目标文件中对应函数调用的位置。</p>
+<p>我们可以在终端执行下面的命令来看一下我们最终得到的可执行程序的依赖，也就是它需要链接的库：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ldd a.out</span><br></pre></td></tr></table></figure>
+<p>可以得到下面的输出：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sn@Program:~/桌面/Test$ ldd a.out </span><br><span class="line">	linux-vdso.so.1 (0x00007ffd0315f000)</span><br><span class="line">	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007fd4e1a41000)</span><br><span class="line">	/lib64/ld-linux-x86-64.so.2 (0x00007fd4e1c7d000)</span><br></pre></td></tr></table></figure>
+<p><code>linux-vdso.so.1</code>和<code>/lib64/ld-linux-x86-64.so.2</code>在本文中不涉及，中间的<code>/lib/x86-64-linux-gnu/libc.so.6</code>这个文件也就是我们的标准库，里面的内容就是我们使用的标准库函数的实现部分。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="二、静态链接库">二、静态链接库</h2>
+<h3 id="简介-2">简介</h3>
+<p>刚刚我们说链接过程是将库文件中的代码链接到源文件编译出来的可重定向目标文件中使用到该库文件中函数的地方。而这个链接又有两种情况：</p>
+<ul>
+<li>其一是将这些库中的可执行代码复制到目标文件中对应位置，即静态链接</li>
+<li>第二种是在目标文件对应位置标记上该函数在库文件中的地址，程序运行时会打开库文件查找并运行该地址处的内容，即动态链接</li>
+</ul>
+<p>我们可以明显看出，静态链接的优点就是程序运行简单，只需要一个可执行程序。但其缺点也很明显，大量库文件代码复制到可执行程序中，必然导致可执行程序的臃肿，其次是如果某个模块需要进行修改，最后还需要把整个项目编译一遍，极其浪费时间。</p>
+<h3 id="生成过程">生成过程</h3>
+<p>通常如果要编写一个静态链接库需要按照以下的步骤进行：</p>
+<ol>
+<li>编写接口头文件：我们首先需要思考这个库需要向外提供怎样的接口即功能，然后写成接口头文件</li>
+<li>实现接口：在有了接口头文件之后，我们就需要去实现这些接口，实现的代码被封装，使用者无法看到</li>
+<li>生成库文件：根据接口头文件和接口实现代码，我们就可以生成一个静态链接库文件了</li>
+<li>提供静态链接库：开发者只需向使用者提供接口头文件和生成的静态链接库文件即可，可以看到接口的实现是非必要的，所以才说实现的代码是被封装的</li>
+</ol>
+<h3 id="使用过程">使用过程</h3>
+<p>如果要使用一个静态链接库通常按照以下的步骤：</p>
+<ol>
+<li>包含接口头文件：在代码中包含接口头文件以使用其提供的接口</li>
+<li>编译时指明静态库的名称和位置以进行链接</li>
+<li>生成可执行程序</li>
+<li>运行可执行程序</li>
+</ol>
+<h2 id="三、动态链接库">三、动态链接库</h2>
+<h3 id="简介-3">简介</h3>
+<p>动态链接库即上述中的另一种情况，在源文件编译出的可重定向目标文件对应位置标记所使用的库函数在库文件中的地址，然后在程序运行时打开库文件查找并运行该地址处的内容。</p>
+<p>动态链接库的缺点和静态链接库的优点恰好相反：程序运行时同时需要可执行程序和库文件，可执行程序还必须能够查找到该库文件的位置</p>
+<p>而其优点也很明显：最突出的就是其灵活性，如果一个模块出了问题，那么我们只需要重新编译该模块的代码而不需要再次编译整个项目；其次则是可执行程序的体积更小，可执行程序中重复的代码更少。</p>
+<h3 id="生成过程-2">生成过程</h3>
+<p>动态链接库的生成过程和静态链接库基本相同，但在生成库文件时稍有差别。</p>
+<p>在 Windows 中生成一个动态链接库会 2 个库文件，一个和静态链接库后缀相同的文件，一个动态链接库文件。其中前者虽然和静态链接库后缀相同，但并非静态链接库，而是向目标文件与动态链接库文件联系起来的一个被称作导入库的文件。</p>
+<p>在提供动态链接库的时候我们需要同时提供以上两个库文件以及一个接口头文件。</p>
+<h3 id="使用过程-2">使用过程</h3>
+<p>动态链接库的使用过程和静态链接库也基本相同，在生成可执行程序时及后续过程有所差别。</p>
+<p>同样是在 Windows 系统下，向目标文件提供的需要链接的库文件应该是导入库的名称和地址而非动态链接库的地址（在 Linux 下还是提供动态链接库的地址）。</p>
+<p>然后在运行可执行程序时，可执行程序和动态链接库必须同时存在，或者可执行程序能够知道动态链接库的位置（无论是 Windows 还是 Linux）</p>
+<h2 id="四、二者的联系与区别">四、二者的联系与区别</h2>
+<p><strong>联系</strong></p>
+<ul>
+<li>它们都是用来向用户提供一项功能的。通过库文件，我们可以方便地将一些常用的功能封装起来供其他人使用，例如除了标准库之外还有字符编码转换功能、绘图功能等等。用户无需自己实现，只需找到一个优秀的第三方库即可。</li>
+<li>都需要提供一个接口头文件供用户导入</li>
+</ul>
+<p><strong>区别</strong></p>
+<ul>
+<li>它们在链接策略上有所区别</li>
+<li>向目标文件导入二者的方式有所区别</li>
+<li>向用户提供的文件有所区别</li>
+<li>用户使用时的方式有所区别</li>
+</ul>
+]]></content>
+      <categories>
+        <category>C/C++</category>
+        <category>链接库</category>
+      </categories>
+      <tags>
+        <tag>C</tag>
+        <tag>C++</tag>
+        <tag>链接库</tag>
+        <tag>动态链接库</tag>
+        <tag>静态链接库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C/C++链接库（准备工作）</title>
+    <url>//posts/6e4f8e4a/</url>
+    <content><![CDATA[<h2 id="简介">简介</h2>
+<p><strong>库</strong>可以说是实际项目中几乎必不可少的内容。在最开始学习编程语言的时候，可能多数人只会接触到可执行文件，那时我们编写的每一个源文件都可以直接编译成程序执行，在多文件编译时最多可能还会接触到<strong>可重定向目标文件</strong>，即后缀为<code>.o</code>的文件。但对库这个概念，或许心中只有一个模糊的概念。</p>
+<p>大家其实都肯定了解一个 C/C++ 的程序从源文件开始的编译过程有 3 步：<strong>预处理</strong>、<strong>编译</strong>、<strong>链接</strong>。</p>
+<p>其中链接这一步通常是最容易被我们忽略的，而这一步实际上就会用到我们的<strong>库文件</strong>。之所以会被忽略，是因为我们学习时所用到的库文件几乎只有标准库文件，而这个标准库文件几乎在所有编译器中都是默认链接的。</p>
+<h3 id="本文的组成">本文的组成</h3>
+<p>本篇主要是为后续文章做铺垫的准备工作部分，主要包括以下几个部分：</p>
+<ul>
+<li>工具和环境简介</li>
+<li>CLion 添加环境的方法</li>
+<li>CLion 使用不同环境运行程序的方法</li>
+<li>CMake 简介</li>
+</ul>
+<h3 id="系列文章">系列文章</h3>
+<ul>
+<li><strong>本文</strong>：<a href="#">C/C++ 链接库（准备工作）</a></li>
+<li><a href="/posts/16812f7c">C/C++ 链接库简介</a></li>
+<li><a href="#">C/C++ 链接库生成与使用：Windows 篇</a>（待写）</li>
+<li><a href="#">C/C++ 链接库生成与使用：Linux 篇</a>（待写）</li>
+</ul>
+<h2 id="一、工具和环境">一、工具和环境</h2>
+<p>实际上是后两篇文章会用到的工具和环境。</p>
+<div class="tabs" id="toolsandenviroment"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#toolsandenviroment-1">工具</button></li><li class="tab"><button type="button" data-href="#toolsandenviroment-2">环境</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="toolsandenviroment-1"><p><strong>Windows</strong> + <strong>CLion</strong></p>
+<blockquote>
+<p>本文其实已经是第二个版本了，前一个版本实际使用的是 Visual Studio 作为开发工具，但有两个原因导致我更换了 IDE。</p>
+<p>首先是 VS 的文件结构不太符合大部分实际开发场景，通常需要自行进行一些额外设置才能使用；</p>
+<p>其次是在 VS 中为项目设置多环境测试不太方便。</p>
+<p>与 VS 相比，CLion 的目录结构就比较灵活，并且可以为一个项目添加多个测试环境。当然，由于 CLion 项目是基于 CMake 的，所以仅仅使用 CMake 也能达到相同的效果，例如 VS Code + CMake 的组合，但实际开发我还是更倾向于使用 IDE。</p>
+</blockquote><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="toolsandenviroment-2"><ol>
+<li>
+<p><strong>MSVC</strong></p>
+<blockquote>
+<p>我们不安装 VS，但仍然需要 VS 提供的开发环境，我们可以正常安装包含编辑器在内的 VS，也可以只安装 VS 的负载。</p>
+<p>进入 <a href="https://visualstudio.microsoft.com/zh-hans/downloads/">https://visualstudio.microsoft.com/zh-hans/downloads/</a> 页面，然后我们不要直接选择页面中明显的那些下载按钮进行下载，首先下滑页面，打开<strong>用于 Visual Studio 的工具</strong>，选择其中的<strong>Visual Studio 2022 生成工具</strong>进行下载。</p>
+<p><img src="01.png" alt="01"></p>
+<p>安装好之后的过程就跟安装正常的 VS 一样了，选择<strong>使用 C++ 的桌面开发</strong>负载进行安装即可。</p>
+<p><img src="02.png" alt="02"></p>
+</blockquote>
+</li>
+<li>
+<p><strong>WSL + CMake + GCC + GDB</strong></p>
+<blockquote>
+<ul>
+<li>WSL 即 Windows 上的 Linux 子系统，不用使用其他虚拟机软件安装 Linux 系统。WSL 的优点主要是占用低，其环境便于 Windows 上的工具使用。其安装方式不在此处列出，读者可参考其他教程或等待我后续更新相关教程。</li>
+<li>安装号 WSL 之后，再在其上安装好必备的 CMake、GCC（gcc、g++）、GDB 等工具。</li>
+</ul>
+</blockquote>
+</li>
+</ol><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="二、CLion-添加环境方法">二、CLion 添加环境方法</h2>
+<div class="tabs" id="methodstoaddenviromentinclion"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#methodstoaddenviromentinclion-1">MSVC</button></li><li class="tab"><button type="button" data-href="#methodstoaddenviromentinclion-2">WSL</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="methodstoaddenviromentinclion-1"><p>首先打开一个 CLion 项目，打开其工具链设置：</p>
+<p><img src="03.png" alt="03"></p>
+<p>需要注意的是工具链设置是一个全局设置，只需要设置一次，以后打开其他项目就是已经设置好的了。</p>
+<p><img src="04.png" alt="04"></p>
+<p>然后按照下图的顺序添加 Visual Studio 的环境（我已经添加好了)。</p>
+<p><img src="05.png" alt="05"></p>
+<p>最后在工具集部分定位到如下图所示的目录位置即可（未用红圈圈出的目录前缀是你的 VS 负载的安装位置)。在正确配置位置之后后续的工具就可以自动识别出来了。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="methodstoaddenviromentinclion-2"><p>我们按照与添加 MSVC 相同的方法添加另一个环境 WSL，然后在工具集部分选择自己要用来测试的 WSL 系统即可：</p>
+<p><img src="06.png" alt="06"></p>
+<p>如果在这个工具链页面中显示有什么工具没检测到的话，就进入你的 WSL 系统进行下载即可。</p><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="三、CLion-使用不同环境编译运行项目方法">三、CLion 使用不同环境编译运行项目方法</h2>
+<p>我们在完成上一步的工具链配置之后，需要选择一个工具链作为默认工具链，每次新建的项目就将使用该工具链对项目进行编译运行。</p>
+<p>如果想要添加配置，则需要在每个项目中单独配置：</p>
+<p>首先打开 CLion 设置中的 CMake 配置：</p>
+<p><img src="07.png" alt="07"></p>
+<p>在这项配置中需要添加配置文件，一个配置文件就是一个本项目的运行环境，你可以看到自带有一个配置文件，这是 CLion 自动创建的，这个配置文件使用的工具链是我设置的默认工具链，并不是上述所说的两者中的任意一个。</p>
+<p>我们点击工具链的下拉框，选择我们需要的工具链即可，这里我选择 Visual Studio 工具链。</p>
+<p><img src="08.png" alt="08"></p>
+<p>然后，我们再按照下图所示的步骤向项目中添加一个工具链：</p>
+<p><img src="09.png" alt="09"></p>
+<p>其中第 3 步<strong>构建类型</strong>还是选择 Debug，然后工具链选择 WSL，最后使其类似于下图即可：</p>
+<p><img src="10.png" alt="10"></p>
+<p>最后点击确定就可以了。</p>
+<p>如果我们需要切换测试环境，则点击下图所示的位置进行切换即可：</p>
+<p><img src="11.png" alt="11"></p>
+<h2 id="四、CMake-简介">四、CMake 简介</h2>
+<p>CLion 项目的配置是基于 CMake 的，其核心在于根目录下的一个<code>CMakeLists.txt</code>文件：</p>
+<p><img src="12.png" alt="12"></p>
+<p>这是一个最基础的 CMake 配置文件，CLion 会调用我们刚配置好的工具链中选择的 CMake 工具来解析该文件并按照该文件的指示对项目进行相应处理，我们详细解释一下这四条配置：</p>
+<ul>
+<li><code>cmake_minimum_required(VERSION 3.22)</code>：这一条规定了用来解析该文件的 CMake 工具的最低版本，如果你的工具链中 CMake 版本低于此处声明的版本号，则会解析失败，你要么更新工具链中的 CMake 工具，要么降低此处声明的版本号</li>
+<li><code>project(LibraryTest)</code>：本句声明了本项目的名称</li>
+<li><code>set(CMAKE_CXX_STANDARD 11)</code>：这是一条设定语句，设定了本项目的 C++ 标准应该是 C++11 标准</li>
+<li><code>add_executable(LibraryTest main.cpp)</code>：这条语句的意思是生成一个可执行程序（<code>add_executable</code>），其中需要至少两个参数，其一是该可执行程序的名称，第二项是参与编译该可执行程序的文件名。</li>
+</ul>
+<p>这就是最基本的 CMake 配置文件的写法，后续如果遇到新的语句，将在该处单独进行解释。</p>
+<p>如果对 CMake 感兴趣，请前往其官网了解：<a href="https://cmake.org/">CMake - Upgrade Your Software Build System</a></p>
+]]></content>
+      <categories>
+        <category>C/C++</category>
+        <category>链接库</category>
+      </categories>
+      <tags>
+        <tag>C</tag>
+        <tag>C++</tag>
+        <tag>链接库</tag>
+        <tag>动态链接库</tag>
+        <tag>静态链接库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Windows环境编程乱码问题解决方案总结</title>
     <url>//posts/a15e7e9/</url>
     <content><![CDATA[<h2 id="前言">前言</h2>
 <p>本文主要是在 Windows 环境下编程所出现的乱码问题的解决方案的总结，其中也包括了前篇所说的调控编译器选项的乱码解决方案，同时还补充了其他的一些可行的方法。</p>
 <p>另外，虽然本文又一次提到了调控编译器选项的相关内容，但本文并不是前篇内容的复制粘贴，也不会进行各种各样的测试，本文只想聊聊在实际开发过程中应该如何使用这样的方法，以及如何将其推广到不止一种字符集环境中。</p>
+<h3 id="系列文章">系列文章</h3>
+<ul>
+<li><a href="/posts/c77f42f7">编程中乱码出现的原因</a></li>
+<li><a href="/posts/5e27120d">通过调控编译器选项的乱码解决方案测试</a></li>
+<li>本文：<a href="#">Windows 环境编程乱码问题解决方案总结</a></li>
+</ul>
 <h2 id="一、调控编译器选项法">一、调控编译器选项法</h2>
 <h3 id="1-重复命令">1. 重复命令</h3>
 <p>在我上一篇的测试中，每一组测试我都是重新写命令然后执行。</p>
@@ -111,7 +319,13 @@
   <entry>
     <title>通过调控编译器选项的乱码解决方案测试</title>
     <url>//posts/5e27120d/</url>
-    <content><![CDATA[<h2 id="一、输出测试">一、输出测试</h2>
+    <content><![CDATA[<h2 id="系列文章">系列文章</h2>
+<ul>
+<li><a href="/posts/c77f42f7">编程中乱码出现的原因</a></li>
+<li>本文：<a href="#">通过调控编译器选项的乱码解决方案测试</a></li>
+<li><a href="/posts/a15e7e9">Windows 环境编程乱码问题解决方案总结</a></li>
+</ul>
+<h2 id="一、输出测试">一、输出测试</h2>
 <h3 id="1-测试代码">1. 测试代码</h3>
 <p>使用了一个非常简单的代码进行测试：</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;你好，C++！&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -365,6 +579,12 @@
 <p>本文将探索在编程过程中出现乱码问题的具体原因。之所以加了个前缀 “编程过程中” 是因为我并非是要说明乱码本身出现的原因即编码与解码阶段使用的编码不一致，这个原因很好理解并且也已经有很多人讲过了。</p>
 <p>本文所探讨的是在编程过程中由于各种中间环节的影响，即使你清楚乱码产生的原因，也仍然可能无法避免地产生乱码的问题。</p>
 <p>另外，由于在 Linux 环境下几乎不会遇到这样的问题（如果我们统一使用<code>utf-8</code>的文件格式与<code>utf-8</code>的用户字符集并且使用 GNU GCC 作为编译器的话），所以本文的全部内容都将基于 Windows 环境下的乱码问题进行介绍，中文环境将以<code>gbk</code>为准。</p>
+<h3 id="系列文章">系列文章</h3>
+<ul>
+<li>本文：<a href="#">编程中乱码出现的原因</a></li>
+<li><a href="/posts/5e27120d">通过调控编译器选项的乱码解决方案测试</a></li>
+<li><a href="/posts/a15e7e9">Windows 环境编程乱码问题解决方案总结</a></li>
+</ul>
 <h2 id="一、三大影响因素">一、三大影响因素</h2>
 <h3 id="1-源文件编码和终端字符集">1. 源文件编码和终端字符集</h3>
 <p>相信很多人遇到这个问题之后进行搜索所得到的答案基本上都是<strong>源文件的编码</strong>（1）和<strong>终端字符集</strong>（2）不匹配，这两个虽然也是乱码的两个重要影响因素，但实际上这两个因素理论上来说是不应该去改变的，即我们应该保持源文件编码和终端字符集的差异。之所以这样说，主要有以下两个方面：</p>
