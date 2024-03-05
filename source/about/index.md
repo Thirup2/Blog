@@ -14,7 +14,13 @@ aside: true
 - 👉 兴趣：网络构建、ACGN；
 
 ## 博客历史
-
+{% timeline 2024,red %}
+<!-- timeline 03-02 -->
+由于网站的流量比较低，通常只有我一个人在看，而租用云服务器的价格又比较高。并且唯一需要用到云服务器的功能只有 Artalk 的后端，实属没有必要。
+故还是将网站转移到 Github Pages 上，同时评论区功能也不再使用 Artalk，还是使用配置最方便的 Gitalk。
+所以现在根据网络情况的不同，可能会导致本网站访问时间过长的问题。
+<!-- endtimeline -->
+{% endtimeline %}
 {% timeline 2023,pink %}
 <!-- timeline 11-11 -->
 完善了一下博客的 SEO；
